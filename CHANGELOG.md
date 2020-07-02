@@ -1,5 +1,31 @@
 # Changelog
 
+## [v1.4.009](https://github.com/pliablepixels/zmNinja/tree/v1.4.009) (2020-07-02)
+
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.4.007...v1.4.009)
+
+**Implemented enhancements:**
+
+- Add ability to force MJPEG streaming per monitor [\#951](https://github.com/pliablepixels/zmNinja/issues/951)
+
+**Fixed bugs:**
+
+- 1.4.3 encode URL seems broken at least on iOS \(Event/24 hr filters etc\) [\#933](https://github.com/pliablepixels/zmNinja/issues/933)
+
+**Closed issues:**
+
+- Connection through WireGuard fails to communicate with API [\#955](https://github.com/pliablepixels/zmNinja/issues/955)
+- zmNinja not working on Mobile Data, but works properly on WiFi [\#952](https://github.com/pliablepixels/zmNinja/issues/952)
+- H265 not working in event view [\#950](https://github.com/pliablepixels/zmNinja/issues/950)
+- APK Download without playstore \(android\) [\#945](https://github.com/pliablepixels/zmNinja/issues/945)
+- ZMNinja stops working after a random period of time [\#938](https://github.com/pliablepixels/zmNinja/issues/938)
+- znNinja won't start when opening from a notification [\#911](https://github.com/pliablepixels/zmNinja/issues/911)
+
+**Merged pull requests:**
+
+-  \#951 add forced mjpeg support on per monitor basis [\#954](https://github.com/pliablepixels/zmNinja/pull/954) ([florie1706](https://github.com/florie1706))
+- \#951 add forced mjpeg support on per monitor basis [\#953](https://github.com/pliablepixels/zmNinja/pull/953) ([maymaymay](https://github.com/maymaymay))
+
 ## [v1.4.007](https://github.com/pliablepixels/zmNinja/tree/v1.4.007) (2020-05-18)
 
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.4.005...v1.4.007)
@@ -17,23 +43,9 @@
 
 - ZM Auth not working [\#910](https://github.com/pliablepixels/zmNinja/issues/910)
 
-**Merged pull requests:**
-
-- typo [\#947](https://github.com/pliablepixels/zmNinja/pull/947) ([florie1706](https://github.com/florie1706))
-- IT translation Update [\#946](https://github.com/pliablepixels/zmNinja/pull/946) ([mcbittech](https://github.com/mcbittech))
-- fix help contact [\#944](https://github.com/pliablepixels/zmNinja/pull/944) ([florie1706](https://github.com/florie1706))
-- \#939 Groups support in montage screen view new API [\#941](https://github.com/pliablepixels/zmNinja/pull/941) ([florie1706](https://github.com/florie1706))
-- \#939 Groups support in montage screen view new API [\#940](https://github.com/pliablepixels/zmNinja/pull/940) ([maymaymay](https://github.com/maymaymay))
-- \#933 add back spaces, 1.32 breaks. Make encoding optional in dev sett… [\#937](https://github.com/pliablepixels/zmNinja/pull/937) ([florie1706](https://github.com/florie1706))
-- \#933 add back spaces, 1.32 breaks. Make encoding optional in dev sett… [\#936](https://github.com/pliablepixels/zmNinja/pull/936) ([maymaymay](https://github.com/maymaymay))
-
 ## [v1.4.005](https://github.com/pliablepixels/zmNinja/tree/v1.4.005) (2020-05-01)
 
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.4.004...v1.4.005)
-
-**Merged pull requests:**
-
-- \#930 \#931 - you can now reduce resize factor to fractions in dev opt [\#934](https://github.com/pliablepixels/zmNinja/pull/934) ([florie1706](https://github.com/florie1706))
 
 ## [v1.4.004](https://github.com/pliablepixels/zmNinja/tree/v1.4.004) (2020-04-30)
 
@@ -43,10 +55,6 @@
 
 - Add option to hide footers in montage [\#931](https://github.com/pliablepixels/zmNinja/issues/931)
 - Allow automatic distribution in montage based on number of columns [\#930](https://github.com/pliablepixels/zmNinja/issues/930)
-
-**Merged pull requests:**
-
-- \#930 \#931 - you can now reduce resize factor to fractions in dev opti… [\#932](https://github.com/pliablepixels/zmNinja/pull/932) ([maymaymay](https://github.com/maymaymay))
 
 ## [v1.4.3](https://github.com/pliablepixels/zmNinja/tree/v1.4.3) (2020-04-28)
 
@@ -70,11 +78,6 @@
 - zmNinja for Blue Iris. \(biNinja?\) [\#918](https://github.com/pliablepixels/zmNinja/issues/918)
 - \[DESKTOP\] Swiping through Event previews gets slower until returning to event view. [\#904](https://github.com/pliablepixels/zmNinja/issues/904)
 
-**Merged pull requests:**
-
-- Update Chinese\(Simplified\) translation [\#927](https://github.com/pliablepixels/zmNinja/pull/927) ([outline941](https://github.com/outline941))
-- Add Chinese \(Simplified\) translation [\#924](https://github.com/pliablepixels/zmNinja/pull/924) ([outline941](https://github.com/outline941))
-
 ## [v1.3.096](https://github.com/pliablepixels/zmNinja/tree/v1.3.096) (2020-04-01)
 
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.091...v1.3.096)
@@ -90,11 +93,6 @@
 - 24 hr format more performance improvements [\#913](https://github.com/pliablepixels/zmNinja/issues/913)
 - Full screen montage - menu button overrides monitor event buttons [\#909](https://github.com/pliablepixels/zmNinja/issues/909)
 - Feature request: skip over idle periods when playing videos from 'mocord' mode [\#896](https://github.com/pliablepixels/zmNinja/issues/896)
-
-**Merged pull requests:**
-
-- toggle option for animation frame in modal events [\#917](https://github.com/pliablepixels/zmNinja/pull/917) ([florie1706](https://github.com/florie1706))
-- toggle option for animation frame in modal events [\#915](https://github.com/pliablepixels/zmNinja/pull/915) ([maymaymay](https://github.com/maymaymay))
 
 ## [v1.3.091](https://github.com/pliablepixels/zmNinja/tree/v1.3.091) (2020-03-18)
 
@@ -153,12 +151,6 @@
 - zmNinja live view fills PATH\_SWAP [\#873](https://github.com/pliablepixels/zmNinja/issues/873)
 - Provide a flatpak on flathub [\#868](https://github.com/pliablepixels/zmNinja/issues/868)
 
-**Merged pull requests:**
-
--  \#886 add translate text [\#891](https://github.com/pliablepixels/zmNinja/pull/891) ([florie1706](https://github.com/florie1706))
-- \#886 add translate text [\#887](https://github.com/pliablepixels/zmNinja/pull/887) ([maymaymay](https://github.com/maymaymay))
-- Added missing dependencies that were causing a run-time error [\#885](https://github.com/pliablepixels/zmNinja/pull/885) ([neillbell](https://github.com/neillbell))
-
 ## [v1.3.085](https://github.com/pliablepixels/zmNinja/tree/v1.3.085) (2019-12-27)
 
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.082...v1.3.085)
@@ -181,13 +173,6 @@
 - clean up monitor change state view \(especially global\), allow folks to turn motion detection on/off easily [\#867](https://github.com/pliablepixels/zmNinja/issues/867)
 - Not playing live stream - iOS. Works on Desktop App version, and Mobile Zoneminder Website. [\#856](https://github.com/pliablepixels/zmNinja/issues/856)
 
-**Merged pull requests:**
-
--  \#876 more logical naming [\#879](https://github.com/pliablepixels/zmNinja/pull/879) ([florie1706](https://github.com/florie1706))
--  \#873, \#876 more logical naming [\#878](https://github.com/pliablepixels/zmNinja/pull/878) ([maymaymay](https://github.com/maymaymay))
-- \#867 clean up global code [\#871](https://github.com/pliablepixels/zmNinja/pull/871) ([florie1706](https://github.com/florie1706))
-- \#867 clean up global code [\#870](https://github.com/pliablepixels/zmNinja/pull/870) ([maymaymay](https://github.com/maymaymay))
-
 ## [v1.3.082](https://github.com/pliablepixels/zmNinja/tree/v1.3.082) (2019-11-12)
 
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.079...v1.3.082)
@@ -205,15 +190,6 @@
 
 - Enhancement: Zoom for Events List [\#855](https://github.com/pliablepixels/zmNinja/issues/855)
 
-**Merged pull requests:**
-
-- Update locale-de.json [\#865](https://github.com/pliablepixels/zmNinja/pull/865) ([florie1706](https://github.com/florie1706))
-- optimized translation [\#864](https://github.com/pliablepixels/zmNinja/pull/864) ([florie1706](https://github.com/florie1706))
-- \#857 api caching layer [\#862](https://github.com/pliablepixels/zmNinja/pull/862) ([florie1706](https://github.com/florie1706))
-- add option to pause streams for simul, turn it off for default [\#861](https://github.com/pliablepixels/zmNinja/pull/861) ([maymaymay](https://github.com/maymaymay))
-- \#857 api caching layer [\#860](https://github.com/pliablepixels/zmNinja/pull/860) ([maymaymay](https://github.com/maymaymay))
-- Faster montage loads & Timeline fixes [\#858](https://github.com/pliablepixels/zmNinja/pull/858) ([pliablepixels](https://github.com/pliablepixels))
-
 ## [v1.3.079](https://github.com/pliablepixels/zmNinja/tree/v1.3.079) (2019-10-16)
 
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.078...v1.3.079)
@@ -230,10 +206,6 @@
 - event playback mode [\#849](https://github.com/pliablepixels/zmNinja/issues/849)
 - cycle montage not working [\#828](https://github.com/pliablepixels/zmNinja/issues/828)
 
-**Merged pull requests:**
-
-- fixed german language typos [\#852](https://github.com/pliablepixels/zmNinja/pull/852) ([londonjob](https://github.com/londonjob))
-
 ## [v1.3.078](https://github.com/pliablepixels/zmNinja/tree/v1.3.078) (2019-08-23)
 
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.074...v1.3.078)
@@ -249,10 +221,6 @@
 - "Authentication Success" reported, even when not possible [\#847](https://github.com/pliablepixels/zmNinja/issues/847)
 - cannot view events from monitors not present in montage view [\#844](https://github.com/pliablepixels/zmNinja/issues/844)
 - Cannot select different server while connection attempt is ongoing [\#842](https://github.com/pliablepixels/zmNinja/issues/842)
-
-**Merged pull requests:**
-
-- What a login mess [\#843](https://github.com/pliablepixels/zmNinja/pull/843) ([pliablepixels](https://github.com/pliablepixels))
 
 ## [v1.3.074](https://github.com/pliablepixels/zmNinja/tree/v1.3.074) (2019-08-10)
 
@@ -281,16 +249,11 @@
 - fallbacks are broken [\#833](https://github.com/pliablepixels/zmNinja/issues/833)
 - Navigation from monitor view to event view broke in mobile devices [\#832](https://github.com/pliablepixels/zmNinja/issues/832)
 - Add a relogin timer for tokens [\#829](https://github.com/pliablepixels/zmNinja/issues/829)
+- Don't close event playback if video controls were pressed quickly [\#827](https://github.com/pliablepixels/zmNinja/issues/827)
 
 **Closed issues:**
 
 - Got a stream wtihin local network. No stream from outside network [\#834](https://github.com/pliablepixels/zmNinja/issues/834)
-
-**Merged pull requests:**
-
-- allow max FPS settings for Montage Mode \(irrelevant if not using mult… [\#836](https://github.com/pliablepixels/zmNinja/pull/836) ([florie1706](https://github.com/florie1706))
-- allow max FPS settings for Montage Mode \(irrelevant if not using mult… [\#835](https://github.com/pliablepixels/zmNinja/pull/835) ([maymaymay](https://github.com/maymaymay))
-- \#830 lockdown kiosk mode initial implementation [\#831](https://github.com/pliablepixels/zmNinja/pull/831) ([maymaymay](https://github.com/maymaymay))
 
 ## [v1.3.066](https://github.com/pliablepixels/zmNinja/tree/v1.3.066) (2019-07-01)
 
@@ -302,7 +265,6 @@
 
 **Fixed bugs:**
 
-- Don't close event playback if video controls were pressed quickly [\#827](https://github.com/pliablepixels/zmNinja/issues/827)
 - Linux installer - doesn't install into favorites [\#826](https://github.com/pliablepixels/zmNinja/issues/826)
 - Layout No Longer Saves [\#823](https://github.com/pliablepixels/zmNinja/issues/823)
 - It is not possible to view a full-size frame from a thumbnail in the analysis view [\#822](https://github.com/pliablepixels/zmNinja/issues/822)
@@ -311,11 +273,6 @@
 
 - \[Desktop\] Request - Zoom for events on none touchscreen. [\#815](https://github.com/pliablepixels/zmNinja/issues/815)
 - Enhancement: add system state info in  "System status" item menu [\#812](https://github.com/pliablepixels/zmNinja/issues/812)
-
-**Merged pull requests:**
-
-- added livefps option [\#825](https://github.com/pliablepixels/zmNinja/pull/825) ([florie1706](https://github.com/florie1706))
-- added livefps option [\#824](https://github.com/pliablepixels/zmNinja/pull/824) ([maymaymay](https://github.com/maymaymay))
 
 ## [v1.3.061](https://github.com/pliablepixels/zmNinja/tree/v1.3.061) (2019-06-06)
 
@@ -356,13 +313,6 @@
 - Cannot run zmN v1.3.42 or v1.3.50 on RPi 3 Model B [\#789](https://github.com/pliablepixels/zmNinja/issues/789)
 - Do not see video with ios 10.3.3 Ipad [\#785](https://github.com/pliablepixels/zmNinja/issues/785)
 
-**Merged pull requests:**
-
-- Api tokens [\#819](https://github.com/pliablepixels/zmNinja/pull/819) ([pliablepixels](https://github.com/pliablepixels))
-- \#806 allow viewing events for caught up montage, auto expand sidebar … [\#811](https://github.com/pliablepixels/zmNinja/pull/811) ([florie1706](https://github.com/florie1706))
-- \#796 simplification, \#806 [\#810](https://github.com/pliablepixels/zmNinja/pull/810) ([maymaymay](https://github.com/maymaymay))
-- Missing translation [\#802](https://github.com/pliablepixels/zmNinja/pull/802) ([maymaymay](https://github.com/maymaymay))
-
 ## [v1.3.056](https://github.com/pliablepixels/zmNinja/tree/v1.3.056) (2019-04-02)
 
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.050...v1.3.056)
@@ -386,16 +336,6 @@
 - Unable start after build [\#788](https://github.com/pliablepixels/zmNinja/issues/788)
 - Video URLs undefined [\#787](https://github.com/pliablepixels/zmNinja/issues/787)
 - iOS log view issues & improvements [\#767](https://github.com/pliablepixels/zmNinja/issues/767)
-
-**Merged pull requests:**
-
-- \#796 initial support [\#798](https://github.com/pliablepixels/zmNinja/pull/798) ([florie1706](https://github.com/florie1706))
-- \#796 initial support [\#797](https://github.com/pliablepixels/zmNinja/pull/797) ([maymaymay](https://github.com/maymaymay))
-- Fixing typo [\#794](https://github.com/pliablepixels/zmNinja/pull/794) ([gtozzi](https://github.com/gtozzi))
-- migrate to sphinx [\#792](https://github.com/pliablepixels/zmNinja/pull/792) ([pliablepixels](https://github.com/pliablepixels))
-- Appium [\#790](https://github.com/pliablepixels/zmNinja/pull/790) ([pliablepixels](https://github.com/pliablepixels))
-- \#779 add options in dev to disable [\#783](https://github.com/pliablepixels/zmNinja/pull/783) ([florie1706](https://github.com/florie1706))
-- \#779 add options in dev to disable [\#782](https://github.com/pliablepixels/zmNinja/pull/782) ([maymaymay](https://github.com/maymaymay))
 
 ## [v1.3.050](https://github.com/pliablepixels/zmNinja/tree/v1.3.050) (2019-02-25)
 
@@ -481,11 +421,6 @@
 - preview image on android is center cropped, not scaled. [\#747](https://github.com/pliablepixels/zmNinja/issues/747)
 - Various inputs/cleanups  [\#745](https://github.com/pliablepixels/zmNinja/issues/745)
 
-**Merged pull requests:**
-
-- integrate object detection mode in event list [\#751](https://github.com/pliablepixels/zmNinja/pull/751) ([florie1706](https://github.com/florie1706))
-- integrate object detection mode in event list [\#746](https://github.com/pliablepixels/zmNinja/pull/746) ([maymaymay](https://github.com/maymaymay))
-
 ## [v1.3.032](https://github.com/pliablepixels/zmNinja/tree/v1.3.032) (2018-11-24)
 
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.029...v1.3.032)
@@ -493,12 +428,6 @@
 **Closed issues:**
 
 - Events playback doens't work in zmNinja with ZoneMinder 1.32.2 but works on native web interface [\#744](https://github.com/pliablepixels/zmNinja/issues/744)
-
-**Merged pull requests:**
-
-- more storage areas fixes [\#743](https://github.com/pliablepixels/zmNinja/pull/743) ([florie1706](https://github.com/florie1706))
-- more storage areas fixes [\#742](https://github.com/pliablepixels/zmNinja/pull/742) ([maymaymay](https://github.com/maymaymay))
-- Some corrections in translation [\#741](https://github.com/pliablepixels/zmNinja/pull/741) ([dado-ca](https://github.com/dado-ca))
 
 ## [v1.3.029](https://github.com/pliablepixels/zmNinja/tree/v1.3.029) (2018-11-07)
 
@@ -525,30 +454,6 @@
 - Is the android version still available from Google Play? [\#713](https://github.com/pliablepixels/zmNinja/issues/713)
 - Recording playback fails after upgrade to ZM 1.32.0 [\#711](https://github.com/pliablepixels/zmNinja/issues/711)
 - Google Play store states app not compatible with Nvidia Shield Android TV [\#705](https://github.com/pliablepixels/zmNinja/issues/705)
-
-**Merged pull requests:**
-
-- Fixes double definition in www/js/app.js [\#740](https://github.com/pliablepixels/zmNinja/pull/740) ([ArsenyZorin](https://github.com/ArsenyZorin))
-- kStateMultiServer missing [\#738](https://github.com/pliablepixels/zmNinja/pull/738) ([maymaymay](https://github.com/maymaymay))
-- desktop logs rework [\#736](https://github.com/pliablepixels/zmNinja/pull/736) ([maymaymay](https://github.com/maymaymay))
-- \#733 initial rough in [\#735](https://github.com/pliablepixels/zmNinja/pull/735) ([maymaymay](https://github.com/maymaymay))
--  \#733 initial rough in [\#734](https://github.com/pliablepixels/zmNinja/pull/734) ([florie1706](https://github.com/florie1706))
-- desktop logs rework [\#732](https://github.com/pliablepixels/zmNinja/pull/732) ([florie1706](https://github.com/florie1706))
-- typo [\#731](https://github.com/pliablepixels/zmNinja/pull/731) ([maymaymay](https://github.com/maymaymay))
-- modified sensitive info warning, removed old text from language files… [\#730](https://github.com/pliablepixels/zmNinja/pull/730) ([florie1706](https://github.com/florie1706))
-- new keys for monitor status [\#728](https://github.com/pliablepixels/zmNinja/pull/728) ([maymaymay](https://github.com/maymaymay))
-- menu option to toggle event summary \(iPhoneX ui interference\) [\#722](https://github.com/pliablepixels/zmNinja/pull/722) ([florie1706](https://github.com/florie1706))
-- menu option to toggle event summary \(iPhoneX ui interference\) [\#721](https://github.com/pliablepixels/zmNinja/pull/721) ([maymaymay](https://github.com/maymaymay))
-- added missing keys [\#720](https://github.com/pliablepixels/zmNinja/pull/720) ([dado-ca](https://github.com/dado-ca))
-- Bosnian Line 404 corrected [\#719](https://github.com/pliablepixels/zmNinja/pull/719) ([dado-ca](https://github.com/dado-ca))
-- master keys:420, locale-pl.json keys:420 [\#718](https://github.com/pliablepixels/zmNinja/pull/718) ([maymaymay](https://github.com/maymaymay))
-- Bosnian translation [\#717](https://github.com/pliablepixels/zmNinja/pull/717) ([dado-ca](https://github.com/dado-ca))
-- various fixes for XCode 10 build process and iCloud [\#714](https://github.com/pliablepixels/zmNinja/pull/714) ([florie1706](https://github.com/florie1706))
-- use corrent icon path [\#712](https://github.com/pliablepixels/zmNinja/pull/712) ([CorySanin](https://github.com/CorySanin))
-- WKWebView fixes [\#709](https://github.com/pliablepixels/zmNinja/pull/709) ([pliablepixels](https://github.com/pliablepixels))
-- various fixes for XCode 10 build process and iCloud [\#708](https://github.com/pliablepixels/zmNinja/pull/708) ([maymaymay](https://github.com/maymaymay))
-- spanish trans update [\#707](https://github.com/pliablepixels/zmNinja/pull/707) ([fxrnando](https://github.com/fxrnando))
-- \#697 initial code for cloud sync [\#703](https://github.com/pliablepixels/zmNinja/pull/703) ([florie1706](https://github.com/florie1706))
 
 ## [v1.3.018](https://github.com/pliablepixels/zmNinja/tree/v1.3.018) (2018-09-14)
 
@@ -577,12 +482,6 @@
 - Allow navigation to detailed event playback from event montage [\#347](https://github.com/pliablepixels/zmNinja/issues/347)
 - Desktop: Window Title is Inconsistent [\#170](https://github.com/pliablepixels/zmNinja/issues/170)
 
-**Merged pull requests:**
-
-- \#697 initial code for cloud sync [\#698](https://github.com/pliablepixels/zmNinja/pull/698) ([maymaymay](https://github.com/maymaymay))
-- \#692 zoneminder privacy warning [\#695](https://github.com/pliablepixels/zmNinja/pull/695) ([florie1706](https://github.com/florie1706))
-- \#692 zoneminder privacy warning [\#693](https://github.com/pliablepixels/zmNinja/pull/693) ([maymaymay](https://github.com/maymaymay))
-
 ## [v1.3.016](https://github.com/pliablepixels/zmNinja/tree/v1.3.016) (2018-08-24)
 
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.013...v1.3.016)
@@ -603,14 +502,6 @@
 
 - Desktop app, no notifications. Works with ios app. [\#650](https://github.com/pliablepixels/zmNinja/issues/650)
 - Push Notification issue [\#639](https://github.com/pliablepixels/zmNinja/issues/639)
-
-**Merged pull requests:**
-
-- \#682 - various updates to handle multi-window pause state [\#687](https://github.com/pliablepixels/zmNinja/pull/687) ([pliablepixels](https://github.com/pliablepixels))
-- link to instructional videos [\#686](https://github.com/pliablepixels/zmNinja/pull/686) ([florie1706](https://github.com/florie1706))
-- \#681 make sure falllback happens in reasonable tim [\#685](https://github.com/pliablepixels/zmNinja/pull/685) ([florie1706](https://github.com/florie1706))
-- link to instructional videos [\#684](https://github.com/pliablepixels/zmNinja/pull/684) ([maymaymay](https://github.com/maymaymay))
-- \#681 make sure falllback happens in reasonable time, also improve pro… [\#683](https://github.com/pliablepixels/zmNinja/pull/683) ([maymaymay](https://github.com/maymaymay))
 
 ## [v1.3.013](https://github.com/pliablepixels/zmNinja/tree/v1.3.013) (2018-07-31)
 
@@ -643,13 +534,6 @@
 - ZmNinjaDesktop on Linux64 \( ubuntu 16.04 \) touchscreen scrolling [\#642](https://github.com/pliablepixels/zmNinja/issues/642)
 - Enhancement: Change between running states from main menu big buttons or widget [\#633](https://github.com/pliablepixels/zmNinja/issues/633)
 
-**Merged pull requests:**
-
-- \#669 - customizable montage scaling granularity [\#671](https://github.com/pliablepixels/zmNinja/pull/671) ([florie1706](https://github.com/florie1706))
-- \#669 - customizable montage scaling granularity [\#670](https://github.com/pliablepixels/zmNinja/pull/670) ([maymaymay](https://github.com/maymaymay))
-- Updated translation [\#663](https://github.com/pliablepixels/zmNinja/pull/663) ([florie1706](https://github.com/florie1706))
-- missed "here" [\#662](https://github.com/pliablepixels/zmNinja/pull/662) ([florie1706](https://github.com/florie1706))
-
 ## [v1.3.008](https://github.com/pliablepixels/zmNinja/tree/v1.3.008) (2018-06-30)
 
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.004...v1.3.008)
@@ -670,16 +554,6 @@
 - api update needed [\#610](https://github.com/pliablepixels/zmNinja/issues/610)
 - Can't build in IOS [\#609](https://github.com/pliablepixels/zmNinja/issues/609)
 
-**Merged pull requests:**
-
-- initial translation [\#660](https://github.com/pliablepixels/zmNinja/pull/660) ([florie1706](https://github.com/florie1706))
--  \#653 typo [\#657](https://github.com/pliablepixels/zmNinja/pull/657) ([maymaymay](https://github.com/maymaymay))
-- \#653 add app link [\#655](https://github.com/pliablepixels/zmNinja/pull/655) ([florie1706](https://github.com/florie1706))
-- \#653 add app link [\#654](https://github.com/pliablepixels/zmNinja/pull/654) ([maymaymay](https://github.com/maymaymay))
-- Even more translation fixes [\#646](https://github.com/pliablepixels/zmNinja/pull/646) ([florie1706](https://github.com/florie1706))
-- Cordova8 [\#645](https://github.com/pliablepixels/zmNinja/pull/645) ([pliablepixels](https://github.com/pliablepixels))
-- improved translation [\#643](https://github.com/pliablepixels/zmNinja/pull/643) ([florie1706](https://github.com/florie1706))
-
 ## [v1.3.004](https://github.com/pliablepixels/zmNinja/tree/v1.3.004) (2018-06-03)
 
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.3.002...v1.3.004)
@@ -696,10 +570,6 @@
 - Missing events if logged in zmNinja with non admin user [\#568](https://github.com/pliablepixels/zmNinja/issues/568)
 - Enhance System Status to show disk space details [\#430](https://github.com/pliablepixels/zmNinja/issues/430)
 - Order of persisted monitors should be reflected in timeline and when swiping prev/next in fullscreen view. [\#62](https://github.com/pliablepixels/zmNinja/issues/62)
-
-**Merged pull requests:**
-
-- placeholder code for bookmarks - not enabled [\#637](https://github.com/pliablepixels/zmNinja/pull/637) ([maymaymay](https://github.com/maymaymay))
 
 ## [v1.3.002](https://github.com/pliablepixels/zmNinja/tree/v1.3.002) (2018-05-24)
 
@@ -756,29 +626,6 @@
 - zmNinja for Apple tvOS [\#449](https://github.com/pliablepixels/zmNinja/issues/449)
 - Improve event montage view [\#186](https://github.com/pliablepixels/zmNinja/issues/186)
 
-**Merged pull requests:**
-
-- Tv init code - not ready - disabled for now [\#631](https://github.com/pliablepixels/zmNinja/pull/631) ([pliablepixels](https://github.com/pliablepixels))
-- added menu button in invalid api [\#630](https://github.com/pliablepixels/zmNinja/pull/630) ([maymaymay](https://github.com/maymaymay))
-- added menu button in invalid api [\#629](https://github.com/pliablepixels/zmNinja/pull/629) ([florie1706](https://github.com/florie1706))
-- consistency - floating menu options [\#628](https://github.com/pliablepixels/zmNinja/pull/628) ([maymaymay](https://github.com/maymaymay))
-- no need for ng-checked with ng-model, also removed some old dev setti… [\#627](https://github.com/pliablepixels/zmNinja/pull/627) ([maymaymay](https://github.com/maymaymay))
-- no need for ng-checked with ng-model, also removed [\#626](https://github.com/pliablepixels/zmNinja/pull/626) ([florie1706](https://github.com/florie1706))
-- \#623 copy/paste enabled [\#625](https://github.com/pliablepixels/zmNinja/pull/625) ([maymaymay](https://github.com/maymaymay))
-- Added missing keys [\#622](https://github.com/pliablepixels/zmNinja/pull/622) ([florie1706](https://github.com/florie1706))
--  \#618 make this optional in dev settings [\#620](https://github.com/pliablepixels/zmNinja/pull/620) ([florie1706](https://github.com/florie1706))
-- \#618 make this optional in dev settings [\#619](https://github.com/pliablepixels/zmNinja/pull/619) ([maymaymay](https://github.com/maymaymay))
-- I tried, I failed, I succeeded, I failed, I gave up :-p \#606 [\#617](https://github.com/pliablepixels/zmNinja/pull/617) ([florie1706](https://github.com/florie1706))
-- tiny bits here and there [\#616](https://github.com/pliablepixels/zmNinja/pull/616) ([florie1706](https://github.com/florie1706))
-- tiny bits here and there [\#615](https://github.com/pliablepixels/zmNinja/pull/615) ([maymaymay](https://github.com/maymaymay))
-- \#602 \#606 - iOS won't support multiport. Webkit bug see https://bugs… [\#612](https://github.com/pliablepixels/zmNinja/pull/612) ([maymaymay](https://github.com/maymaymay))
-- take off iOS assumption - seems even safari allows 6 [\#608](https://github.com/pliablepixels/zmNinja/pull/608) ([maymaymay](https://github.com/maymaymay))
-- Update locale-de.json [\#607](https://github.com/pliablepixels/zmNinja/pull/607) ([florie1706](https://github.com/florie1706))
-- correct API message [\#605](https://github.com/pliablepixels/zmNinja/pull/605) ([maymaymay](https://github.com/maymaymay))
--  \#587 - option added to dev settings to make this configurable [\#588](https://github.com/pliablepixels/zmNinja/pull/588) ([maymaymay](https://github.com/maymaymay))
-- review not preview [\#586](https://github.com/pliablepixels/zmNinja/pull/586) ([florie1706](https://github.com/florie1706))
-- review not preview [\#585](https://github.com/pliablepixels/zmNinja/pull/585) ([maymaymay](https://github.com/maymaymay))
-
 ## [v1.2.515](https://github.com/pliablepixels/zmNinja/tree/v1.2.515) (2018-01-11)
 
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.513...v1.2.515)
@@ -803,26 +650,9 @@
 - migrate from ng-websocket to angular-websocket [\#565](https://github.com/pliablepixels/zmNinja/issues/565)
 - UWP app in the works? [\#521](https://github.com/pliablepixels/zmNinja/issues/521)
 
-**Merged pull requests:**
-
-- removed extra timeline key [\#584](https://github.com/pliablepixels/zmNinja/pull/584) ([maymaymay](https://github.com/maymaymay))
--  \#563 if you tap on an event which is being recorded, show live instead [\#583](https://github.com/pliablepixels/zmNinja/pull/583) ([maymaymay](https://github.com/maymaymay))
-- other nits [\#581](https://github.com/pliablepixels/zmNinja/pull/581) ([maymaymay](https://github.com/maymaymay))
--  \#563 - made playback warning more explicit. If you tap as soon as rec… [\#580](https://github.com/pliablepixels/zmNinja/pull/580) ([maymaymay](https://github.com/maymaymay))
--  \#577 timeline tap toggling [\#578](https://github.com/pliablepixels/zmNinja/pull/578) ([maymaymay](https://github.com/maymaymay))
--  \#570 ability to page forward and back by 24 hrs [\#575](https://github.com/pliablepixels/zmNinja/pull/575) ([maymaymay](https://github.com/maymaymay))
-- \#570 ability to page forward and back by 24 hrs [\#574](https://github.com/pliablepixels/zmNinja/pull/574) ([florie1706](https://github.com/florie1706))
--  \#570 allowed multi sorting and fixes in sorting logic [\#573](https://github.com/pliablepixels/zmNinja/pull/573) ([maymaymay](https://github.com/maymaymay))
-- December-Update for locale-de [\#571](https://github.com/pliablepixels/zmNinja/pull/571) ([florie1706](https://github.com/florie1706))
-- added note on API update [\#567](https://github.com/pliablepixels/zmNinja/pull/567) ([maymaymay](https://github.com/maymaymay))
-
 ## [v1.2.513](https://github.com/pliablepixels/zmNinja/tree/v1.2.513) (2017-12-11)
 
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.511...v1.2.513)
-
-**Merged pull requests:**
-
-- 565 websocket migrate [\#566](https://github.com/pliablepixels/zmNinja/pull/566) ([pliablepixels](https://github.com/pliablepixels))
 
 ## [v1.2.511](https://github.com/pliablepixels/zmNinja/tree/v1.2.511) (2017-12-10)
 
@@ -841,13 +671,6 @@
 **Closed issues:**
 
 - locale-hu.json help-hu.html update [\#558](https://github.com/pliablepixels/zmNinja/issues/558)
-
-**Merged pull requests:**
-
-- Fcm [\#564](https://github.com/pliablepixels/zmNinja/pull/564) ([pliablepixels](https://github.com/pliablepixels))
-- Signed-off-by: Veress Krisztián \<krive001@gmail.com\> [\#560](https://github.com/pliablepixels/zmNinja/pull/560) ([krive001](https://github.com/krive001))
-- Signed-off-by: Veress Krisztián \<krive001@gmail.com\> [\#559](https://github.com/pliablepixels/zmNinja/pull/559) ([krive001](https://github.com/krive001))
-- android auth code [\#557](https://github.com/pliablepixels/zmNinja/pull/557) ([florie1706](https://github.com/florie1706))
 
 ## [v1.2.507](https://github.com/pliablepixels/zmNinja/tree/v1.2.507) (2017-11-06)
 
@@ -868,10 +691,6 @@
 
 - Login Auth Sucess but api failed Issue [\#552](https://github.com/pliablepixels/zmNinja/issues/552)
 - Lag when left in Full Screen Montage [\#526](https://github.com/pliablepixels/zmNinja/issues/526)
-
-**Merged pull requests:**
-
--  \#555 - android auth code [\#556](https://github.com/pliablepixels/zmNinja/pull/556) ([maymaymay](https://github.com/maymaymay))
 
 ## [v1.2.504](https://github.com/pliablepixels/zmNinja/tree/v1.2.504) (2017-10-09)
 

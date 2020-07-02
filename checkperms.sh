@@ -6,4 +6,4 @@ else
 	FILE="$1"
 fi
 echo "*** Permissions for $FILE ***"
-`echo $ANDROID_HOME`/build-tools/${SDK_VERSION}/aapt d permissions $FILE
+`echo $ANDROID_SDK_ROOT`/build-tools/${SDK_VERSION}/aapt d permissions $FILE

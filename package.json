@@ -1,7 +1,7 @@
 {
   "name": "zmninjapro",
   "description": "Home security mobile app for ZoneMinder",
-  "version": "1.4.008",
+  "version": "1.4.009",
   "displayName": "zmNinja",
   "author": "Pliable Pixels",
   "license": "custom see LICENSE.md",
@@ -62,9 +62,6 @@
       "cordova-plugin-app-version": {},
       "cordova-plugin-statusbar-pp-fork": {},
       "cordova-plugin-statusbar": {},
-      "cordova-plugin-ionic-webview": {
-        "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
-      },
       "cordova-plugin-media-pp-fork": {}
     }
   },
@@ -91,7 +88,6 @@
     "cordova-plugin-inappbrowser": "git+https://github.com/apache/cordova-plugin-inappbrowser.git",
     "cordova-plugin-insomnia": "^4.3.0",
     "cordova-plugin-ionic-keyboard": "^2.2.0",
-    "cordova-plugin-ionic-webview": "git+https://github.com/pliablepixels/cordova-plugin-ionic-webview.git",
     "cordova-plugin-media-pp-fork": "^1.0.2-dev",
     "cordova-plugin-multi-window": "0.0.3",
     "cordova-plugin-network-information": "^2.0.2",

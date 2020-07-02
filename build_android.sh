@@ -71,8 +71,8 @@ build_release() {
             echo "***VERSION CODE CHECKS:"
             for f in release_files/*; do
                 echo "$f:"
-                `echo $ANDROID_HOME`/build-tools/${SDK_VERSION}/aapt dump badging $f | grep versionCode
-                `echo $ANDROID_HOME`/build-tools/${SDK_VERSION}/aapt dump badging $f | grep native-code
+                `echo $ANDROID_SDK_ROOT`/build-tools/${SDK_VERSION}/aapt dump badging $f | grep versionCode
+                `echo $ANDROID_SDK_ROOT`/build-tools/${SDK_VERSION}/aapt dump badging $f | grep native-code
             done
 
   }
