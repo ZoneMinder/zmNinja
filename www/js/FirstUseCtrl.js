@@ -18,7 +18,7 @@ angular.module('zmApp.controllers').controller('zmApp.FirstUseCtrl', ['$scope', 
 
     // 
     if (window.cordova) {
-      cordova.plugin.http.setSSLCertMode('nocheck', function () {
+      cordova.plugin.http.setServerTrustMode('nocheck', function () {
         NVR.debug('--> First use -> SSL is permissive, will allow any certs for now. You can change it later.');
       }, function () {
         NVR.log('-->First Use -> Error setting SSL permissive');

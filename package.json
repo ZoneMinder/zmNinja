@@ -1,7 +1,7 @@
 {
   "name": "zmninjapro",
   "description": "Home security mobile app for ZoneMinder",
-  "version":"1.4.009",
+  "version": "1.4.009",
   "displayName": "zmNinja",
   "author": "Pliable Pixels",
   "license": "custom see LICENSE.md",
@@ -45,9 +45,6 @@
         "ANDROID_SUPPORT_V13_VERSION": "27.+",
         "FCM_VERSION": "17.0.+"
       },
-      "cordova-plugin-advanced-http": {
-        "OKHTTP_VERSION": "3.10.0"
-      },
       "cordova-plugin-x-socialsharing": {
         "ANDROID_SUPPORT_V4_VERSION": "24.1.1+",
         "PHOTO_LIBRARY_ADD_USAGE_DESCRIPTION": "This app requires photo library access to function properly.",
@@ -62,6 +59,12 @@
       "cordova-plugin-app-version": {},
       "cordova-plugin-statusbar-pp-fork": {},
       "cordova-plugin-statusbar": {},
+      "cordova-plugin-advanced-http": {
+        "OKHTTP_VERSION": "3.10.0"
+      },
+      "cordova-plugin-ionic-webview": {
+        "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
+      },
       "cordova-plugin-media-pp-fork": {}
     }
   },
@@ -73,7 +76,7 @@
     "cordova-ios": "^4.5.5",
     "cordova-library-helper-pp-fork": "^1.0.1",
     "cordova-plugin-add-swift-support": "^1.7.2",
-    "cordova-plugin-advanced-http": "git+https://github.com/silkimen/cordova-plugin-advanced-http.git",
+    "cordova-plugin-advanced-http": "^2.5.1",
     "cordova-plugin-advanced-websocket": "^1.1.5",
     "cordova-plugin-android-fingerprint-auth": "^1.5.0",
     "cordova-plugin-android-permissions": "^1.0.2",
@@ -88,6 +91,7 @@
     "cordova-plugin-inappbrowser": "git+https://github.com/apache/cordova-plugin-inappbrowser.git",
     "cordova-plugin-insomnia": "^4.3.0",
     "cordova-plugin-ionic-keyboard": "^2.2.0",
+    "cordova-plugin-ionic-webview": "git+https://github.com/pliablepixels/cordova-plugin-ionic-webview.git",
     "cordova-plugin-media-pp-fork": "^1.0.2-dev",
     "cordova-plugin-multi-window": "0.0.3",
     "cordova-plugin-network-information": "^2.0.2",

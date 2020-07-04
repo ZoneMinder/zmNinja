@@ -264,7 +264,7 @@ angular.module('zmApp.controllers')
 
           //alert("Enabling insecure SSL");
           log(">>>> Disabling strict SSL checking (turn off  in Dev Options if you can't connect)");
-          cordova.plugin.http.setSSLCertMode('nocheck', function () {
+          cordova.plugin.http.setServerTrustMode('nocheck', function () {
             debug('--> SSL is permissive, will allow any certs. Use at your own risk.');
           }, function () {
             NVR.log('-->Error setting SSL permissive');
