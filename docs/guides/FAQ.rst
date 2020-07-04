@@ -596,7 +596,9 @@ Event stream viewing does not work
 
 Video Not Playable
 ~~~~~~~~~~~~~~~~~~
-
+-  Your video may be using a codec that is not supported on mobile browsers.
+   H265 is a good example. To work around this, use MJPEG for the monitor.
+   Go to ``Menu->Monitors``, click on ``Configuration`` and enable "Force MJPEG"
 -  Mobile devices have more restrictions to video playback than
    destkops. Make sure you first check if the video is playable in
    Chrome using the same phone you are using zmNinja on
