@@ -39,33 +39,38 @@ Asking for apks
 ----------------
 
 Every once in a while, I get a request from folks asking for the zmNinja APK.
-Most often, it is because their devices don't have Google Play Store. And 
-almost, always, they offer to pay, just not via Google's Play store.
+Usually, it is because their devices don't have Google Play Store. And 
+almost always, they offer to pay, just not via Google's Play store.
 
 I'm sorry, I don't offer a non play store APK download mechanism.
 This is why:
 
 * The moment someone pays for the apk, there is an expectation that the app 
   will be updated as well. If you get the apk from me, it will be frozen in time.
-  And I have no interest in supplying updated apks on a regular basis. I know some
+  And I don't have the ability to supply updated apks on a regular basis. I know some
   of you think you will never need an update, but you will. Your OS may change, ZM may
   change and suddenly the app may have issues. 
 
 * There is absolutely no way for me to know or track what happens to the apks
   after I send them out. You may choose to host the apk on a file sharing
   site or send it to a colleague or family member who may make it available for
-  anyone else to download. I know most of you have no such intentions, but I know
+  everyone else to download. I know most of you have no such intentions, but I know
   for sure, a few do (I've had my apk show up on mediashare sites in the past).
-  For everyone who has asked me to "make an exception, only once", I'd do that only
-  if I knew you well. If I did not, I shoul be making the same exception to everyone who 
-  has asked me.
+  For everyone who has asked me to "make an exception only once", I'd do that only
+  if I knew you. If I did not, I should be making the same exception to 
+  everyone who has asked me.
+
+* Technically, I suppose I could implement a different licensing server mechanism
+  but that is exactly what the play store already provides. The reason I chose to 
+  use the play store is to avoid all of this. Goes back to how I prefer to use my
+  available time.
 
 * The corollary to that is, as you know, the source code is on github and so
   are the build instructions. You are free to compile on your own to make your
   apk. 
 
-So bottom line, your reasons are likely very legit, just that I can't support
-a non play store channel given my available time.
+So bottom line, your reasons are likely very legitimate, just that I can't support
+a non play store channel given my lack of available time.
 
 
 Things you should own up to
