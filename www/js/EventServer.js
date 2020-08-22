@@ -51,7 +51,7 @@ angular.module('zmApp.controllers')
 
 
       if ($rootScope.apnsToken != '') {
-        var plat = $ionicPlatform.is('ios') ? 'ios' : 'android';
+       // var plat = $ionicPlatform.is('ios') ? 'ios' : 'android';
         var ld = NVR.getLogin();
         var pushstate = "enabled";
         if (ld.disablePush == true)
@@ -65,7 +65,7 @@ angular.module('zmApp.controllers')
 
         sendMessage("push", {
           type: 'token',
-          platform: plat,
+          platform: $rootScope.platformOS,
           token: $rootScope.apnsToken,
           monlist: $rootScope.monstring,
           intlist: $rootScope.intstring,
