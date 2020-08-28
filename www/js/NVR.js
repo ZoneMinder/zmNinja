@@ -21,7 +21,7 @@ angular.module('zmApp.controllers')
         DO NOT TOUCH zmAppVersion
         It is changed by sync_version.sh
       */
-      var zmAppVersion = "1.4.010";
+      var zmAppVersion = "1.5.000";
      
       var isBackground = false;
       var justResumed = false;

@@ -138,8 +138,12 @@ it support automatic building of notification extensions. So there is manual wor
 - Now in XCode Targets, select ``zmNinjaNotification``, and make sure you select a Team and make sure Deployment Target is 11 or above
 - Change Deployment target to 11 or above (same as zmNinja target)
 - ``cp etc/NotificationService.m platforms/ios/zmNinjaNotification/``
-- ``cd platforms/ios/``
-- ``pod install``
+
+Starting 1.5.0, zmNinja uses the `cordova-plugin-firebasex <https://github.com/dpa99c/cordova-plugin-firebasex>`__ 
+library for push notifications. The older cordova-push-plugin is no longer supported by the author.
+If you are facing compilation issues that relate to this plugin, please make sure you read it's troubleshooting section,
+especially around outdated pods et. al.
+
 
 You can now do `build_ios.sh`. However, after you build, you will have to go back to XCode
 after the build to make the following changes:
