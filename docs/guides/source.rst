@@ -24,28 +24,33 @@ Output of ``ionic info``
 
 ::
 
+ 
     Ionic:
 
-       ionic (Ionic CLI) : 4.5.0 (/usr/local/lib/node_modules/ionic)
-       Ionic Framework   : ionic1 1.3.5
-       @ionic/v1-toolkit : 1.0.19
+    Ionic CLI         : 6.9.3 (/Users/pp/.nvm/versions/node/v12.17.0/lib/node_modules/@ionic/cli)
+    Ionic Framework   : unknown
+    @ionic/v1-toolkit : 1.0.22
 
     Cordova:
 
-       cordova (Cordova CLI) : 8.1.2 (cordova-lib@8.1.1)
-       Cordova Platforms     : android 7.1.4, ios 5.0.0
-       Cordova Plugins       : cordova-plugin-ionic-keyboard 2.1.3, cordova-plugin-ionic-webview 2.2.0,
-    (and 30 other plugins)
+    Cordova CLI       : 9.0.0 (cordova-lib@9.0.1)
+    Cordova Platforms : android 8.1.0, ios 5.1.1
+    Cordova Plugins   : cordova-plugin-ionic-keyboard 2.2.0, (and 29 other plugins)
+
+    Utility:
+
+    cordova-res : not installed
+    native-run  : not installed
 
     System:
 
-       Android SDK Tools : 26.1.1 (/Users/pp/Library/Android/sdk/)
-       ios-deploy        : 2.0.0
-       ios-sim           : 7.0.0
-       NodeJS            : v8.11.2 (/usr/local/bin/node)
-       npm               : 5.6.0
-       OS                : macOS Mojave
-       Xcode             : Xcode 10.1 Build version 10B61
+    Android SDK Tools : 26.1.1 (/Users/pp/Library/Android/sdk)
+    ios-deploy        : 1.10.0
+    ios-sim           : 8.0.2
+    NodeJS            : v12.17.0 (/Users/pp/.nvm/versions/node/v12.17.0/bin/node)
+    npm               : 6.14.4
+    OS                : macOS Catalina
+    Xcode             : Xcode 11.6 Build version 11E708
 
 Install Dependencies - needed for all platforms
 -----------------------------------------------
@@ -120,7 +125,7 @@ this)
 
 (Harder) If you need picture notification support in push
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-As of Mar 2019, cordova-ios does not support multiple targets, nor does 
+As of Aug 2020, cordova-ios does not support multiple targets, nor does 
 it support automatic building of notification extensions. So there is manual work to be done:
 
 - Open up ``platforms/ios/zmNinja.xcworkspace`` in XCode
@@ -133,8 +138,12 @@ it support automatic building of notification extensions. So there is manual wor
 - Now in XCode Targets, select ``zmNinjaNotification``, and make sure you select a Team and make sure Deployment Target is 11 or above
 - Change Deployment target to 11 or above (same as zmNinja target)
 - ``cp etc/NotificationService.m platforms/ios/zmNinjaNotification/``
-- ``cd platforms/ios/``
-- ``pod install``
+
+Starting 1.5.0, zmNinja uses the `cordova-plugin-firebasex <https://github.com/dpa99c/cordova-plugin-firebasex>`__ 
+library for push notifications. The older cordova-push-plugin is no longer supported by the author.
+If you are facing compilation issues that relate to this plugin, please make sure you read it's troubleshooting section,
+especially around outdated pods et. al.
+
 
 You can now do `build_ios.sh`. However, after you build, you will have to go back to XCode
 after the build to make the following changes:

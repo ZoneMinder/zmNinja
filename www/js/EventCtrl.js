@@ -2475,25 +2475,23 @@ angular.module('zmApp.controllers')
         $scope.popover = popover;
       });
 
+      // coming to this view clears all notification badges
       EventServer.sendMessage('push', {
         type: 'badge',
         badge: 0,
       });
+      // also clear bells
+      $rootScope.alarmCount = "0";
+      $rootScope.isAlarm = 0;
 
-      
+      // reset badge count
+      if (window.FirebasePlugin && $rootScope.platformOS == 'ios') {
+        NVR.debug ('Clearing app badge count');
+        window.FirebasePlugin.setBadgeNumber(0);
 
-      //reset badge count
-      if (window.cordova && window.cordova.plugins.notification) {
-        $cordovaBadge.set(0).then(function () {
-          // You have permission, badge set.
-        }, function (err) {
-          NVR.debug("app does not have badge permissions. Please check your phone notification settings");
-          // You do not have permission.
-        });
-
-        $cordovaLocalNotification.clearAll();
       }
-
+    
+    
     });
 
     $scope.$on('$ionicView.leave', function () {

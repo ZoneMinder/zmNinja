@@ -56,7 +56,7 @@ This is why:
   site or send it to a colleague or family member who may make it available for
   everyone else to download. I know most of you have no such intentions, but I know
   for sure, a few do (I've had my apk show up on mediashare sites in the past).
-  For everyone who has asked me to "make an exception only once", I'd do that only
+  For everyone who has asked me to make an exception only once, I'd do that only
   if I knew you. If I did not, I should be making the same exception to 
   everyone who has asked me.
 
@@ -631,6 +631,29 @@ Event stream viewing does not work
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -  Look at apache error logs - it often gives you hints
+
+Video takes too long to play
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- Around April 2020, I've received the occasional email about videos suddenly Taking
+  longer to play. There are a few potential reasons for this:
+
+  - You upgraded zoneminder and switched your monitors to store mp4 videos. When you
+    do that, the mobile device takes time to download the video. Yes, I know your desktop
+    browser is faster. Maybe that is how mobile video players work. I don't do anything special
+    in zmNinja - I just pass the video to the browser canvas to play using ``<video>`` tags.
+
+  - A change was made to ZoneMinder which allowed "fragmented" videos to be played.
+    This allows videos that are in progress to be played. Technically, it should make
+    things faster but some have complained this makes download slower.
+
+  - Potential solutions:
+
+    - In zmNinja, go to ``Menu->Monitors``, click on ``Configuration`` for that monitor
+      and enable "Force MJPEG". This will force MPJEG playback for events
+
+    - I am told in future versions of ZoneMinder, there will be an option to turn off
+      this fragmented feature. Note that if you turn it off, you may not get push notification
+      animations in zmninja (if you have it enabled)
 
 Video Not Playable
 ~~~~~~~~~~~~~~~~~~

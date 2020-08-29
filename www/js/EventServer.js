@@ -1,7 +1,7 @@
 /* jshint -W041 */
 
 /* jslint browser: true*/
-/* global cordova,StatusBar,angular,console ,PushNotification*/
+/* global cordova,StatusBar,angular,console ,PushNotification, FirebasePlugin*/
 
 //--------------------------------------------------------------------------
 // This factory interacts with the ZM Event Server
@@ -51,7 +51,7 @@ angular.module('zmApp.controllers')
 
 
       if ($rootScope.apnsToken != '') {
-        var plat = $ionicPlatform.is('ios') ? 'ios' : 'android';
+       // var plat = $ionicPlatform.is('ios') ? 'ios' : 'android';
         var ld = NVR.getLogin();
         var pushstate = "enabled";
         if (ld.disablePush == true)
@@ -65,7 +65,7 @@ angular.module('zmApp.controllers')
 
         sendMessage("push", {
           type: 'token',
-          platform: plat,
+          platform: $rootScope.platformOS,
           token: $rootScope.apnsToken,
           monlist: $rootScope.monstring,
           intlist: $rootScope.intstring,
@@ -410,7 +410,8 @@ angular.module('zmApp.controllers')
 
       var msg = {
         'event': type,
-        'data': obj
+        'data': obj,
+        'token': $rootScope.apnsToken
       };
 
       var jmsg = JSON.stringify(msg);
@@ -431,6 +432,12 @@ angular.module('zmApp.controllers')
       if (isSocketReady == false) {
 
         NVR.debug ("EventSever: Connection not yet ready, adding message to queue");
+        pendingMessages.push ({type:type, obj:obj});
+        return;
+      }
+
+      if (($rootScope.platformOS != 'desktop') && (!$rootScope.apnsToken) ) {
+        NVR.debug ('Mobile platform does not have a token yet, adding message to queue');
         pendingMessages.push ({type:type, obj:obj});
         return;
       }
@@ -510,6 +517,7 @@ angular.module('zmApp.controllers')
       }*/
 
     }
+    
 
     function pushInit() {
       NVR.log("EventSever: Setting up push registration");
@@ -522,13 +530,194 @@ angular.module('zmApp.controllers')
       var plat = $rootScope.platformOS;
 
       if ($rootScope.platformOS == 'desktop') {
-       NVR.log ('Not setting up push as this is desktop.');
+       NVR.log ('push: Not setting up push as this is desktop.');
         return;
       }
 
+     
+      // get permission if we need it
+      FirebasePlugin.hasPermission(function(hasPermission){
+        if (!hasPermission) {
+          window.FirebasePlugin.grantPermission(function(hasPermission){
+            if (hasPermission) {
+              NVR.debug ('push: permission granted, waiting for token');
+            } else {
+              NVR.log('ERROR: push: Permission not granted for push');
+            }
+          });
+        } else {
+          NVR.debug('push: permissions are already enabled');
+        }
+      });
+
+      if ($rootScope.platformOS == 'android') {
+        // Define custom  channel - all keys are except 'id' are optional.
+        var channel  = {
+          // channel ID - must be unique per app package
+          id: "zmninja",
+          // Channel description. Default: empty string
+          description: "zmNinja push",
+          // Channel name. Default: empty string
+          name: "zmNinja",
+          //The sound to play once a push comes. Default value: 'default'
+          //Values allowed:
+          //'default' - plays the default notification sound
+          //'ringtone' - plays the currently set ringtone
+          //'false' - silent; don't play any sound
+          //filename - the filename of the sound file located in '/res/raw' without file extension (mysound.mp3 -> mysound)
+          sound: "default",
+
+          //Vibrate on new notification. Default value: true
+          //Possible values:
+          //Boolean - vibrate or not
+          //Array - vibration pattern - e.g. [500, 200, 500] - milliseconds vibrate, milliseconds pause, vibrate, pause, etc.
+          vibration: true,
+          // Whether to blink the LED
+          light: true,
+          //LED color in ARGB format - this example BLUE color. If set to -1, light color will be default. Default value: -1.
+          lightColor: parseInt("FF0000FF", 16).toString(),
+          //Importance - integer from 0 to 4. Default value: 4
+          //0 - none - no sound, does not show in the shade
+          //1 - min - no sound, only shows in the shade, below the fold
+          //2 - low - no sound, shows in the shade, and potentially in the status bar
+          //3 - default - shows everywhere, makes noise, but does not visually intrude
+          //4 - high - shows everywhere, makes noise and peeks
+          importance: 4,
+
+          //Show badge over app icon when non handled pushes are present. Default value: true
+          badge: true,
+
+          //Show message on locked screen. Default value: 1
+          //Possible values (default 1):
+          //-1 - secret - Do not reveal any part of the notification on a secure lockscreen.
+          //0 - private - Show the notification on all lockscreens, but conceal sensitive or private information on secure lockscreens.
+          //1 - public - Show the notification in its entirety on all lockscreens.
+          visibility: 1
+        };
+
+        // Create the channel
+        FirebasePlugin.createChannel(channel,
+        function(){
+          NVR.debug('push: Channel created: ' + channel.id);
+        },
+        function(error){
+        NVR.debug('push: Create channel error: ' + error);
+        });
+      }
+     
+
+      if ($rootScope.platformOS == 'ios') {
+        if (ld.isUseEventServer) {
+          NVR.debug ('push: ios, setting badge alarm count at start');
+          window.FirebasePlugin.getBadgeNumber(function(cnt) {
+            if (cnt) {
+              NVR.debug ('push: ios, badge is:'+cnt);
+              $rootScope.isAlarm = 1;
+              $rootScope.alarmCount = cnt;
+              if ($rootScope.alarmCount > 99) {
+                $rootScope.alarmCount = '99+';
+              }
+            }
+          });
+        }
+      } // ios
+      // called when token is assigned
+      window.FirebasePlugin.onTokenRefresh(
+        function (token) {
+          NVR.debug ("push: got token:"+token);
+          $rootScope.apnsToken = token;
+          NVR.debug ('push: setting up onMessageReceived...');
+          window.FirebasePlugin.onMessageReceived(function(message) {
+            $ionicPlatform.ready(function () {
+
+              NVR.debug("push: EventSever: received push notification with payload:"+JSON.stringify(message));
+
+              if ($rootScope.platformOS == 'ios') {
+                NVR.debug ("push: clearing badge");
+                window.FirebasePlugin.setBadgeNumber(0);
+              }
+              
+              var ld = NVR.getLogin();
+              if (ld.isUseEventServer == false) {
+                NVR.debug("push: EventSever: received push notification, but event server disabled. Not acting on it");
+                return;
+              }
+              NVR.debug ('push: Message type received is:'+message.messageType);
+              
+              sendMessage('push', {
+                type: 'badge',
+                badge: 0,
+              });
+              var mid;
+              var eid = message.eid;
+              if (message.mid) {
+                mid = message.mid;
+                var mi = mid.indexOf(',');
+                if (mi > 0) {
+                  mid = mid.slice(0, mi);
+                }
+                mid = parseInt(mid);
+              }
+
+              
+              if (message.tap=='foreground') {
+                console.log ('push: Foreground');
+                $rootScope.tappedNotification = 0;
+                $rootScope.tappedEid = 0;
+                $rootScope.tappedMid = 0;
+
+                if (ld.soundOnPush) {
+                  media.play({
+                    playAudioWhenScreenIsLocked: false
+                  });
+                }
+                if ($rootScope.alarmCount == "99") {
+                  $rootScope.alarmCount = "99+";
+                }
+                if ($rootScope.alarmCount != "99+") {
+                  $rootScope.alarmCount = (parseInt($rootScope.alarmCount) + 1).toString();
+                }
+                $rootScope.isAlarm = 1;
+    
+
+
+              } else if (message.tap == 'background') {
+                $rootScope.alarmCount = "0";
+                $rootScope.isAlarm = 0;
+                $rootScope.tappedNotification = 1;
+                $rootScope.tappedMid = mid;
+                $rootScope.tappedEid = eid;
+                NVR.log("EventSever: Push notification: Tapped Monitor taken as:" + $rootScope.tappedMid);
+  
+                $timeout ( function () {
+                  NVR.debug ("EventServer: broadcasting process-push");
+                  $rootScope.$broadcast('process-push');
+                },100);
+                    
+  
+              } else {
+                NVR.debug ("push: message tap not defined");
+                $rootScope.tappedNotification = 0;
+                $rootScope.tappedEid = 0;
+                $rootScope.tappedMid = 0;
+
+              }
+
+            }); // ready
+          });
+        }, 
+        function (err) {
+          NVR.debug ('push: Error getting token:'+err);
+
+        });
+
+
+      
+      
+
       if (plat == 'ios') {
         mediasrc = "sounds/blop.mp3";
-        push = PushNotification.init(
+       /* push = PushNotification.init(
 
           {
             "ios": {
@@ -541,13 +730,13 @@ angular.module('zmApp.controllers')
             }
           }
 
-        );
+        );*/
 
       } else {
         mediasrc = "/android_asset/www/sounds/blop.mp3";
         var android_media_file = "blop";
 
-        push = PushNotification.init(
+       /* push = PushNotification.init(
 
           {
             "android": {
@@ -559,15 +748,15 @@ angular.module('zmApp.controllers')
             }
           }
 
-        );
+        );*/
 
       }
 
-      PushNotification.hasPermission(function (succ) {
+     /* PushNotification.hasPermission(function (succ) {
         NVR.debug ("Push permission returned: "+JSON.stringify(succ));
       }, function (err) {
         NVR.debug ("Push permission error returned: "+JSON.stringify(err));
-      });
+      });*/
       // console.log("*********** MEDIA BLOG IS " + mediasrc);
 
       try {
@@ -578,7 +767,7 @@ angular.module('zmApp.controllers')
       }
       
 
-
+      /*
       push.on('registration', function (data) {
         pushInited = true;
         NVR.debug("EventSever: Push Notification registration ID received: " + JSON.stringify(data));
@@ -640,136 +829,10 @@ angular.module('zmApp.controllers')
               NVR.log("EventSever: Could not get monitors, can't send push reg");
             });
 
-      });
-
-      push.on('notification', function (data) {
-
-        $ionicPlatform.ready(function () {
-          NVR.log("EventSever: notification handler device ready");
-          NVR.debug("EventSever: received push notification");
-
-          var ld = NVR.getLogin();
-          if (ld.isUseEventServer == false) {
-            NVR.debug("EventSever: received push notification, but event server disabled. Not acting on it");
-            return;
-          }
-
-          if (data && data.additionalData && data.additionalData.foreground == false) {
-            // This means push notification tap in background
-
-            NVR.debug("EventSever: PUSH NOTF >>> " + JSON.stringify(data));
-
-            // set tappedMid to monitor 
-            //*** PUSH DATA>>>>{"sound":"blop","message":"Alarms: Basement (2854) ","additionalData":{"mid":"2","coldstart":false,"collapse_key":"do_not_collapse","foreground":false}}
-
-            if (data.additionalData.dismissed != undefined || data.additionalData.coldstart == true || $rootScope.platformOS == 'ios') // user tapped on notification
-            // in iOS case, since content-av is not there this notification won't be called unless you tap
-            {
-              NVR.debug("Notification Tapped");
-              $rootScope.alarmCount = "0";
-              $rootScope.isAlarm = 0;
-              $rootScope.tappedNotification = 1;
-
-              var mid;
-              var eid;
-
-              // we are using FCM on IOS too 
-              /*  if ($rootScope.platformOS == 'ios') {
-                    mid = data.additionalData.gcm.notification.mid;
-                    eid = data.additionalData.gcm.notification.eid;
-
-                }
-                else {*/
-
-              mid = data.additionalData.mid;
-              eid = data.additionalData.eid;
-              // }
-
-
-
-              // if Multiple mids, take the first one
-              if (mid) {
-                var mi = mid.indexOf(',');
-                if (mi > 0) {
-                  mid = mid.slice(0, mi);
-                }
-              }
-             
-              mid = parseInt(mid);
-
-              $rootScope.tappedMid = mid;
-              $rootScope.tappedEid = eid;
-              NVR.log("EventSever: Push notification: Tapped Monitor taken as:" + $rootScope.tappedMid);
-
-              if ($rootScope.platformOS == 'ios') {
-
-                NVR.debug("EventSever: iOS only: clearing background push");
-                push.finish(function () {
-                  NVR.debug("EventSever: processing of push data is finished");
-                });
-              }
-
-            } else {
-              NVR.debug("EventSever: App started via icon, not notification tap");
-              $rootScope.tappedNotification = 0;
-              $rootScope.tappedEid = 0;
-              $rootScope.tappedMid = 0;
-            }
-            // keep this emit not broadcast
-            // see Portal latch for reason
-
-            //https://stackoverflow.com/a/22651128/1361529
-            $timeout ( function () {
-              NVR.debug ("EventServer: broadcasting process-push");
-              $rootScope.$broadcast('process-push');
-            },100);
-          
-
-          } else // app is foreground
-          {
-
-            // this flag honors the HW mute button. Go figure
-            // http://ilee.co.uk/phonegap-plays-sound-on-mute/
-
-            NVR.debug("EventSever: --> *** PUSH IN FOREGROUND");
-
-            $rootScope.tappedNotification = 0;
-            $rootScope.tappedEid = 0;
-            $rootScope.tappedMid = 0;
-
-            if (ld.soundOnPush) {
-              media.play({
-                playAudioWhenScreenIsLocked: false
-              });
-            }
-
-            var str = data.message;
-            // console.log ("***STRING: " + str + " " +str.status);
-            var eventsToDisplay = [];
-
-            NVR.displayBanner('alarm', [str], 0, 5000 * eventsToDisplay.length);
-
-            $rootScope.isAlarm = 1;
-
-            // Show upto a max of 99 when it comes to display
-            // so aesthetics are maintained
-            if ($rootScope.alarmCount == "99") {
-              $rootScope.alarmCount = "99+";
-            }
-            if ($rootScope.alarmCount != "99+") {
-              $rootScope.alarmCount = (parseInt($rootScope.alarmCount) + 1).toString();
-            }
-
-          
-
-          }
-        });
-      });
-
-      push.on('error', function (e) {
-        NVR.debug("EventSever: Push error: " + JSON.stringify(e));
-        // console.log("************* PUSH ERROR ******************");
-      });
+      }); */
+      
+      // add push code here
+    
     }
 
     return {
