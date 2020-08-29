@@ -2482,7 +2482,7 @@ angular.module('zmApp.controllers')
       });
       // also clear bells
       $rootScope.alarmCount = "0";
-      $rootScope.isAlarm = !$rootScope.isAlarm;
+      $rootScope.isAlarm = 0;
 
       // reset badge count
       if (window.FirebasePlugin && $rootScope.platformOS == 'ios') {
