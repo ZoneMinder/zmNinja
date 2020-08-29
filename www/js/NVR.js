@@ -2674,7 +2674,10 @@ angular.module('zmApp.controllers')
                   //console.log("API VERSION RETURNED: " + JSON.stringify(success));
                   $rootScope.apiValid = true;
 
-                  if (versionCompare(success.data.version, '1.32.0') != -1) {
+                  if (versionCompare(success.data.version, '1.34.0') != -1) {
+                    debug("objdetect supported in image.php");
+                    snapshotFrame = 'objdetect';
+                  } else if (versionCompare(success.data.version, '1.32.0') != -1) {
                     debug("snapshot  supported in image.php");
                     snapshotFrame = 'snapshot';
                   } else {
