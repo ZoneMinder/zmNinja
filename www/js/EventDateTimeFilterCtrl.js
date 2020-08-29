@@ -63,6 +63,7 @@ angular.module('zmApp.controllers')
         $rootScope.toTime = "";
         $rootScope.fromString = "";
         $rootScope.toString = "";
+        $rootScope.monitorsFilter = '';
 
         // if you come here via the events pullup
         // you are looking at a specific monitor ID
@@ -100,6 +101,8 @@ angular.module('zmApp.controllers')
       // don't root.
       //--------------------------------------------------------------------------
       $scope.saveFilters = function () {
+        // only reset date/time if at least one of them is set.
+        if ($rootScope.fromDate || $rootScope.toDate || $rootScope.fromTime || $rootScope.toTime) {
         if (!$rootScope.fromDate) {
           //console.log("RESET fromDate");
           $rootScope.fromDate = new Date();
@@ -131,11 +134,21 @@ angular.module('zmApp.controllers')
           $rootScope.fromDate = $rootScope.toDate;
           $rootScope.toDate = t;
         }
-
-        $rootScope.isEventFilterOn = true;
+        
         $rootScope.fromString = moment($rootScope.fromDate).format("YYYY-MM-DD") + " " + moment($rootScope.fromTime).format("HH:mm:ss");
 
         $rootScope.toString = moment($rootScope.toDate).format("YYYY-MM-DD") + " " + moment($rootScope.toTime).format("HH:mm:ss");
+        }
+        else {
+            $rootScope.fromDate = null;
+            $rootScope.toDate = null;
+            $rootScope.fromTime = null;
+            $rootScope.toTime = null;
+            $rootScope.fromString = null;
+            $rootScope.toString = null;
+        }
+
+        $rootScope.isEventFilterOn = true;
 
         //console.log("CONCAT DATES " + temp);
         //

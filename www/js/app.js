@@ -2388,7 +2388,7 @@ angular.module('zmApp', [
           }
         },
         cache: false,
-        url: "/events/:id/:playEvent",
+        url: "/events/:id/:playEvent/:lastCheckTime",
         templateUrl: "templates/events.html",
         controller: 'zmApp.EventCtrl',
 
