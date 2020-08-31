@@ -1159,6 +1159,54 @@ angular.module('zmApp.controllers')
            reload: true
        });*/
     };
+    
+    $scope.nextEventsLoad = function () {
+        NVR.debug("nextEventsLoad called");
+        $scope.nextEvents = false;
+        //$scope.eventsBeingLoaded = true;
+        var lData = NVR.getLogin();
+
+        currEventsPage = 1;
+        maxEventsPage = 1;
+        currentPagePosition = 0;
+        currentPageLength = 0;
+
+        nolangFrom = "";
+        nolangTo = "";
+        if ($rootScope.toString && $rootScope.fromString) {
+            //nolangTo = moment($rootScope.fromString).locale('en').format("YYYY-MM-DD HH:mm:ss");
+            nolangTo = moment($scope.events[$scope.events.length-1].Event.StartTime).subtract(1, 'seconds').locale('en').format("YYYY-MM-DD HH:mm:ss");
+            //$rootScope.fromString = new Date('01/01/2000');
+            nolangFrom = moment(new Date('01/01/2000')).locale('en').format("YYYY-MM-DD HH:mm:ss");
+        }
+        
+      //NVR.debug ("GETTING EVENTS USING "+$scope.id+" "+nolangFrom+" "+ nolangTo);
+      NVR.debug("EventCtrl: grabbing events for: id=" + $scope.id + " Date/Time:" + nolangFrom +
+        "-" + nolangTo);
+
+      NVR.getEvents($scope.id, currEventsPage, "", nolangFrom, nolangTo, false, $rootScope.monitorsFilter)
+        .then(function (data) {
+         // console.log(JSON.stringify(data.pagination));
+          if (data.pagination && data.pagination.pageCount)
+            maxEventsPage = data.pagination.pageCount;
+
+          NVR.debug("maxEventsPage: " + maxEventsPage + ", currEventsPage: " + currEventsPage);
+
+          // console.log ("WE GOT EVENTS="+JSON.stringify(data));
+
+          //NVR.debug("EventCtrl: success, got " + data.events.length + " events");
+          loadEvents(data);
+          
+          currentPageData = data;
+          //$scope.events = data.events;
+          // we only need to stop the template from loading when the list is empty
+          // so this can be false once we have _some_ content
+          // FIXME: check reload
+          //$scope.eventsBeingLoaded = false;
+          moreEvents = true;
+        });
+        loadMoreTime = Date.now();
+    };
 
     //----------------------------------------------------------------
     // Alarm notification handling
