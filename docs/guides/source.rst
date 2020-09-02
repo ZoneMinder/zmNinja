@@ -58,22 +58,39 @@ Install Dependencies - needed for all platforms
 Install NodeJS
 ~~~~~~~~~~~~~~
 
-Install NodeJS from `here <https://nodejs.org/en/download/>`__. As of
-Dec 2018, I'm using Node ``v8.11.2``. I use
-`n <https://github.com/tj/n>`__ to manage node versions and switch
-between them.
+I use `nvm <https://github.com/nvm-sh/nvm>`__ to install NodeJS. It allows you to 
+easily switch node versions. Follow their instructions and use the same node major 
+version you see above (12.x). Note that it is entirely possible another version of 
+node works. This is the only one I've tested with. I don't think minot version changes
+will cause issues (example, ``12.18`` etc.).
 
 Install cordova and ionic
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code:: bash
 
-    npm install -g cordova@8.1.2 ionic 
+    npm install -g cordova@9.0.0 @ionic/cli 
     npm install @ionic/v1-toolkit --save-dev
+    npm install -g cordova-res
+    gem install cocoapods
 
-Don't install later versions of cordova. I found compilation issues with cordova 9.
 
-And some more:
+If you don't have ``gem`` that means you need to install ruby. Installing ruby
+installs gobs of nonsense. Too bad. 
+(Note you may need to do ``sudo`` depending on how your system is set
+up. It's `better you
+don't <https://johnpapa.net/how-to-use-npm-global-without-sudo-on-osx/>`__,
+but if you must, well, you must)
+
+Download zmNinja
+----------------
+
+.. code:: bash
+
+    git clone --depth 1 https://github.com/pliablepixels/zmNinja.git
+
+
+Add some more build deps:
 
 .. code:: bash
 
@@ -83,29 +100,8 @@ And some more:
     npm install jshint
 
 
-(Note you may need to do ``sudo`` depending on how your system is set
-up. It's `better you
-don't <https://johnpapa.net/how-to-use-npm-global-without-sudo-on-osx/>`__,
-but if you must, well, you must)
-
-You also need to install ``cocoapods`` (some of the plugins depend on them):
-
-.. code:: bash
-
-    sudo gem install cocoapods    
-
-If you don't have ``gem`` that means you need to install ruby. Installing ruby
-installs gobs of nonsense. Too bad. 
-
-Download zmNinja
-----------------
-
-.. code:: bash
-
-    git clone --depth 1 https://github.com/pliablepixels/zmNinja.git
-
-Configure build configure zmNinja and get all required plugins
---------------------------------------------------------------
+Prepare for a build
+----------------------------
 
 .. code:: bash
 
@@ -114,6 +110,7 @@ Configure build configure zmNinja and get all required plugins
     npm install
     ionic cordova platform add android (or ios)
     cordova prepare
+
 
 Making an iOS build
 -------------------
@@ -138,10 +135,11 @@ it support automatic building of notification extensions. So there is manual wor
 - Now in XCode Targets, select ``zmNinjaNotification``, and make sure you select a Team and make sure Deployment Target is 11 or above
 - Change Deployment target to 11 or above (same as zmNinja target)
 - ``cp etc/NotificationService.m platforms/ios/zmNinjaNotification/``
+- Please make sure you select the right development teams for both zmNinja and zmNinjaNotification so the app can be signed
 
 Starting 1.5.0, zmNinja uses the `cordova-plugin-firebasex <https://github.com/dpa99c/cordova-plugin-firebasex>`__ 
 library for push notifications. The older cordova-push-plugin is no longer supported by the author.
-If you are facing compilation issues that relate to this plugin, please make sure you read it's troubleshooting section,
+If you are facing compilation issues that relate to this plugin, please make sure you read it's `install section <https://github.com/dpa99c/cordova-plugin-firebasex#installation>`__,
 especially around outdated pods et. al.
 
 
