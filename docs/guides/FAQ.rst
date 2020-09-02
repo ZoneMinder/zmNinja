@@ -148,6 +148,17 @@ source code compile issues.
 How to report errors
 --------------------
 
+-  In general, please try and localize the logs. It helps me pinpoint the issue. 
+   Let's assume you have an issue where montage always shows green dots instead of images.
+   I'd recommend the following steps:
+   - Load up zmNinja
+   - Clear zmNinja logs
+   - Kill the app
+   - Load up zmNinja again and go to montage. I presume you are now looking at the error
+   - Go to logs, and email them to me via the email button on top (envelope icon)
+   Specifically, **don't do  whole bunch of unrelated things and send me logs expecting me
+   to sift through and find out what is going on**.
+
 -  I don't know why something is not working if you don't provide
    sufficient inputs. Start by creating a `GitHub
    issue <https://github.com/pliablepixels/zmNinja/issues>`__ and please
