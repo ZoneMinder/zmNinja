@@ -151,6 +151,7 @@ How to report errors
 -  In general, please try and localize the logs. It helps me pinpoint the issue. 
    Let's assume you have an issue where montage always shows green dots instead of images.
    I'd recommend the following steps:
+   
    - Load up zmNinja
    - Clear zmNinja logs
    - Kill the app
