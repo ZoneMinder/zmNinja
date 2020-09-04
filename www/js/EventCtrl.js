@@ -178,16 +178,7 @@ angular.module('zmApp.controllers')
 
 
     $scope.$on('$ionicView.beforeLeave', function () {
-      /*NVR.log("EventCtrl:beforeLeave Filter reset");
-      $rootScope.isEventFilterOn = false;
-      $rootScope.fromDate = "";
-      $rootScope.fromTime = "";
-      $rootScope.toDate = "";
-      $rootScope.toTime = "";
-      $rootScope.fromString = "";
-      $rootScope.toString = "";
-      $rootScope.monitorsFilter = '';
-*/
+
       NVR.debug ("Cancelling page reload timer");
       $interval.cancel(intervalReloadEvents);
       NVR.debug("EventCtrl: Deregistering resize listener");

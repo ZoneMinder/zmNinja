@@ -592,7 +592,6 @@ angular.module('zmApp.controllers')
 
             // now is server TZ time
             var now = ld.lastEventCheckTimes[monitor.Monitor.Id];
-            NVR.debug ("ld.lastEventCheckTimes[id]:" + ld.lastEventCheckTimes[monitor.Monitor.Id]);
             apiurl += "/StartTime >:" + now;
 
         }
@@ -616,7 +615,7 @@ angular.module('zmApp.controllers')
 
         apiurl  += '.json?sort=StartTime&direction=desc&limit=1'+$rootScope.authSession;
 
-        NVR.debug ("Getting event count for monitor.Monitor.Id: " + monitor.Monitor.Id);
+        NVR.debug ("Getting event count ");
         $http.get(apiurl)
         .then (function (data) {
            // console.log ("EVENTS GOT: "+JSON.stringify(data));
@@ -1707,7 +1706,7 @@ angular.module('zmApp.controllers')
     function onResume() {
 
       // we should be going to portal login so no need here
-      NVR.debug ("Montage resume called, regenerating all connkeys");
+      //NVR.debug ("Montage resume called, regenerating all connkeys");
       //NVR.regenConnKeys();
       // $scope.MontageMonitors = NVR.getMonitorsNow();
 
@@ -2291,29 +2290,9 @@ angular.module('zmApp.controllers')
 
       var stream;
       var fps = NVR.getLogin().montageliveFPS;
-      if (!monitor.Monitor.streamingURL) {
-            NVR.debug("monitor.Monitor.streamingURL: " + monitor.Monitor.streamingURL );
-            NVR.debug("monitor.Monitor.MonitorId: " + monitor.Monitor.MonitorId );
-            /*for (var key in monitor.Monitor) {
-                console.log(key + ": " + monitor.Monitor[key]);
-            }
-            return;
-            NVR.log("Reloading view for montage view, recomputing rand");
-            $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
-            $scope.monitors = [];
-            //imageLoadingDataShare.set(0);
-
-            var refresh = NVR.getMonitors(1);
-
-            refresh.then(function (data) {
-                $scope.monitors = data;
-            });
-            return;*/
-      }
       if (currentStreamState == streamState.STOPPED || monitor.Monitor.listDisplay == 'noshow' ) {
         //console.log ("STREAM=empty and auth="+$rootScope.authSession);
         //sconsole.log ('EMPTY STREAM');
-        NVR.log("currentStreamState: " + currentStreamState + ", monitor.Monitor.listDisplay: " + monitor.Monitor.listDisplay); 
         return "";
       }
 
@@ -2321,7 +2300,6 @@ angular.module('zmApp.controllers')
         stream = monitor.Monitor.streamingURL +
         "/nph-zms?mode=single&scale=10&monitor="+ monitor.Monitor.Id +  "&rand=" + randToAvoidCacheMem + monitor.Monitor.Id ;
        // console.log(stream);
-       NVR.log("currentStreamState: " + currentStreamState);
       
       } else {
         stream = monitor.Monitor.streamingURL +
@@ -2350,7 +2328,6 @@ angular.module('zmApp.controllers')
 
 
       //console.log("STREAM=" + stream);
-      //NVR.log("STREAM=" + stream);
       return stream;
 
     };
