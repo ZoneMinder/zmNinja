@@ -45,7 +45,7 @@
             <i class="ion-clock"></i>&nbsp;&nbsp;{{prettifyDate(event.Event.StartTime)}} &nbsp;{{tzAbbr}}&nbsp;
           </span>
           <div class="row" style="font-size:90%;">
-            <div ng-if="loginData.enableThumbs" style="margin-left: auto;margin-right: auto;">
+            <div ng-if="loginData.eventViewThumbs!='none'" style="margin-left: auto;margin-right: auto;">
 
 
               <img bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}" on-tap="closeIfOpen(event);openModalWithSnapshot(event)"
@@ -86,7 +86,6 @@
 
               <b>
                 <i ng-if="event.Event.Archived=='1'" class="ion-ios-flag" style="color:red">&nbsp;</i>{{event.Event.MonitorName}}</b>
-              <span ng-if="!loginData.enableThumbs">({{event.Event.Id}})</span> &nbsp;
               <i class="ion-images"></i> {{event.Event.Frames}} &nbsp;
               <i class="ion-ios-bell-outline"></i> {{event.Event.AlarmFrames}} &nbsp;
               <span style="font-size:80%; color:rgb(110,110,110)">

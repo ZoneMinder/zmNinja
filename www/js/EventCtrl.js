@@ -458,6 +458,11 @@ angular.module('zmApp.controllers')
       NVR.debug("EventCtrl: grabbing events for: id=" + $scope.id + " Date/Time:" + $rootScope.fromString +
         "-" + $rootScope.toString);
 
+      if ($scope.loginData.eventViewThumbs != 'objdetect_gif') {
+          maxEventsToLoad = 50; //limit to 5 to minimise memory usage when displaying gifs
+      }
+      NVR.debug("maxEventsToLoad: " + maxEventsToLoad);
+
       NVR.getEvents($scope.id, currEventsPage, "", nolangFrom, nolangTo, false, $rootScope.monitorsFilter)
         .then(function (data) {
          // console.log(JSON.stringify(data.pagination));
@@ -475,13 +480,12 @@ angular.module('zmApp.controllers')
           //$scope.events = data.events;
           // we only need to stop the template from loading when the list is empty
           // so this can be false once we have _some_ content
-          // FIXME: check reload
           $scope.eventsBeingLoaded = false;
           moreEvents = true;
           // to avoid only few events being displayed
           // if last page has less events
           //console.log("**Loading Next Page ***");
-          if ($scope.events < 5) {
+          if ($scope.events < maxEventsToLoad) {
             //console.log ("EVENTS LOADED="+JSON.stringify($scope.events));
             NVR.debug("EventCtrl:loading one more page just in case we don't have enough to display");
             loadMore();
@@ -2861,6 +2865,7 @@ angular.module('zmApp.controllers')
         currentPageLength = myevents.length;
         var eventsLoaded = 0;
         var prevPagePosition = currentPagePosition;
+        NVR.debug("maxEventsToLoad: " + maxEventsToLoad);
         for (currentPagePosition; currentPagePosition < myevents.length && eventsLoaded < maxEventsToLoad; currentPagePosition++) {
             var idfound = true;
             if (loginData.persistMontageOrder) {
@@ -3014,14 +3019,14 @@ angular.module('zmApp.controllers')
       var stream = "";
       //console.log(event.Event.Notes);
       var snapshotFrame = NVR.getSnapshotFrame();
-      if (NVR.getSnapshotFrame() == 'objdetect' && !event.Event.Notes.includes("detected:")) {
-          snapshotFrame = 'snapshot';
+      if (($scope.loginData.eventViewThumbs.substring(0, 9) == 'objdetect') && event.Event.Notes.includes("detected:")) {
+          snapshotFrame = $scope.loginData.eventViewThumbs;
       }
       stream = event.Event.recordingURL +
         "/index.php?view=image&fid=" +
         snapshotFrame+"&eid="+event.Event.Id  +
-        "&width=" + event.Event.thumbWidth +
-        "&height=" + event.Event.thumbHeight;
+        "&width=" + event.Event.thumbWidth * 2 +
+        "&height=" + event.Event.thumbHeight * 2;
       stream += $rootScope.authSession;
 
       stream += NVR.insertSpecialTokens();

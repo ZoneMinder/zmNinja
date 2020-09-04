@@ -188,7 +188,6 @@ angular.module('zmApp.controllers')
         'timelineScale': -1,
         'hideArchived': false,
         'videoPlaybackSpeed': 2,
-        'enableThumbs': true,
         'enableStrictSSL': false,
         'enableSlowLoading': false,
         'isFullScreen': false,
@@ -1562,10 +1561,9 @@ angular.module('zmApp.controllers')
         }
 
 
+        if (typeof loginData.eventViewThumbs == 'undefined') {
 
-        if (typeof loginData.enableThumbs == 'undefined') {
-
-          loginData.enableThumbs = true;
+          loginData.eventViewThumbs = 'snapshot';
 
         }
 
@@ -2674,10 +2672,7 @@ angular.module('zmApp.controllers')
                   //console.log("API VERSION RETURNED: " + JSON.stringify(success));
                   $rootScope.apiValid = true;
 
-                  if (versionCompare(success.data.version, '1.34.0') != -1) {
-                    debug("objdetect supported in image.php");
-                    snapshotFrame = 'objdetect';
-                  } else if (versionCompare(success.data.version, '1.32.0') != -1) {
+                  if (versionCompare(success.data.version, '1.32.0') != -1) {
                     debug("snapshot  supported in image.php");
                     snapshotFrame = 'snapshot';
                   } else {
