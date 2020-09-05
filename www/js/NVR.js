@@ -188,7 +188,6 @@ angular.module('zmApp.controllers')
         'timelineScale': -1,
         'hideArchived': false,
         'videoPlaybackSpeed': 2,
-        'enableThumbs': true,
         'enableStrictSSL': false,
         'enableSlowLoading': false,
         'isFullScreen': false,
@@ -1562,10 +1561,9 @@ angular.module('zmApp.controllers')
         }
 
 
+        if (typeof loginData.eventViewThumbs == 'undefined') {
 
-        if (typeof loginData.enableThumbs == 'undefined') {
-
-          loginData.enableThumbs = true;
+          loginData.eventViewThumbs = 'snapshot';
 
         }
 

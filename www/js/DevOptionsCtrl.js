@@ -181,6 +181,35 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
     });
   };
 
+  $scope.selectEventViewThumbs = function() {
+
+    var buttons = [
+      { text: $translate.instant('kNone').toLowerCase(), value:'none' },
+      { text: 'snapshot', value:'snapshot' },
+      { text: 'objdetect', value:'objdetect' },
+      { text: 'objdetect_jpg', value:'objdetect_jpg' },
+      { text: 'objdetect_gif', value:'objdetect_gif' },
+
+    ];
+
+    $ionicActionSheet.show({
+      titleText: $translate.instant('kSelect'),
+      buttons: buttons,
+
+      cancelText: $translate.instant('kButtonCancel'),
+      cancel: function() {
+       NVR.debug ('obfuscation actionsheet cancelled');
+      },
+      buttonClicked: function(index) {
+
+        $scope.loginData.eventViewThumbs = buttons[index].value;
+        NVR.debug ('changed event view thumbs to:'+$scope.loginData.eventViewThumbs );
+        return true;
+      },
+
+    });
+  };
+
   $scope.saveDevOptions = function () {
 
     saveDevOptions();

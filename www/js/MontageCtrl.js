@@ -2611,15 +2611,20 @@ angular.module('zmApp.controllers')
     var ld = NVR.getLogin();
     mid = monitor.Monitor.Id;
     // always use server tz to avoid confusion
+    var lastCheckTime = ld.lastEventCheckTimes[mid];
     ld.lastEventCheckTimes[mid] = (new moment()).tz(NVR.getTimeZoneNow()).format('YYYY-MM-DD HH:mm:ss');
-    NVR.debug ("Updating monitor:"+mid+" event check time (server tz) to " + ld.lastEventCheckTimes[mid] );
+    NVR.debug ("Updating monitor:"+mid+" event check time (server tz) to " + lastCheckTime);
     NVR.setLogin(ld);
+    if (!monitor.Monitor.lastEvent) {
+        lastCheckTime = "";
+    }
     monitor.Monitor.lastEvent = undefined;
     monitor.Monitor.showSidebar = false;
     if (!showEvents) return;
     $state.go("app.events", {
         "id": monitor.Monitor.Id,
-        "playEvent": false
+        "playEvent": false,
+        "lastCheckTime": lastCheckTime
       });
       return;
 

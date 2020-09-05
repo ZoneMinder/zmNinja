@@ -1,5 +1,5 @@
 <ion-view cache-view="false">
-  <ion-nav-title>{{scrollPosition();}}</ion-nav-title>
+  <ion-nav-title>{{navTitle;}}</ion-nav-title>
   <ion-nav-buttons side="left">
     <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()">
     </button>&nbsp;
@@ -21,14 +21,19 @@
     </ion-header-bar>
   </div>
   <!-- collection repeat forces js scrolling, thing to remember -->
-  <ion-content ng-cloak on-tap="tapped();" delegate-handle="mainScroll" mouse-wheel-scroll>
+  <ion-content ng-cloak on-tap="tapped();" delegate-handle="mainScroll" mouse-wheel-scroll on-scroll="scrolling();">
+  <ion-refresher
+    pulling-text="Pull to refresh..."
+    on-refresh="doRefresh()">
+  </ion-refresher>
     <!-- needed for header-shrink so first item doesn't go below header-->
     <!-- <div style="height: 64px;"></div>-->
     <!-- lets make sure the events list is not empty as collection repeat needs height -->
     <div ng-if="!eventsBeingLoaded">
       <ion-list show-delete="eventList.showDelete">
-        <ion-item force-refresh-images="true" collection-repeat="event in events| filter:search.text |  eventListFilter" force-refresh-images=true 
-          item-height="event.Event.height" id="item-{{$index}}" on-swipe-left="checkSwipe($index);" force-refresh-images="true" >
+	    <div ng-repeat="event in events| filter:search.text |  eventListFilter" id="item-{{$index}}" style="min-height: 50px;">
+        <ion-item force-refresh-images="true"
+          on-swipe-left="checkSwipe($index);" force-refresh-images="true" >
           <span style="float:left;margin-top:-18px;background-color:#96281B;color:#fff;font-size:11px;opacity:0.7;border-radius: 0px 0px 5px 5px;">&nbsp;&nbsp;&nbsp;
             <i class="ion-calendar"></i>&nbsp;&nbsp;{{prettifyTime(event.Event.StartTime)}}&nbsp;{{tzAbbr}}&nbsp;</span>&nbsp;&nbsp;
           <span style="float:left;margin-top:-18px;background-color:#fff;color:#888;font-size:11px;opacity:1;">&nbsp;&nbsp;
@@ -40,7 +45,19 @@
             <i class="ion-clock"></i>&nbsp;&nbsp;{{prettifyDate(event.Event.StartTime)}} &nbsp;{{tzAbbr}}&nbsp;
           </span>
           <div class="row" style="font-size:90%;">
-            <div class="col col-60">
+            <div ng-if="loginData.eventViewThumbs!='none'" style="margin-left: auto;margin-right: auto;">
+
+
+              <img bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}" on-tap="closeIfOpen(event);openModalWithSnapshot(event)"
+                width="{{event.Event.thumbWidth}}px" height="{{event.Event.thumbHeight}}px"  fallback-src="img/noimage.png" />
+
+
+            </div>
+          </div>
+          <!--row-->
+          <div class="row" style="font-size:80%; color:rgb(110,110,110)">
+            <div class="col">
+              <div class="item-text-wrap">
               <!-- this ngswitch displays different icons
                                         depending on the cause of the event -->
               <span ng-switch on="event.Event.Cause">
@@ -69,39 +86,13 @@
 
               <b>
                 <i ng-if="event.Event.Archived=='1'" class="ion-ios-flag" style="color:red">&nbsp;</i>{{event.Event.MonitorName}}</b>
-              <span ng-if="!loginData.enableThumbs">({{event.Event.Id}})</span> &nbsp;
-              <br />
-
               <i class="ion-images"></i> {{event.Event.Frames}} &nbsp;
               <i class="ion-ios-bell-outline"></i> {{event.Event.AlarmFrames}} &nbsp;
-              <i class="ion-monitor"></i> {{event.Event.MonitorId}} &nbsp;
-              <br />
               <span style="font-size:80%; color:rgb(110,110,110)">
-                {{humanize(event.Event.Length)}}
+                {{humanize(event.Event.Length)}} &nbsp;
               </span>
-              <br />
 
-
-            </div>
-
-
-            <div align="right" class="col col-40" ng-if="loginData.enableThumbs">
-
-
-              <img bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}" on-tap="closeIfOpen(event);openModalWithSnapshot(event)"
-                width="{{event.Event.thumbWidth}}px" height="{{event.Event.thumbHeight}}px"  fallback-src="img/noimage.png" />
-
-
-            </div>
-
-          </div>
-          <!--row-->
-          <div class="row" style="font-size:80%; color:rgb(110,110,110)">
-            <div class="col">
-              <div class="item-text-wrap">
                 <i class="ion-ios-pricetags-outline"></i>&nbsp; {{event.Event.Name}}
-                <br />
-                <i class="ion-calendar"></i>&nbsp; {{prettify(event.Event.StartTime)}}&nbsp;{{tzAbbr}}&nbsp;
                 <br />
                 <i class="ion-clipboard"></i>&nbsp; {{event.Event.Notes}}
 
@@ -109,6 +100,7 @@
               </div>
             </div>
           </div>
+		  <div class="row" style="float:right; margin-right: 10px; display: block;">
           <span style="float:right">
             <div ng-if="event.Event.EndTime || 1">
               <button class="button button-stable button-small button-outline icon icon-left ion-stats-bars" ng-click="closeIfOpen(event);analyzeEvent(event)">
@@ -130,12 +122,24 @@
 
             </div>
           </span>
+		  </div>
+		  
+          <ion-delete-button class="ion-minus-circled" ng-click="deleteEvent(event.Event.Id, $index)">
+          </ion-delete-button>
+
+
+          <ion-option-button ng-if="event.Event.Archived == 1" class="button-balanced" ng-click="archiveUnarchiveEvent($index,event.Event.Id)">{{'kUnflag'
+            | translate}}</ion-option-button>
+
+          <ion-option-button ng-if="event.Event.Archived == 0" class="button-assertive" ng-click="archiveUnarchiveEvent($index, event.Event.Id)">{{'kFlag'
+            | translate}}</ion-option-button>
+
           <!-- this is the event scrub/alarm frames area -->
-          <div ng-if="isGroupShown(event)">
+		<div ng-if="isGroupShown(event)" style="min-height: 50px;">
             <div ng-if="groupType=='alarms'">
               <br />
               <br />
-              <div style="height:190px;">
+              <div>
                 <p>
                   <!--scroll <i class="icon ion-arrow-left-c"></i> 
                                 <i class="icon ion-arrow-right-c"></i>-->
@@ -220,45 +224,27 @@
               <!-- DefaultVideo -->
             </div>
             <!-- type = scrub -->
-          </div>
           <!-- isGroupShown -->
-          <ion-delete-button class="ion-minus-circled" ng-click="deleteEvent(event.Event.Id, $index)">
-          </ion-delete-button>
-
-
-          <ion-option-button ng-if="event.Event.Archived == 1" class="button-balanced" ng-click="archiveUnarchiveEvent($index,event.Event.Id)">{{'kUnflag'
-            | translate}}</ion-option-button>
-
-          <ion-option-button ng-if="event.Event.Archived == 0" class="button-assertive" ng-click="archiveUnarchiveEvent($index, event.Event.Id)">{{'kFlag'
-            | translate}}</ion-option-button>
-
-
-          <!-- hack to make sure swipe left displays well
-             if there is no content and our list height is set
-             to a larger height, the swipe display acts weird -->
-
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-
-        </ion-item>
+        </div>
+		</ion-item>
+		</div>
       </ion-list>
-    </div>
+	</div>
     <!-- !eventsBeingLoaded-->
 
 
     <ion-item ng-show="!events.length">
       <span translate="kNoEvents"></span>
     </ion-item>
+    <ion-item ng-show="nextEvents">
+        <div style="margin-left: auto;margin-right: auto;width: min-content;">
+            <button ng-click="nextEventsLoad();" class="button button-stable button-outline button-small icon icon-left ">
+            <span translate="kMore"></span>
+            </button>
+        </div>
+    </ion-item>
     <div ng-if="!eventsBeingLoaded">
-      <ion-infinite-scroll ng-if="moreDataCanBeLoaded()" icon="ion-loading-c" on-infinite="loadMore()" distance="2%">
+      <ion-infinite-scroll ng-if="moreDataCanBeLoaded()" icon="ion-loading-c" on-infinite="loadMore()" distance="400px">
       </ion-infinite-scroll>
     </div>
     <canvas id="canvas" class="hiddengifcanvas"></canvas>

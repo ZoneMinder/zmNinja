@@ -63,6 +63,7 @@ angular.module('zmApp.controllers')
         $rootScope.toTime = "";
         $rootScope.fromString = "";
         $rootScope.toString = "";
+        $rootScope.monitorsFilter = '';
 
         // if you come here via the events pullup
         // you are looking at a specific monitor ID
@@ -100,42 +101,54 @@ angular.module('zmApp.controllers')
       // don't root.
       //--------------------------------------------------------------------------
       $scope.saveFilters = function () {
-        if (!$rootScope.fromDate) {
-          //console.log("RESET fromDate");
-          $rootScope.fromDate = new Date();
-          NVR.debug("DateTimeFilter: resetting from date");
-        }
+        // only reset date/time if at least one of them is set.
+        if ($rootScope.fromDate || $rootScope.toDate || $rootScope.fromTime || $rootScope.toTime) {
+            if (!$rootScope.fromDate) {
+              //console.log("RESET fromDate");
+              $rootScope.fromDate = new Date();
+              NVR.debug("DateTimeFilter: resetting from date");
+            }
 
-        if (!$rootScope.toDate) {
-          // console.log("RESET toDate");
-          $rootScope.toDate = new Date();
-          NVR.debug("DateTimeFilter: resetting to date");
-        }
+            if (!$rootScope.toDate) {
+              // console.log("RESET toDate");
+              $rootScope.toDate = new Date();
+              NVR.debug("DateTimeFilter: resetting to date");
+            }
 
-        if (!$rootScope.fromTime) {
-          // console.log("RESET fromTime");
-          $rootScope.fromTime = new Date(99, 5, 24, 0, 0, 0, 0); //moment().format("hh:mm:ss");
-          NVR.debug("DateTimeFilter: resetting from time");
-        }
+            if (!$rootScope.fromTime) {
+              // console.log("RESET fromTime");
+              $rootScope.fromTime = new Date(99, 5, 24, 0, 0, 0, 0); //moment().format("hh:mm:ss");
+              NVR.debug("DateTimeFilter: resetting from time");
+            }
 
-        if (!$rootScope.toTime) {
-          //console.log("RESET toTime");
-          $rootScope.toTime = new Date(99, 5, 24, 23, 59, 59, 0);
-          //$rootScope.toTime = "01:01:02"; //moment().format("hh:mm:ss");
-          NVR.debug("DateTimeFilter: resetting to time");
-        }
+            if (!$rootScope.toTime) {
+              //console.log("RESET toTime");
+              $rootScope.toTime = new Date(99, 5, 24, 23, 59, 59, 0);
+              //$rootScope.toTime = "01:01:02"; //moment().format("hh:mm:ss");
+              NVR.debug("DateTimeFilter: resetting to time");
+            }
 
-        if ($rootScope.fromDate > $rootScope.toDate) {
-          NVR.log("From date > To Date, swapping");
-          var t = $rootScope.fromDate;
-          $rootScope.fromDate = $rootScope.toDate;
-          $rootScope.toDate = t;
+            if ($rootScope.fromDate > $rootScope.toDate) {
+              NVR.log("From date > To Date, swapping");
+              var t = $rootScope.fromDate;
+              $rootScope.fromDate = $rootScope.toDate;
+              $rootScope.toDate = t;
+            }
+            
+            $rootScope.fromString = moment($rootScope.fromDate).format("YYYY-MM-DD") + " " + moment($rootScope.fromTime).format("HH:mm:ss");
+
+            $rootScope.toString = moment($rootScope.toDate).format("YYYY-MM-DD") + " " + moment($rootScope.toTime).format("HH:mm:ss");
+        }
+        else {
+            $rootScope.fromDate = null;
+            $rootScope.toDate = null;
+            $rootScope.fromTime = null;
+            $rootScope.toTime = null;
+            $rootScope.fromString = null;
+            $rootScope.toString = null;
         }
 
         $rootScope.isEventFilterOn = true;
-        $rootScope.fromString = moment($rootScope.fromDate).format("YYYY-MM-DD") + " " + moment($rootScope.fromTime).format("HH:mm:ss");
-
-        $rootScope.toString = moment($rootScope.toDate).format("YYYY-MM-DD") + " " + moment($rootScope.toTime).format("HH:mm:ss");
 
         //console.log("CONCAT DATES " + temp);
         //

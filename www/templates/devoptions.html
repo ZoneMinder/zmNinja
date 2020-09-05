@@ -189,12 +189,13 @@
         </ion-toggle>
       </label>
 
-
       <label>
-        <ion-toggle ng-model="loginData.enableThumbs" toggle-class="toggle-calm">
-          <span class="item-text-wrap">{{'kEnableThumbs' | translate}}
-          </span>
-        </ion-toggle>
+        <div class="item item-button-right">
+          {{'kEnableThumbs' | translate}}: <button class="button button-calm" ng-click="selectEventViewThumbs()">
+            <i class="icon ion-gear-b"></i>
+          </button>
+          <p>{{loginData.eventViewThumbs}}</p>
+        </div>
       </label>
 
       <label>
