@@ -54,7 +54,7 @@
           <!--row-->
           <!--<div class="row" style="font-size:80%; color:rgb(110,110,110)">-->
            <!-- <div class="col">-->
-             <div class="col">
+             <div class="col no-padding">
               <div class="item-text-wrap">
               <!-- this ngswitch displays different icons
                                         depending on the cause of the event -->
@@ -86,12 +86,12 @@
 
                 <br/><i class="ion-ios-pricetags-outline"></i>&nbsp; {{event.Event.Name}}
 
-                <br/><i class="ion-clipboard"></i>&nbsp; {{event.Event.Notes}}
+          
 
                 <!-- <br/> Default video:{{event.Event.relativePath}}{{event.Event.DefaultVideo}}-->
               </div>
             </div> <!-- col-->
-            <div class="col">
+            <div class="col no-padding">
               <div ng-if="loginData.eventViewThumbs!='none'" ng-class="::{'largeThumbs': thumbClass=='large', 'smallThumbs': thumbClass=='small'}">
                 <img bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}" on-tap="closeIfOpen(event);openModalWithSnapshot(event)"
                   width="{{event.Event.thumbWidth}}px" height="{{event.Event.thumbHeight}}px"  fallback-src="img/noimage.png" />
@@ -99,6 +99,9 @@
             </div>
             <!--</div>-->
           </div>
+      <div ng-if="event.Event.Notes" class="row" style="font-size:80%; color:rgb(110,110,110)">
+        <i class="ion-clipboard"></i>&nbsp; {{event.Event.Notes}}
+      </div>
 		  <div class="row" style="float:right; margin-right: 10px; display: block;">
           <span style="float:right">
             <div ng-if="event.Event.EndTime || 1">
