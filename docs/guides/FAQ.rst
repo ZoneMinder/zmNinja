@@ -151,7 +151,7 @@ How to report errors
 -  In general, please try and localize the logs. It helps me pinpoint the issue. 
    Let's assume you have an issue where montage always shows green dots instead of images.
    I'd recommend the following steps:
-   
+
    - Load up zmNinja
    - Clear zmNinja logs
    - Kill the app
@@ -714,6 +714,32 @@ monitors you have. In Event Montage however, I am using zms to display
 long running streams - trying to do snapshots in event montage is a lot
 of work and I need to keep track of when the event ends, move to next
 image etc. I limit this to 5 because I need 1 for control messages.
+
+
+Push Notifications related
+---------------------------
+
+My device is not receiving push notifications
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+It may be one of the following:
+
+* Make sure your device is able to reach the ES (usually at port 9000, TCP). You may
+  need to open your firewall ports.
+  If it can't reach the server, you'll see it in your logs. Note that even if you
+  get a push token from Apple/Google but are not able to reach the ES from your phone,
+  the ES will not know about your token and won't be able to send notifications.
+
+* If you are sure the device can reach the ES over port 9000 (or your custom port), check
+  ``/var/lib/zmeventnotification/push/tokens.txt`` - if it's empty, your device is not
+  able to connect to it. Check ES logs, also check zmNinja logs. The answer will be between
+  them
+  
+My device is not receiving push for a specific monitor
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+It may be possible that you configured push in zmNinja, and then added a new monitor.
+In this case, your monitor may be excluded from the allowed list of monitors. Go to 
+menu->settings->event server and make sure your monitor is checked
+
 
 Other misc. issues
 ------------------
