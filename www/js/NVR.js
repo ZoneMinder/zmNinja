@@ -227,7 +227,9 @@ angular.module('zmApp.controllers')
         'httpCordovaNoEncode': false,
         'currentZMGroupNames': [],
         'unsupported': {},
-        'monitorSpecific': {}
+        'monitorSpecific': {},
+        'eventViewThumbs': true,
+        'eventViewThumbsSize': 'small',
         
 
       };
@@ -1564,6 +1566,12 @@ angular.module('zmApp.controllers')
         if (typeof loginData.eventViewThumbs == 'undefined') {
 
           loginData.eventViewThumbs = 'snapshot';
+
+        }
+
+        if (typeof loginData.eventViewThumbsSize == 'undefined') {
+
+          loginData.eventViewThumbsSize = 'small';
 
         }
 

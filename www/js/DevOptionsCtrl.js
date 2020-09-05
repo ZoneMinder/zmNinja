@@ -143,6 +143,8 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
 
     NVR.debug("SaveDevOptions: Saving to disk");
     NVR.setLogin($scope.loginData);
+
+    //console.log ($scope.loginData);
     NVR.getMonitors(1);
 
   }
@@ -204,6 +206,33 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
 
         $scope.loginData.eventViewThumbs = buttons[index].value;
         NVR.debug ('changed event view thumbs to:'+$scope.loginData.eventViewThumbs );
+        return true;
+      },
+
+    });
+  };
+
+  $scope.selectEventViewThumbsSize = function() {
+
+    var buttons = [
+
+      { text: $translate.instant('kEventViewThumbsSmall'), value:'small' },
+      { text: $translate.instant('kEventViewThumbsLarge'), value:'large' },
+
+    ];
+
+    $ionicActionSheet.show({
+      titleText: $translate.instant('kSelect'),
+      buttons: buttons,
+
+      cancelText: $translate.instant('kButtonCancel'),
+      cancel: function() {
+       NVR.debug ('obfuscation actionsheet cancelled');
+      },
+      buttonClicked: function(index) {
+
+        $scope.loginData.eventViewThumbsSize = buttons[index].value;
+        NVR.debug ('changed event view thumbs size to:'+$scope.loginData.eventViewThumbsSize );
         return true;
       },
 

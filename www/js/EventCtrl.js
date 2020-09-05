@@ -195,6 +195,14 @@ angular.module('zmApp.controllers')
       //console.log ("********* BEFORE ENTER");
       //
 
+      $scope.thumbClass = 'small';
+      var ld = NVR.getLogin();
+      if (ld.eventViewThumbsSize == 'large') {
+        NVR.debug ('Switching to big thumbs style');
+        $scope.thumbClass = 'large';
+      } else {
+        NVR.debug ('using small thumbs style');
+      }
       $scope.mid = '';
 
       $scope.$on ("alarm", function() {
@@ -2955,8 +2963,18 @@ angular.module('zmApp.controllers')
 
     function computeThumbnailSize(mw, mh, mo) {
         
-      tw = Math.round(0.9 * $rootScope.devWidth);
-      th = Math.round(0.7 * $rootScope.devHeight);
+      var ld = NVR.getLogin();
+
+      if (ld.eventViewThumbsSize == 'large') {
+        tw = Math.round(0.9 * $rootScope.devWidth);
+        th = Math.round(0.7 * $rootScope.devHeight);
+      } else {
+        tw = Math.round(0.4 * $rootScope.devWidth);
+      th = Math.round(0.3 * $rootScope.devHeight);
+      }
+      
+
+      
 
       var ratio = mw / mh;
       var result = {

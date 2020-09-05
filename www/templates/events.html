@@ -44,20 +44,22 @@
           <span style="float:right;margin-top:-18px;background-color:#444444;color:#fff;font-size:11px;opacity:0.7;border-radius: 0px 0px 5px 5px;">&nbsp;&nbsp;&nbsp;
             <i class="ion-clock"></i>&nbsp;&nbsp;{{prettifyDate(event.Event.StartTime)}} &nbsp;{{tzAbbr}}&nbsp;
           </span>
-          <div class="row" style="font-size:90%;">
-            <div ng-if="loginData.eventViewThumbs!='none'" style="margin-left: auto;margin-right: auto;">
 
-
-              <img bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}" on-tap="closeIfOpen(event);openModalWithSnapshot(event)"
-                width="{{event.Event.thumbWidth}}px" height="{{event.Event.thumbHeight}}px"  fallback-src="img/noimage.png" />
-
-
-            </div>
-          </div>
-          <!--row-->
           <div class="row" style="font-size:80%; color:rgb(110,110,110)">
-            <div class="col">
+        
+
+        
+
+          <!--</div>-->
+          <!--row-->
+          <!--<div class="row" style="font-size:80%; color:rgb(110,110,110)">-->
+           <!-- <div class="col">-->
               <div class="item-text-wrap">
+
+                <div ng-if="loginData.eventViewThumbs!='none'" ng-class="::{'largeThumbs': thumbClass=='large', 'smallThumbs': thumbClass=='small'}">
+                  <img bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}" on-tap="closeIfOpen(event);openModalWithSnapshot(event)"
+                    width="{{event.Event.thumbWidth}}px" height="{{event.Event.thumbHeight}}px"  fallback-src="img/noimage.png" />
+                </div>
               <!-- this ngswitch displays different icons
                                         depending on the cause of the event -->
               <span ng-switch on="event.Event.Cause">
@@ -98,7 +100,7 @@
 
                 <!-- <br/> Default video:{{event.Event.relativePath}}{{event.Event.DefaultVideo}}-->
               </div>
-            </div>
+            <!--</div>-->
           </div>
 		  <div class="row" style="float:right; margin-right: 10px; display: block;">
           <span style="float:right">

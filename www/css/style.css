@@ -1910,6 +1910,16 @@ fill-opacity: 0.8;
     
 }
 
+.largeThumbs {
+  margin-left:auto;
+  margin-right:auto;
+  display:block;
+}
+
+.smallThumbs {
+  float:right;
+  padding-left:20px;
+}
 
 @media (min-width:600px) {
     .montage-time {

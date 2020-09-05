@@ -199,6 +199,15 @@
       </label>
 
       <label>
+        <div class="item item-button-right">
+          {{'kEventViewThumbsSize' | translate}}: <button class="button button-calm" ng-click="selectEventViewThumbsSize()">
+            <i class="icon ion-gear-b"></i>
+          </button>
+          <p>{{loginData.eventViewThumbsSize}}</p>
+        </div>
+      </label>
+
+      <label>
         <ion-toggle ng-model="loginData.montageHideFooter" toggle-class="toggle-calm">
           <span class="item-text-wrap">{{'kMontageHideFooter' | translate}}
           </span>
