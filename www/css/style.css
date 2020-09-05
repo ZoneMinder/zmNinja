@@ -1918,7 +1918,7 @@ fill-opacity: 0.8;
 
 .smallThumbs {
   float:right;
-  padding-left:20px;
+  display:block;
 }
 
 @media (min-width:600px) {
