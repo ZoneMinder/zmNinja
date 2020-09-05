@@ -733,6 +733,10 @@ It may be one of the following:
   ``/var/lib/zmeventnotification/push/tokens.txt`` - if it's empty, your device is not
   able to connect to it. Check ES logs, also check zmNinja logs. The answer will be between
   them
+
+* If you are running ES in dlandon's docker image and are seeing connection to the ES being 
+  reset, you may need to restart the ES manually. I don't use that docker image - to further
+  debug, please raise issues in the docker repo.
   
 My device is not receiving push for a specific monitor
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
