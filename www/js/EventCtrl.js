@@ -2961,16 +2961,36 @@ angular.module('zmApp.controllers')
 
     }
 
-    function computeThumbnailSize(mw, mh, mo) {
-        
-      var ld = NVR.getLogin();
+    function calculateAspectRatioFit(srcWidth, srcHeight, maxWidth, maxHeight) {
+      // credit: https://stackoverflow.com/a/14731922
+      var ratio = Math.min(maxWidth / srcWidth, maxHeight / srcHeight);
+      return { w: Math.round(srcWidth*ratio), h: Math.round(srcHeight*ratio) };
+   }
 
+
+    function computeThumbnailSize(mw, mh, mo) {
+      if (mo != 0 && mo != 180) {
+
+        var tmp = mw;
+        mw = mh;
+        mh = tmp;
+      }
+      var ld = NVR.getLogin();
+      if (ld.eventViewThumbsSize == 'large') {
+        return calculateAspectRatioFit(mw, mh, 0.9* $rootScope.devWidth, 0.4 * $rootScope.devHeight);
+
+      } else {
+        return calculateAspectRatioFit(mw, mh, 0.3 * $rootScope.devWidth, 0.3 * $rootScope.devHeight);
+
+      } 
+      
+      /*
       if (ld.eventViewThumbsSize == 'large') {
         tw = Math.round(0.9 * $rootScope.devWidth);
         th = Math.round(0.7 * $rootScope.devHeight);
       } else {
         tw = Math.round(0.4 * $rootScope.devWidth);
-      th = Math.round(0.3 * $rootScope.devHeight);
+        th = Math.round(0.3 * $rootScope.devHeight);
       }
       
 
@@ -2982,7 +3002,7 @@ angular.module('zmApp.controllers')
         h: 0
       };
 
-    
+    */
     /* seems I really should be using strings due to horz and very
     but luckily parseInt will make them 0 which gets treated as "nothing to do"
     '0' => translate('Normal'),
@@ -2993,6 +3013,7 @@ angular.module('zmApp.controllers')
     'vert' => translate('FlippedVert')
 
     */
+   /*
       if (mo != 0 && mo != 180) {
 
         var tmp = mw;
@@ -3020,7 +3041,7 @@ angular.module('zmApp.controllers')
       result.w = mw;
       result.h = mh;
       return result;
-
+*/
     }
 
    

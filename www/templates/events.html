@@ -50,7 +50,7 @@
               <i class="ion-clock"></i>&nbsp;&nbsp;{{prettifyDate(event.Event.StartTime)}} &nbsp;{{tzAbbr}}&nbsp;
             </span>
 
-            <div ng-class="::{'row responsive-lg': thumbClass=='large', 'row responsive-sm': thumbClass=='small'}"
+            <div ng-class="::{'row responsive-lg': thumbClass=='large', 'row': thumbClass=='small'}"
               style="font-size:80%; color:rgb(110,110,110)">
 
 
@@ -60,7 +60,7 @@
               <!--row-->
               <!--<div class="row" style="font-size:80%; color:rgb(110,110,110)">-->
               <!-- <div class="col">-->
-              <div class="col no-padding">
+              <div class="col">
                 <div class="item-text-wrap">
                   <!-- this ngswitch displays different icons
                                         depending on the cause of the event -->
@@ -98,7 +98,7 @@
                   <!-- <br/> Default video:{{event.Event.relativePath}}{{event.Event.DefaultVideo}}-->
                 </div>
               </div> <!-- col-->
-              <div class="col no-padding">
+              <div class="col">
                 <div ng-if="loginData.eventViewThumbs!='none'"
                   ng-class="::{'largeThumbs': thumbClass=='large', 'smallThumbs': thumbClass=='small'}">
                   <img bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"
