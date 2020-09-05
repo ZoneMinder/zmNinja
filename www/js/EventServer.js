@@ -156,6 +156,7 @@ angular.module('zmApp.controllers')
 
         if (str.version == undefined)
           str.version = "0.1";
+        //console.log ('************* COMPARING '+str.version+'to '+zm.minEventServerVersion);
         if (NVR.versionCompare(str.version, zm.minEventServerVersion) == -1) {
           $rootScope.zmPopup = $ionicPopup.alert({
             title: $translate.instant('kEventServerVersionTitle'),
