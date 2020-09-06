@@ -201,7 +201,7 @@ angular.module('zmApp.controllers')
       if (ld.eventViewThumbsSize == 'large') {
         NVR.debug ('Switching to big thumbs style');
         $scope.thumbClass = 'large';
-        $scope.rowHeightRegular = 400;
+        $scope.rowHeightRegular = 450;
         $scope.rowHeightExpanded = $scope.rowHeightRegular + 200;
       } else {
         NVR.debug ('using small thumbs style');
@@ -3004,22 +3004,22 @@ angular.module('zmApp.controllers')
       var ld = NVR.getLogin();
       var landscape = ($rootScope.devWidth > $rootScope.devHeight) ? true:false;
 
-      var maxRowHeight = $scope.rowHeight - ($scope.thumbClass=='large'?200: 120);
+      var maxRowHeight = $scope.rowHeight - 120;
 
       if (ld.eventViewThumbsSize == 'large') {
         if (landscape) {
-          return calculateAspectRatioFit(mw, mh, 0.8* $rootScope.devWidth, maxRowHeight);
+          return calculateAspectRatioFit(mw, mh, 0.7* $rootScope.devWidth, maxRowHeight);
         } else {
-          return calculateAspectRatioFit(mw, mh, 0.5* $rootScope.devWidth, maxRowHeight);
+          return calculateAspectRatioFit(mw, mh, 0.4* $rootScope.devWidth, maxRowHeight);
         }
 
       } else { // small
 
         if (landscape) {
-          return calculateAspectRatioFit(mw, mh, 0.6* $rootScope.devWidth, maxRowHeight);
+          return calculateAspectRatioFit(mw, mh, 0.5* $rootScope.devWidth, maxRowHeight);
 
         } else {
-          return calculateAspectRatioFit(mw, mh, 0.4* $rootScope.devWidth, maxRowHeight);
+          return calculateAspectRatioFit(mw, mh, 0.3* $rootScope.devWidth, maxRowHeight);
         }
 
       }
