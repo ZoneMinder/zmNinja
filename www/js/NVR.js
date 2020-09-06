@@ -228,7 +228,7 @@ angular.module('zmApp.controllers')
         'currentZMGroupNames': [],
         'unsupported': {},
         'monitorSpecific': {},
-        'eventViewThumbs': true,
+        'eventViewThumbs': 'snapshot',
         'eventViewThumbsSize': 'small',
         
 
