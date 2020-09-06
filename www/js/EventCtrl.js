@@ -196,20 +196,26 @@ angular.module('zmApp.controllers')
 
     $scope.$on('$ionicView.beforeEnter', function () {
 
-    
       var ld = NVR.getLogin();
-      if (ld.eventViewThumbsSize == 'large') {
-        NVR.debug ('Switching to big thumbs style');
-        $scope.thumbClass = 'large';
-        $scope.rowHeightRegular = 450;
-        $scope.rowHeightExpanded = $scope.rowHeightRegular + 230;
+      if (ld.eventViewThumbs != 'none') {
+        if (ld.eventViewThumbsSize == 'large') {
+          NVR.debug ('Switching to big thumbs style');
+          $scope.thumbClass = 'large';
+          $scope.rowHeightRegular = 450;
+          $scope.rowHeightExpanded = $scope.rowHeightRegular + 230;
+        } else {
+          NVR.debug ('using small thumbs style');
+          $scope.thumbClass = 'small';
+          $scope.rowHeightRegular = 250;
+          $scope.rowHeightExpanded = $scope.rowHeightRegular + 200;
+  
+        }
       } else {
-        NVR.debug ('using small thumbs style');
-        $scope.thumbClass = 'small';
-        $scope.rowHeightRegular = 250;
-        $scope.rowHeightExpanded = $scope.rowHeightRegular + 200;
-
+          NVR.debug ('No thumbs');
+          $scope.rowHeightRegular = 170;
+          $scope.rowHeightExpanded = $scope.rowHeightRegular + 200;
       }
+      
 
       $scope.rowHeight = $scope.rowHeightRegular;
       $scope.mid = '';
