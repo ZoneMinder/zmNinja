@@ -64,7 +64,7 @@
                 <div class="item-text-wrap">
                   <!-- this ngswitch displays different icons
                                         depending on the cause of the event -->
-                  <span ng-switch on="event.Event.Cause">
+                  <span ng-switch on="event.Event.Cause" ng-class="::{'largeThumbsSpan': thumbClass=='large', 'smallThumbsSpan': thumbClass=='small'}">
                     <span ng-switch-when="Motion">
                       <i class="ion-android-walk" style="font-size:150%;"></i>&nbsp;
                       <!-- <i ng-class="(event.Event.DefaultVideo !== undefined && event.Event.DefaultVideo!='')? 'ion-ios-videocam':'ion-images'" style="float:left; padding-left:5px; font-size:100%;"></i>-->
@@ -80,25 +80,28 @@
 
 
                     </span>
+                    <b><i ng-if="event.Event.Archived=='1'" class="ion-ios-flag"
+                      style="color:red">&nbsp;</i>{{event.Event.MonitorName}}</b>
                   </span>
 
-                  <b>
-                    <i ng-if="event.Event.Archived=='1'" class="ion-ios-flag"
-                      style="color:red">&nbsp;</i>{{event.Event.MonitorName}}</b>
-                  <br /><i class="ion-images"></i> {{event.Event.Frames}} &nbsp;
+                  <span ng-class="::{'largeThumbsSpan': thumbClass=='large', 'smallThumbsSpan': thumbClass=='small'}">
+                  <i class="ion-images"></i> {{event.Event.Frames}} &nbsp;
                   <i class="ion-ios-bell-outline"></i> {{event.Event.AlarmFrames}} &nbsp;
                   <span style="font-size:80%; color:rgb(110,110,110)">
                     {{humanize(event.Event.Length)}} &nbsp;
                   </span>
+                  </span>
 
-                  <br /><i class="ion-ios-pricetags-outline"></i>&nbsp; {{event.Event.Name}}
+                  <span ng-class="::{'largeThumbsSpan': thumbClass=='large', 'smallThumbsSpan': thumbClass=='small'}">
+                  <i class="ion-ios-pricetags-outline"></i>&nbsp; {{event.Event.Name}}
+                  </span>
 
 
 
                   <!-- <br/> Default video:{{event.Event.relativePath}}{{event.Event.DefaultVideo}}-->
                 </div>
               </div> <!-- col-->
-              <div ng-if="loginData.eventViewThumbs!='none'" class="col">
+              <div class="col">
                 <div ng-if="loginData.eventViewThumbs!='none'"
                   ng-class="::{'largeThumbs': thumbClass=='large', 'smallThumbs': thumbClass=='small'}">
                   <img bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"

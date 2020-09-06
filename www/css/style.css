@@ -1920,12 +1920,12 @@ fill-opacity: 0.8;
   
   flex-wrap:wrap;
   float:right;
-  
-  
-
-  
-  
 }
+
+span.smallThumbsSpan {
+  display: table;
+}
+
 .no-padding {
   padding: 0px !important;
 }
