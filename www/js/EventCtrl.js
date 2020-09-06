@@ -195,14 +195,23 @@ angular.module('zmApp.controllers')
       //console.log ("********* BEFORE ENTER");
       //
 
-      $scope.thumbClass = 'small';
+      
+    
       var ld = NVR.getLogin();
       if (ld.eventViewThumbsSize == 'large') {
         NVR.debug ('Switching to big thumbs style');
         $scope.thumbClass = 'large';
+        $scope.rowHeightRegular = 400;
+        $scope.rowHeightExpanded = $scope.rowHeightRegular + 200;
       } else {
         NVR.debug ('using small thumbs style');
+        $scope.thumbClass = 'small';
+        $scope.rowHeightRegular = 250;
+        $scope.rowHeightExpanded = $scope.rowHeightRegular + 200;
+
       }
+
+      $scope.rowHeight = $scope.rowHeightRegular;
       $scope.mid = '';
 
       $scope.$on ("alarm", function() {
@@ -2024,9 +2033,10 @@ angular.module('zmApp.controllers')
       if (!$ionicScrollDelegate.$getByHandle("mainScroll")) $scope.navTitle = "";
       if (!$ionicScrollDelegate.$getByHandle("mainScroll").getScrollPosition()) $scope.navTitle = "";
       var scrl = parseFloat($ionicScrollDelegate.$getByHandle("mainScroll").getScrollPosition().top);
+      eventHeight = $scope.rowHeight;
       if (eventHeight == 0 && !$scope.eventsBeingLoaded && document.getElementById('item-0') != null) {
         eventHeight = document.getElementById('item-0').offsetHeight;
-        NVR.debug("scrl: " + scrl + ", eventHeight: " + eventHeight);
+        //NVR.debug("scrl: " + scrl + ", eventHeight: " + eventHeight);
       }
       var item = 0;
       if (eventHeight) {
@@ -2129,6 +2139,7 @@ angular.module('zmApp.controllers')
 
         NVR.debug("EventCtrl:Old event scrub will hide now");
         oldEvent.Event.ShowScrub = false;
+        event.Event.rowHeight = $scope.rowHeightRegular;
         oldEvent = "";
       }
 
@@ -2155,7 +2166,7 @@ angular.module('zmApp.controllers')
       if (event.Event.ShowScrub == true) // turn on display now
       {
 
-
+        event.Event.rowHeight = $scope.rowHeightExpanded;
         if (groupType == 'alarms') {
           // $ionicListDelegate.canSwipeItems(false);
           //NVR.debug ("Disabling flag swipe as alarms are swipable");
@@ -2263,7 +2274,9 @@ angular.module('zmApp.controllers')
 
           };
 
+          event.Event.rowHeight = $scope.rowHeightExpanded;
           $ionicScrollDelegate.resize();
+
           $scope.mycarousel.index = 0;
           $scope.ionRange.index = 1;
           //console.log("**Resetting range");
@@ -2371,6 +2384,14 @@ angular.module('zmApp.controllers')
           var objheight = parseInt(locobject.height);
           // console.log("top location is " + toplocation);
           var distdiff = parseInt($rootScope.devHeight) - toplocation - objheight;
+
+          if (distdiff < $scope.rowHeight) // size of the scroller with bars
+          {
+            scrollbynumber = $scope.rowHeight - distdiff;
+            $ionicScrollDelegate.$getByHandle("mainScroll").scrollBy(0, scrollbynumber, true);
+
+            // we need to scroll up to make space
+          }
           // console.log("*****Space at  bottom is " + distdiff);
         } // end of groupType == scrub 
       } // end of ShowScrub == true
@@ -2379,7 +2400,7 @@ angular.module('zmApp.controllers')
         // 
         // $ionicListDelegate.canSwipeItems(true);
         // NVR.debug ("enabling options swipe");
-
+        event.Event.rowHeight = $scope.rowHeightRegular;
         $ionicSideMenuDelegate.canDragContent(true);
         $ionicScrollDelegate.resize();
 
@@ -2908,6 +2929,9 @@ angular.module('zmApp.controllers')
               var th = computeThumbnailSize(mw, mh, mo);
               myevents[currentPagePosition].Event.thumbWidth = th.w;
               myevents[currentPagePosition].Event.thumbHeight = th.h;
+              myevents[currentPagePosition].Event.rowHeight = $scope.rowHeight;
+             // myevents[currentPagePosition].Event.rowHeight = th.h + 50;
+             // console.log ("************* RH:"+myevents[currentPagePosition].Event.rowHeight);
             }
 
             // in multiserver BasePath is login url for frames 
@@ -2978,88 +3002,28 @@ angular.module('zmApp.controllers')
         mh = tmp;
       }
       var ld = NVR.getLogin();
+      var landscape = ($rootScope.devWidth > $rootScope.devHeight) ? true:false;
 
-      // landscape
-      if ($rootScope.devWidth > $rootScope.devHeight) {
+      var maxRowHeight = $scope.rowHeight - ($scope.thumbClass=='large'?200: 120);
 
-        if (ld.eventViewThumbsSize == 'large') {
-          return calculateAspectRatioFit(mw, mh, 0.8* $rootScope.devWidth, 1.5 * $rootScope.devHeight);
-  
-        } else {
-          return calculateAspectRatioFit(mw, mh, 0.5 * $rootScope.devWidth, 0.7 * $rootScope.devHeight);
-  
-        } 
-      } else {
-        // portrait
-        if (ld.eventViewThumbsSize == 'large') {
-          return calculateAspectRatioFit(mw, mh, 0.9* $rootScope.devWidth, 0.4 * $rootScope.devHeight);
-  
-        } else {
-          return calculateAspectRatioFit(mw, mh, 0.3 * $rootScope.devWidth, 0.3 * $rootScope.devHeight);
-  
-        } 
-
-      }
-      
-      
-      /*
       if (ld.eventViewThumbsSize == 'large') {
-        tw = Math.round(0.9 * $rootScope.devWidth);
-        th = Math.round(0.7 * $rootScope.devHeight);
-      } else {
-        tw = Math.round(0.4 * $rootScope.devWidth);
-        th = Math.round(0.3 * $rootScope.devHeight);
-      }
-      
-
-      
-
-      var ratio = mw / mh;
-      var result = {
-        w: 0,
-        h: 0
-      };
-
-    */
-    /* seems I really should be using strings due to horz and very
-    but luckily parseInt will make them 0 which gets treated as "nothing to do"
-    '0' => translate('Normal'),
-    '90' => translate('RotateRight'),
-    '180' => translate('Inverted'),
-    '270' => translate('RotateLeft'),
-    'horz' => translate('FlippedHori'),
-    'vert' => translate('FlippedVert')
-
-    */
-   /*
-      if (mo != 0 && mo != 180) {
-
-        var tmp = mw;
-        mw = mh;
-        mh = tmp;
-      }
-
-      if (mw > mh) {
-        mw = tw;
-        mh = tw / ratio;
-        if (mh > th) {
-            mw = th * ratio;
-            mh = th;
+        if (landscape) {
+          return calculateAspectRatioFit(mw, mh, 0.8* $rootScope.devWidth, maxRowHeight);
+        } else {
+          return calculateAspectRatioFit(mw, mh, 0.5* $rootScope.devWidth, maxRowHeight);
         }
-      } else if (mh > mw) {
-        mh = th;
-        mw = th * ratio;
-      } else {
-        mh = th;
-        mw = tw;
-      }
-      mw = Math.round(mw);
-      mh = Math.round(mh);
 
-      result.w = mw;
-      result.h = mh;
-      return result;
-*/
+      } else { // small
+
+        if (landscape) {
+          return calculateAspectRatioFit(mw, mh, 0.6* $rootScope.devWidth, maxRowHeight);
+
+        } else {
+          return calculateAspectRatioFit(mw, mh, 0.4* $rootScope.devWidth, maxRowHeight);
+        }
+
+      }
+     
     }
 
    
