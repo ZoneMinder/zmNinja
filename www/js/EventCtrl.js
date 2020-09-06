@@ -246,8 +246,6 @@ angular.module('zmApp.controllers')
       $scope.rowHeight = $scope.rowHeightRegular;
       $scope.mid = '';
 
-      $rootScope.monitorsFilter = '';
-
 
       $scope.$on ("alarm", function() {
         NVR.debug ("EventCtrl: new event notification, doing an immediate reload");
@@ -1849,7 +1847,7 @@ angular.module('zmApp.controllers')
           $rootScope.toTime = "";
           $rootScope.fromString = "";
           $rootScope.toString = "";
-
+          $rootScope.monitorsFilter = "";
           $scope.id = 0;
           $scope.showEvent = false;
           $scope.footerState = ionPullUpFooterState.MINIMIZED;
