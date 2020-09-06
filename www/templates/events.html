@@ -51,20 +51,10 @@
               <i class="ion-clock"></i>&nbsp;&nbsp;{{prettifyDate(event.Event.StartTime)}} &nbsp;{{tzAbbr}}&nbsp;
             </span>
 
-            <div ng-class="::{'row responsive-lg': thumbClass=='large', 'row': thumbClass=='small'}"
-              style="font-size:80%; color:rgb(110,110,110)">
-
-
-
-
-              <!--</div>-->
-              <!--row-->
-              <!--<div class="row" style="font-size:80%; color:rgb(110,110,110)">-->
-              <!-- <div class="col">-->
-              <div class="col">
-                <div class="item-text-wrap">
+            <div class="row" style="font-size:80%; color:rgb(110,110,110)">
+              <div class="col item-text-wrap"> <!-- data -->
                   <!-- this ngswitch displays different icons
-                                        depending on the cause of the event -->
+                    depending on the cause of the event -->
                   <span ng-switch on="event.Event.Cause" ng-class="::{'largeThumbsSpan': thumbClass=='large', 'smallThumbsSpan': thumbClass=='small'}">
                     <span ng-switch-when="Motion">
                       <i class="ion-android-walk" style="font-size:150%;"></i>&nbsp;
@@ -73,45 +63,38 @@
                     </span>
                     <span ng-switch-when="Signal">
                       <i class="ion-wifi" style="font-size:150%;"></i>&nbsp;
-                      <!--<i ng-class="(event.Event.DefaultVideo !== undefined && event.Event.DefaultVideo!='')? 'ion-ios-videocam':'ion-images'" style="float:left; padding-left:5px; font-size:100%;"></i>-->
-
                     </span>
                     <span ng-switch-default>
                       <i class="ion-ionic" style="font-size:150%;"></i>&nbsp;
-
-
                     </span>
                     <b><i ng-if="event.Event.Archived=='1'" class="ion-ios-flag"
                       style="color:red">&nbsp;</i>{{event.Event.MonitorName}}</b>
                   </span>
 
-                  <span ng-class="::{'largeThumbsSpan': thumbClass=='large', 'smallThumbsSpan': thumbClass=='small'}">
                   <i class="ion-images"></i> {{event.Event.Frames}} &nbsp;
                   <i class="ion-ios-bell-outline"></i> {{event.Event.AlarmFrames}} &nbsp;
                   <span style="font-size:80%; color:rgb(110,110,110)">
                     {{humanize(event.Event.Length)}} &nbsp;
                   </span>
-                  </span>
-
-                  <span ng-class="::{'largeThumbsSpan': thumbClass=='large', 'smallThumbsSpan': thumbClass=='small'}">
                   <i class="ion-ios-pricetags-outline"></i>&nbsp; {{event.Event.Name}}
-                  </span>
 
-
-
-                  <!-- <br/> Default video:{{event.Event.relativePath}}{{event.Event.DefaultVideo}}-->
-                </div>
-              </div> <!-- col-->
-              <div class="col">
-                <div ng-if="loginData.eventViewThumbs!='none'"
-                  ng-class="::{'largeThumbs': thumbClass=='large', 'smallThumbs': thumbClass=='small'}">
-                  <img bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"
+                  <!-- for largeThumbs show image in this column -->
+                  <div ng-if="loginData.eventViewThumbs!='none' && thumbClass=='large'">
+                    <br/><img  bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"
                     on-tap="closeIfOpen(event);openModalWithSnapshot(event)" width="{{event.Event.thumbWidth}}px"
                     height="{{event.Event.thumbHeight}}px" fallback-src="img/noimage.png" />
-                </div>
-              </div>
-              <!--</div>-->
-            </div>
+                  </div>
+
+              </div> <!-- col-->
+              <!-- 2 col format for small, 1 col format for large -->
+              <span ng-if="thumbClass=='small' && loginData.eventViewThumbs!='none'">
+                  <div class="col">
+                    <img  bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"
+                    on-tap="closeIfOpen(event);openModalWithSnapshot(event)" width="{{event.Event.thumbWidth}}px"
+                    height="{{event.Event.thumbHeight}}px" fallback-src="img/noimage.png" />
+                  </div> <!--col--->
+              </span> <!-- thumbs -->
+             </div> <!--row-->
             <div ng-if="event.Event.Notes" class="row" style="font-size:80%; color:rgb(110,110,110)">
               <i class="ion-clipboard"></i>&nbsp; {{event.Event.Notes}}
             </div>
@@ -136,10 +119,6 @@
                     ng-click="closeIfOpen(event);openModal(event)">
                     <span translate="kFootage"></span>
                   </button>
-
-
-
-
                 </div>
               </span>
             </div>

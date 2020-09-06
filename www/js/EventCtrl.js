@@ -78,7 +78,12 @@ angular.module('zmApp.controllers')
     //---------------------------------------------------
 
 
-    
+    $scope.$on('sizechanged', function() {
+      $timeout (function () {
+        recomputeThumbSize();
+      },10);
+  
+    });
 
     //we come here is TZ is updated after the view loads
     var tzu = $scope.$on('tz-updated', function () {
@@ -95,7 +100,6 @@ angular.module('zmApp.controllers')
 
     $scope.$on('$ionicView.afterEnter', function () {
 
-      window.addEventListener("resize", recomputeThumbSize, false);
       $ionicListDelegate.canSwipeItems(true);
      // NVR.debug("enabling options swipe");
 
@@ -192,17 +196,13 @@ angular.module('zmApp.controllers')
 
     $scope.$on('$ionicView.beforeEnter', function () {
 
-      //console.log ("********* BEFORE ENTER");
-      //
-
-      
     
       var ld = NVR.getLogin();
       if (ld.eventViewThumbsSize == 'large') {
         NVR.debug ('Switching to big thumbs style');
         $scope.thumbClass = 'large';
         $scope.rowHeightRegular = 450;
-        $scope.rowHeightExpanded = $scope.rowHeightRegular + 200;
+        $scope.rowHeightExpanded = $scope.rowHeightRegular + 230;
       } else {
         NVR.debug ('using small thumbs style');
         $scope.thumbClass = 'small';
@@ -3003,17 +3003,18 @@ angular.module('zmApp.controllers')
       }
       var ld = NVR.getLogin();
       var landscape = ($rootScope.devWidth > $rootScope.devHeight) ? true:false;
-
-      var maxRowHeight = $scope.rowHeight - 120;
+      var maxRowHeight;
 
       if (ld.eventViewThumbsSize == 'large') {
+        maxRowHeight = $scope.rowHeight - 170;
         if (landscape) {
-          return calculateAspectRatioFit(mw, mh, 0.7* $rootScope.devWidth, maxRowHeight);
+          return calculateAspectRatioFit(mw, mh, 0.9* $rootScope.devWidth, maxRowHeight);
         } else {
-          return calculateAspectRatioFit(mw, mh, 0.4* $rootScope.devWidth, maxRowHeight);
+          return calculateAspectRatioFit(mw, mh, 0.8* $rootScope.devWidth, maxRowHeight);
         }
 
       } else { // small
+        maxRowHeight = $scope.rowHeight - 150;
 
         if (landscape) {
           return calculateAspectRatioFit(mw, mh, 0.5* $rootScope.devWidth, maxRowHeight);
