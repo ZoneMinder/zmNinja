@@ -1510,7 +1510,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
       "/StartTime >:" + currentEvent.Event.StartTime +
       ($scope.followSameMonitor == '1' ? "/"+"MonitorId =:" + currentEvent.Monitor.Id : "") ;
       if ($scope.useFilters) {
-        nextEvent = nextEvent + "/"+"AlarmFrames >=:" + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0);
+        if (loginData.enableAlarmCount && loginData.minAlarmCount)
+          nextEvent = nextEvent + "/"+"AlarmFrames >=:" + loginData.minAlarmCount;
       }
       nextEvent = nextEvent + ".json?sort=StartTime&direction=asc&limit=1"+$rootScope.authSession;
       
@@ -1520,7 +1521,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
       ($scope.followSameMonitor == '1' ? "/"+"MonitorId =:"+ currentEvent.Monitor.Id : "");
 
       if ($scope.useFilters) {
-        prevEvent = prevEvent + "/"+"AlarmFrames >=:" + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0);
+        if (loginData.enableAlarmCount && loginData.minAlarmCount)
+          prevEvent = prevEvent + "/"+"AlarmFrames >=:" + loginData.minAlarmCount;
       }
       prevEvent = prevEvent + ".json?sort=StartTime&direction=desc&limit=1"+$rootScope.authSession;
 

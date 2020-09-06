@@ -3661,7 +3661,8 @@ angular.module('zmApp.controllers')
           if (endTime)
             myurl = myurl + "/"+"EndTime >=:" + startTime;
 
-          myurl = myurl + "/"+"AlarmFrames >=:" + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0);
+          if (loginData.enableAlarmCount && loginData.minAlarmCount)
+            myurl = myurl + "/"+"AlarmFrames >=:" + loginData.minAlarmCount;
 
           //https:///zm/api/events/index/Notes%20REGEXP:detected%3A.json
           if (loginData.objectDetectionFilter && !noObjectFilter) {
@@ -3752,7 +3753,8 @@ angular.module('zmApp.controllers')
           if (endTime)
             myurl = myurl + "/"+"EndTime >=:" + startTime;
 
-          myurl = myurl + "/"+"AlarmFrames >=:" + (loginData.enableAlarmCount ? loginData.minAlarmCount : 0);
+          if (loginData.enableAlarmCount && loginData.minAlarmCount)
+            myurl = myurl + "/"+"AlarmFrames >=:" + loginData.minAlarmCount;
 
           //console.log ('********* MON FILTER '+monListFilter);
           if (monListFilter) 

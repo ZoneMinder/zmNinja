@@ -596,7 +596,8 @@ angular.module('zmApp.controllers')
 
         }
        
-        apiurl += "/"+"AlarmFrames >=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0);
+        if (ld.enableAlarmCount && ld.minAlarmCount)
+          apiurl += "/"+"AlarmFrames >=:" + ld.minAlarmCount;
         if (ld.objectDetectionFilter) {
           apiurl +='/'+'Notes REGEXP:detected:';
         }

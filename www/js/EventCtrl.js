@@ -1860,7 +1860,9 @@ angular.module('zmApp.controllers')
       //https://server/zm/api/events/consoleEvents/5%20minute.json
       var ld = NVR.getLogin();
 
-      var af = "/"+"AlarmFrames >=:" + (ld.enableAlarmCount ? ld.minAlarmCount : 0);
+      var af="";
+      if (ld.enableAlarmCount && ld.minAlarmCount )
+        af = "/AlarmFrames >=:" + ld.minAlarmCount ;
 
       if (ld.objectDetectionFilter) {
         af = af + '/'+'Notes REGEXP:detected:';
@@ -2981,7 +2983,7 @@ angular.module('zmApp.controllers')
       if ($rootScope.devWidth > $rootScope.devHeight) {
 
         if (ld.eventViewThumbsSize == 'large') {
-          return calculateAspectRatioFit(mw, mh, 0.9* $rootScope.devWidth, 1.5 * $rootScope.devHeight);
+          return calculateAspectRatioFit(mw, mh, 0.8* $rootScope.devWidth, 1.5 * $rootScope.devHeight);
   
         } else {
           return calculateAspectRatioFit(mw, mh, 0.5 * $rootScope.devWidth, 0.7 * $rootScope.devHeight);
