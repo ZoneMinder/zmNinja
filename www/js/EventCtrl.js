@@ -2976,13 +2976,29 @@ angular.module('zmApp.controllers')
         mh = tmp;
       }
       var ld = NVR.getLogin();
-      if (ld.eventViewThumbsSize == 'large') {
-        return calculateAspectRatioFit(mw, mh, 0.9* $rootScope.devWidth, 0.4 * $rootScope.devHeight);
 
+      // landscape
+      if ($rootScope.devWidth > $rootScope.devHeight) {
+
+        if (ld.eventViewThumbsSize == 'large') {
+          return calculateAspectRatioFit(mw, mh, 0.9* $rootScope.devWidth, 1.5 * $rootScope.devHeight);
+  
+        } else {
+          return calculateAspectRatioFit(mw, mh, 0.5 * $rootScope.devWidth, 0.7 * $rootScope.devHeight);
+  
+        } 
       } else {
-        return calculateAspectRatioFit(mw, mh, 0.3 * $rootScope.devWidth, 0.3 * $rootScope.devHeight);
+        // portrait
+        if (ld.eventViewThumbsSize == 'large') {
+          return calculateAspectRatioFit(mw, mh, 0.9* $rootScope.devWidth, 0.4 * $rootScope.devHeight);
+  
+        } else {
+          return calculateAspectRatioFit(mw, mh, 0.3 * $rootScope.devWidth, 0.3 * $rootScope.devHeight);
+  
+        } 
 
-      } 
+      }
+      
       
       /*
       if (ld.eventViewThumbsSize == 'large') {

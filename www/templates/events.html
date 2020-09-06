@@ -98,7 +98,7 @@
                   <!-- <br/> Default video:{{event.Event.relativePath}}{{event.Event.DefaultVideo}}-->
                 </div>
               </div> <!-- col-->
-              <div class="col">
+              <div ng-if="loginData.eventViewThumbs!='none'" class="col">
                 <div ng-if="loginData.eventViewThumbs!='none'"
                   ng-class="::{'largeThumbs': thumbClass=='large', 'smallThumbs': thumbClass=='small'}">
                   <img bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"
