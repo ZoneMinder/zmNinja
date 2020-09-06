@@ -76,7 +76,7 @@
            
               <!-- <div style="max-width:100%; max-height:100%;" on-swipe-left="onSwipeEvent(nextId,1)" on-swipe-right="onSwipeEvent(prevId,-1)" > -->
               
-               <div on-swipe-left="onSwipeEvent(nextId,1)" on-swipe-right="onSwipeEvent(prevId,-1)" ng-style="{'height':$root.videoHeight+'px', 'width':$root.devWidth+'px'}">
+               <div on-swipe-left="onSwipeEvent(nextId,1)" on-swipe-right="onSwipeEvent(prevId,-1)" ng-style="{'height':$root.videoHeight+'px', 'width':$root.devWidthIgnorePix+'px'}">
 
                 <videogular id="testaut_events_playwindow" vg-can-play="onCanPlay()" vg-native-fullscreen="videoObject.config.nativeFullScreen"
                   vg-player-ready="onPlayerReady($API)" 
