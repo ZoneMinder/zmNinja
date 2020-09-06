@@ -185,8 +185,9 @@ angular.module('zmApp.controllers')
 
       NVR.debug ("Cancelling page reload timer");
       $interval.cancel(intervalReloadEvents);
-      NVR.debug("EventCtrl: Deregistering resize listener");
-      window.removeEventListener("resize", recomputeThumbSize, false);
+      document.removeEventListener("pause", onPause, false);
+
+     
       //NVR.debug("EventCtrl: Deregistering broadcast handles");
       for (var i = 0; i < broadcastHandles.length; i++) {
       //  broadcastHandles[i]();
@@ -195,6 +196,21 @@ angular.module('zmApp.controllers')
     });
 
     $scope.$on('$ionicView.beforeEnter', function () {
+
+      /*
+        It's a bleeding mess trying to get this working on  
+        multiple devices and orientations with flex-box, primarily
+        because I'm not a CSS guru.
+
+        Plus, collection-repeat offers significant performance benefits
+        and this requires fixed row sizes across all rows.
+
+        The layout I am using:
+        a) If you are using large thumbs, it's a single column format
+        b) If you are using small thumbs, it's a two column format
+
+        The max size of the image is in computeThumbnailSize()
+      */
 
       var ld = NVR.getLogin();
       if (ld.eventViewThumbs != 'none') {
@@ -3001,8 +3017,8 @@ angular.module('zmApp.controllers')
 
 
     function computeThumbnailSize(mw, mh, mo) {
+      // if ZM is going to rotate the view, lets flip our dimensions
       if (mo != 0 && mo != 180) {
-
         var tmp = mw;
         mw = mh;
         mh = tmp;
@@ -3014,18 +3030,21 @@ angular.module('zmApp.controllers')
       if (ld.eventViewThumbsSize == 'large') {
         maxRowHeight = $scope.rowHeight - 170;
         if (landscape) {
+          // go till 90% of width in large landscape, but restricted to useable row height 
           return calculateAspectRatioFit(mw, mh, 0.9* $rootScope.devWidth, maxRowHeight);
         } else {
+                    // go till 80% of width in large portrait, but restricted to useable row height 
+
           return calculateAspectRatioFit(mw, mh, 0.8* $rootScope.devWidth, maxRowHeight);
         }
 
       } else { // small
         maxRowHeight = $scope.rowHeight - 150;
-
         if (landscape) {
+          // go till 50% of width in small landscape, but restricted to useable row height 
           return calculateAspectRatioFit(mw, mh, 0.5* $rootScope.devWidth, maxRowHeight);
-
         } else {
+                    // go till 30% of width in small portrait, but restricted to useable row height 
           return calculateAspectRatioFit(mw, mh, 0.3* $rootScope.devWidth, maxRowHeight);
         }
 
