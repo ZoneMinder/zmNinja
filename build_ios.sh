@@ -5,7 +5,7 @@ if [ "$1" != "skip" ]
 then
 #  ionic cordova plugin remove cordova-plugin-ionic-webview 2>/dev/null
   echo "Adding wkwebview..."
-  ionic cordova plugin add https://github.com/pliablepixels/cordova-plugin-ionic-webview.git
+  cordova plugin add https://github.com/pliablepixels/cordova-plugin-ionic-webview.git
   echo "Resetting media fork..."
   cordova plugin remove cordova-plugin-media-pp-fork
   cordova plugin add cordova-plugin-media-pp-fork
