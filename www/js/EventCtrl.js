@@ -182,7 +182,17 @@ angular.module('zmApp.controllers')
 
 
     $scope.$on('$ionicView.beforeLeave', function () {
-
+      if ($stateParams.lastCheckTime != undefined && $stateParams.lastCheckTime != '' && moment($stateParams.lastCheckTime).isValid()) {
+          NVR.debug ("removing montage temporary filter");
+          $rootScope.isEventFilterOn = false;
+          $rootScope.fromDate = "";
+          $rootScope.fromTime = "";
+          $rootScope.toDate = "";
+          $rootScope.toTime = "";
+          $rootScope.fromString = "";
+          $rootScope.toString = "";
+          $rootScope.monitorsFilter="";
+      }
       NVR.debug ("Cancelling page reload timer");
       $interval.cancel(intervalReloadEvents);
       document.removeEventListener("pause", onPause, false);
@@ -235,6 +245,9 @@ angular.module('zmApp.controllers')
 
       $scope.rowHeight = $scope.rowHeightRegular;
       $scope.mid = '';
+
+      $rootScope.monitorsFilter = '';
+
 
       $scope.$on ("alarm", function() {
         NVR.debug ("EventCtrl: new event notification, doing an immediate reload");
@@ -1836,7 +1849,6 @@ angular.module('zmApp.controllers')
           $rootScope.toTime = "";
           $rootScope.fromString = "";
           $rootScope.toString = "";
-          $rootScope.monitorsFilter = '';
 
           $scope.id = 0;
           $scope.showEvent = false;
