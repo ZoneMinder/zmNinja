@@ -136,6 +136,7 @@
     "kFilterEvents"              :"Filter Events",
     "kFilterEventsBetween1"      :"You are viewing events between",
     "kFilterEventsBetween2"      :"Do you want to delete this filter?",
+    "kFilterEventsSelectiveMon"  :"for selective monitors",
     "kFilterOn"                  :"Filter On",
     "kFilterSettings"            :"Filter Settings",
     "kFitScreen"                 :"fit screen",

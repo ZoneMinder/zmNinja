@@ -281,7 +281,13 @@ angular.module('zmApp.controllers')
       document.addEventListener("pause", onPause, false);
       //console.log("I got STATE PARAM " + $stateParams.id);
       $scope.id = parseInt($stateParams.id, 10);
-      if (isNaN($scope.id)) $scope.id = 0;
+      if (isNaN($scope.id)) { 
+        $scope.id = 0; 
+      } 
+
+      if ($scope.id)
+        $rootScope.isEventFilterOn = true;
+
 
       $scope.showEvent = $stateParams.playEvent || false;
       $scope.monitors = NVR.getMonitorsNow();
@@ -299,6 +305,8 @@ angular.module('zmApp.controllers')
         $rootScope.toTime = moment($rootScope.toString).toDate();
         //console.log("toString: " + $rootScope.toString);
       }
+
+
 
       //console.log("BEFORE ENTER >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
@@ -1828,12 +1836,20 @@ angular.module('zmApp.controllers')
 
     $scope.filterTapped = function () {
       //console.log("FILTER TAPPED");
-      var myFrom = moment($rootScope.fromString).format("MMM/DD/YYYY " + NVR.getTimeFormat()).toString();
-      var toString = moment($rootScope.toString).format("MMM/DD/YYYY " + NVR.getTimeFormat()).toString();
+      var myFrom = $translate.instant('kAll');
+      var toString = $translate.instant('kAll');
+      var monString = '';
+
+      if (moment($rootScope.fromString).isValid())
+        myFrom = moment($rootScope.fromString).format("MMM/DD/YYYY " + NVR.getTimeFormat()).toString();
+      if (moment($rootScope.toString).isValid())
+        toString = moment($rootScope.toString).format("MMM/DD/YYYY " + NVR.getTimeFormat()).toString();
+      if ($rootScope.monitorsFilter != '')
+        monString = $translate.instant('kFilterEventsSelectiveMon');
 
       $rootScope.zmPopup = $ionicPopup.confirm({
         title: $translate.instant('kFilterSettings'),
-        template: $translate.instant('kFilterEventsBetween1') + ':<br/> <b>' + myFrom + "</b> " + $translate.instant('kTo') + " <b>" + toString + '</b><br/>' + $translate.instant('kFilterEventsBetween2'),
+        template: $translate.instant('kFilterEventsBetween1') + ':<br/> <b>' + myFrom + "</b> " + $translate.instant('kTo') + " <b>" + toString + '</b> '+ monString+'<br/>' + $translate.instant('kFilterEventsBetween2'),
         okText: $translate.instant('kButtonOk'),
         cancelText: $translate.instant('kButtonCancel'),
       });
