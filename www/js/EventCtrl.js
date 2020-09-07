@@ -184,7 +184,7 @@ angular.module('zmApp.controllers')
     $scope.$on('$ionicView.beforeLeave', function () {
       //$window.removeEventListener('orientationchange', updateUI);
 
-      if ($stateParams.lastCheckTime != undefined && $stateParams.lastCheckTime != '' && moment($stateParams.lastCheckTime).isValid()) {
+      if ($stateParams.lastCheckTime != undefined && $stateParams.lastCheckTime != '' && moment($stateParams.lastCheckTime).isValid() && !$rootScope.enteringEventFilter) {
           NVR.debug ("removing montage temporary filter");
           $rootScope.isEventFilterOn = false;
           $rootScope.fromDate = "";
