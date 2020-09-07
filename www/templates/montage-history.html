@@ -13,7 +13,7 @@
       ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
   </ion-nav-buttons>
   <ion-content has-bouncing="false" style="background-color:#444444" delegate-handle="none" overflow-scroll="false"
-    mouse-wheel-scroll>
+    mouse-wheel-scroll class="notch-ready">
     <div class="timeline_text"> {{'kFrom' | translate}}:{{prettifyDateTimeFirst(datetimeValueFrom.value)}}
       ({{humanizeTime(datetimeValueFrom.value)}})
       <div ng-if="!isMultiPort">({{'kChromeMax' | translate}})</div>

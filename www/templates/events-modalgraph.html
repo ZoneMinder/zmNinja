@@ -1,6 +1,6 @@
 <div ng-controller="EventsModalGraphCtrl">
   <ion-modal-view cache-view="false" style="width:80%;height:80%; top: 10%; left: 10%; right: 10%; bottom: 10%;">
-    <ion-content ng-cloak on-double-tap="closeModal()" delegate-handle="eventgraph-modal-delegate">
+    <ion-content class="notch-ready" ng-cloak on-double-tap="closeModal()" delegate-handle="eventgraph-modal-delegate">
       <div data-tap-disabled="true">
         <canvas id="eventchart" width="auto" height="70%"></canvas>
       </div>
