@@ -32,7 +32,7 @@ angular.module('zmApp.controllers')
 
   })
 
-  .controller('zmApp.EventCtrl', ['$scope', '$rootScope', 'zm', 'NVR', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', '$ionicSlideBoxDelegate', '$ionicPosition', '$ionicPopover', '$ionicPopup', 'EventServer', '$sce', '$cordovaBadge', '$cordovaLocalNotification', '$q', 'carouselUtils', '$translate', '$cordovaFileTransfer', '$cordovaFile', '$ionicListDelegate', 'ionPullUpFooterState', 'SecuredPopups', function ($scope, $rootScope, zm, NVR, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPosition, $ionicPopover, $ionicPopup, EventServer, $sce, $cordovaBadge, $cordovaLocalNotification, $q, carouselUtils, $translate, $cordovaFileTransfer, $cordovaFile, $ionicListDelegate, ionPullUpFooterState,SecuredPopups) {
+  .controller('zmApp.EventCtrl', ['$scope', '$rootScope', 'zm', 'NVR', 'message', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$ionicPlatform', '$ionicSlideBoxDelegate', '$ionicPosition', '$ionicPopover', '$ionicPopup', 'EventServer', '$sce', '$cordovaBadge', '$cordovaLocalNotification', '$q', 'carouselUtils', '$translate', '$cordovaFileTransfer', '$cordovaFile', '$ionicListDelegate', 'ionPullUpFooterState', 'SecuredPopups', '$window', function ($scope, $rootScope, zm, NVR, message, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $ionicPlatform, $ionicSlideBoxDelegate, $ionicPosition, $ionicPopover, $ionicPopup, EventServer, $sce, $cordovaBadge, $cordovaLocalNotification, $q, carouselUtils, $translate, $cordovaFileTransfer, $cordovaFile, $ionicListDelegate, ionPullUpFooterState,SecuredPopups, $window) {
 
     // events in last 5 minutes
     // TODO https://server/zm/api/events/consoleEvents/5%20minute.json
@@ -182,6 +182,8 @@ angular.module('zmApp.controllers')
 
 
     $scope.$on('$ionicView.beforeLeave', function () {
+      //$window.removeEventListener('orientationchange', updateUI);
+
       if ($stateParams.lastCheckTime != undefined && $stateParams.lastCheckTime != '' && moment($stateParams.lastCheckTime).isValid()) {
           NVR.debug ("removing montage temporary filter");
           $rootScope.isEventFilterOn = false;

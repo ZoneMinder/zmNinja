@@ -212,7 +212,12 @@ angular.module('ionic-pullup', [])
                     }
                 };
 
+                function cleanup() {
+                    $window.removeEventListener('orientationchange', updateUI);
+                    deregisterWatch();
+                }
                 var deregisterWatch = $scope.$watch('state', function (newState, oldState) {
+                    
                     if (oldState === undefined || newState == oldState) return;
                     switch (newState) {
                         case FooterState.COLLAPSED:
@@ -228,7 +233,7 @@ angular.module('ionic-pullup', [])
                     $rootScope.$broadcast('ionPullUp:tap', $scope.state, footer.defaultBehavior);
                 });
 
-                $scope.$on('$destroy', deregisterWatch);
+                $scope.$on('$destroy', cleanup);
 
                 $ionicPlatform.ready(function () {
                     $window.addEventListener('orientationchange', updateUI);
