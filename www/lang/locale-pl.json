@@ -136,6 +136,7 @@
     "kFilterEvents"              :"Filtruj Zdarzenia",
     "kFilterEventsBetween1"      :"Przeglądasz Zdarzenia między",
     "kFilterEventsBetween2"      :"Czy chcesz usunąć ten filtr?",
+    "kFilterEventsSelectiveMon"  :"dla wybranych Monitorów",
     "kFilterOn"                  :"Filtr włączony",
     "kFilterSettings"            :"Ustawienia filtra",
     "kFitScreen"                 :"dopasuj do ekranu",
