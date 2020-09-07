@@ -1734,7 +1734,11 @@ angular.module('zmApp.controllers')
         NVR.debug("Deregistering handlers for multi-window");
         window.MultiWindowPlugin.deregisterOnStop("montage-pause");
 
+      } else {
+        document.removeEventListener("pause", onPause, false);
+
       }
+     
       if ($scope.modal) $scope.modal.remove();
     });
 
@@ -2380,8 +2384,13 @@ angular.module('zmApp.controllers')
         $state.go(s[0],s[1],s[2]);
       });
 
-      window.addEventListener("resize", jiggleMontage, false);
-     
+      //window.addEventListener("resize", jiggleMontage, false);
+      $scope.$on('sizechanged', function() {
+        $timeout (function () {
+          jiggleMontage();
+        },10);
+    
+      });
 
       timeInMontage = new Date();
       broadcastHandles = [];
@@ -2632,7 +2641,7 @@ angular.module('zmApp.controllers')
    };
     $scope.$on('$ionicView.beforeLeave', function () {
 
-      window.removeEventListener("resize", jiggleMontage, false);
+     // window.removeEventListener("resize", jiggleMontage, false);
       currentStreamState = streamState.STOPPED;
       viewCleanup();
       viewCleaned = true;

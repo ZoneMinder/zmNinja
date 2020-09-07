@@ -1,4 +1,4 @@
-<ion-view view-title="{{'kEventMontage' | translate}}" cache-view="false" hide-nav-bar="{{minimal}}">
+<ion-view view-title="{{'kEventMontage' | translate}}" cache-view="false" hide-nav-bar="{{minimal}}" style="background-color:#444444">
   <ion-nav-buttons side="left">
     <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
     <button class="button button-icon button-clear ion-arrow-move" ng-click="dragToggle();">&nbsp; </button>
@@ -13,7 +13,7 @@
       ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
   </ion-nav-buttons>
   <ion-content has-bouncing="false" style="background-color:#444444" delegate-handle="none" overflow-scroll="false"
-    mouse-wheel-scroll>
+    mouse-wheel-scroll class="notch-ready">
     <div class="timeline_text"> {{'kFrom' | translate}}:{{prettifyDateTimeFirst(datetimeValueFrom.value)}}
       ({{humanizeTime(datetimeValueFrom.value)}})
       <div ng-if="!isMultiPort">({{'kChromeMax' | translate}})</div>

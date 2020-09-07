@@ -24,7 +24,7 @@
     </ion-header-bar>
   </div>
   <!-- collection repeat forces js scrolling, thing to remember -->
-  <ion-content ng-cloak on-tap="tapped();" delegate-handle="mainScroll" mouse-wheel-scroll on-scroll="scrolling();">
+  <ion-content class="notch-ready" ng-cloak on-tap="tapped();" delegate-handle="mainScroll" mouse-wheel-scroll on-scroll="scrolling();" >
     <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()">
     </ion-refresher>
     <!-- needed for header-shrink so first item doesn't go below header-->

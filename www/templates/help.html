@@ -4,7 +4,7 @@
     <button data-badge="{{$root.alarmCount}}" class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge"
       ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
   </ion-nav-buttons>
-  <ion-content class="padding" delegate-handle="none" overflow-scroll="false" mouse-wheel-scroll>
+  <ion-content class="notch-ready" delegate-handle="none" overflow-scroll="false" mouse-wheel-scroll>
     <p>
       <small>{{$root.appName}} v{{zmAppVersion}}</small>
     </p>
