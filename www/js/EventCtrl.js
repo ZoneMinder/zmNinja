@@ -3056,7 +3056,7 @@ angular.module('zmApp.controllers')
       var maxRowHeight;
 
       if (ld.eventViewThumbsSize == 'large') {
-        maxRowHeight = $scope.rowHeight - 170;
+        maxRowHeight = $scope.rowHeight - 190;
         if (landscape) {
           // go till 90% of width in large landscape, but restricted to useable row height 
           return calculateAspectRatioFit(mw, mh, 0.9* $rootScope.devWidth, maxRowHeight);
