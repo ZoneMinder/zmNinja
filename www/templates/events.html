@@ -34,7 +34,7 @@
       <ion-list show-delete="eventList.showDelete">
         
          <ion-item force-refresh-images="true" collection-repeat="event in events| filter:search.text |  eventListFilter" force-refresh-images=true 
-          item-height="event.Event.rowHeight" id="item-{{$index}}" on-swipe-left="checkSwipe($index);" force-refresh-images="true" >
+          id="item-{{$index}}" on-swipe-left="checkSwipe($index);" force-refresh-images="true" >
          
             <span
               style="float:left;margin-top:-18px;background-color:#96281B;color:#fff;font-size:11px;opacity:0.7;border-radius: 0px 0px 5px 5px;">&nbsp;&nbsp;&nbsp;
@@ -51,8 +51,14 @@
               <i class="ion-clock"></i>&nbsp;&nbsp;{{prettifyDate(event.Event.StartTime)}} &nbsp;{{tzAbbr}}&nbsp;
             </span>
 
+            <div class="row" ng-if="loginData.eventViewThumbs!='none' && thumbClass=='large'">
+                  <!-- for largeThumbs show image in this column -->
+                    <img  bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"
+                    on-tap="closeIfOpen(event);openModalWithSnapshot(event)" width="{{event.Event.thumbWidth}}px"
+                    height="{{event.Event.thumbHeight}}px" fallback-src="img/noimage.png" style="margin: auto;" />
+            </div>
             <div class="row" style="font-size:80%; color:rgb(110,110,110)">
-              <div class="col item-text-wrap"> <!-- data -->
+              <div class="item-text-wrap"> <!-- data -->
                   <!-- this ngswitch displays different icons
                     depending on the cause of the event -->
                   <span ng-switch on="event.Event.Cause" ng-class="::{'largeThumbsSpan': thumbClass=='large', 'smallThumbsSpan': thumbClass=='small'}">
@@ -71,34 +77,31 @@
                       style="color:red">&nbsp;</i>{{event.Event.MonitorName}}</b>
                   </span>
 
+                  <span ng-switch on="event.Event.Cause" ng-class="::{'largeThumbsSpan': thumbClass=='large', 'smallThumbsSpan': thumbClass=='small'}"
                   <i class="ion-images"></i> {{event.Event.Frames}} &nbsp;
                   <i class="ion-ios-bell-outline"></i> {{event.Event.AlarmFrames}} &nbsp;
                   <span style="font-size:80%; color:rgb(110,110,110)">
                     {{humanize(event.Event.Length)}} &nbsp;
                   </span>
-                  <br/><i class="ion-ios-pricetags-outline"></i>&nbsp; {{event.Event.Name}}
-
-                  <!-- for largeThumbs show image in this column -->
-                  <div ng-if="loginData.eventViewThumbs!='none' && thumbClass=='large'">
-                    <br/><img  bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"
-                    on-tap="closeIfOpen(event);openModalWithSnapshot(event)" width="{{event.Event.thumbWidth}}px"
-                    height="{{event.Event.thumbHeight}}px" fallback-src="img/noimage.png" />
-                  </div>
+                  </span>
+                  <span ng-switch on="event.Event.Cause" ng-class="::{'largeThumbsSpan': thumbClass=='large', 'smallThumbsSpan': thumbClass=='small'}"
+                  <i class="ion-ios-pricetags-outline"></i>&nbsp; {{event.Event.Name}}
+                  </span>
 
               </div> <!-- col-->
               <!-- 2 col format for small, 1 col format for large -->
-              <span ng-if="thumbClass=='small' && loginData.eventViewThumbs!='none'">
+              <span ng-if="thumbClass=='small' && loginData.eventViewThumbs!='none'" style="margin-left: auto;" >
                   <div class="col">
                     <img  bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"
                     on-tap="closeIfOpen(event);openModalWithSnapshot(event)" width="{{event.Event.thumbWidth}}px"
                     height="{{event.Event.thumbHeight}}px" fallback-src="img/noimage.png" />
                   </div> <!--col--->
               </span> <!-- thumbs -->
-             </div> <!--row-->
+            </div> <!--row-->
             <div ng-if="event.Event.Notes" class="row" style="font-size:80%; color:rgb(110,110,110)">
               <i class="ion-clipboard"></i>&nbsp; {{event.Event.Notes}}
             </div>
-            <div class="row" style="float:right; margin-right: 10px; display: block;">
+            <div class="row" style="float:right; margin-right: 10px; margin-top: 0px; display: block;">
               <span style="float:right">
                 <div ng-if="event.Event.EndTime || 1">
                   <button class="button button-stable button-small button-outline icon icon-left ion-stats-bars"
