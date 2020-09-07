@@ -227,23 +227,14 @@ angular.module('zmApp.controllers')
         if (ld.eventViewThumbsSize == 'large') {
           NVR.debug ('Switching to big thumbs style');
           $scope.thumbClass = 'large';
-          $scope.rowHeightRegular = 450;
-          $scope.rowHeightExpanded = $scope.rowHeightRegular + 230;
         } else {
           NVR.debug ('using small thumbs style');
           $scope.thumbClass = 'small';
-          $scope.rowHeightRegular = 250;
-          $scope.rowHeightExpanded = $scope.rowHeightRegular + 200;
-  
         }
       } else {
           NVR.debug ('No thumbs');
-          $scope.rowHeightRegular = 170;
-          $scope.rowHeightExpanded = $scope.rowHeightRegular + 200;
       }
       
-
-      $scope.rowHeight = $scope.rowHeightRegular;
       $scope.mid = '';
 
 
@@ -2082,10 +2073,6 @@ angular.module('zmApp.controllers')
       if (!$ionicScrollDelegate.$getByHandle("mainScroll").getScrollPosition()) $scope.navTitle = "";
       var scrl = parseFloat($ionicScrollDelegate.$getByHandle("mainScroll").getScrollPosition().top);
       eventHeight = $scope.rowHeight;
-      if (eventHeight == 0 && !$scope.eventsBeingLoaded && document.getElementById('item-0') != null) {
-        eventHeight = document.getElementById('item-0').offsetHeight;
-        //NVR.debug("scrl: " + scrl + ", eventHeight: " + eventHeight);
-      }
       var item = 0;
       if (eventHeight) {
         item = Math.floor(scrl / eventHeight);
@@ -2214,8 +2201,8 @@ angular.module('zmApp.controllers')
       if (event.Event.ShowScrub == true) // turn on display now
       {
 
-        event.Event.rowHeight = $scope.rowHeightExpanded;
         if (groupType == 'alarms') {
+          event.Event.rowHeight = $scope.rowHeightExpanded;
           // $ionicListDelegate.canSwipeItems(false);
           //NVR.debug ("Disabling flag swipe as alarms are swipable");
           $scope.alarm_images = [];
@@ -2322,7 +2309,7 @@ angular.module('zmApp.controllers')
 
           };
 
-          event.Event.rowHeight = $scope.rowHeightExpanded;
+          event.Event.rowHeight = $scope.rowHeightExpanded + 30;
           $ionicScrollDelegate.resize();
 
           $scope.mycarousel.index = 0;
@@ -2977,6 +2964,9 @@ angular.module('zmApp.controllers')
               var th = computeThumbnailSize(mw, mh, mo);
               myevents[currentPagePosition].Event.thumbWidth = th.w;
               myevents[currentPagePosition].Event.thumbHeight = th.h;
+              $scope.rowHeight = th.h + 144;
+              $scope.rowHeightRegular = $scope.rowHeight;
+              $scope.rowHeightExpanded = $scope.rowHeight + 230;
               myevents[currentPagePosition].Event.rowHeight = $scope.rowHeight;
              // myevents[currentPagePosition].Event.rowHeight = th.h + 50;
              // console.log ("************* RH:"+myevents[currentPagePosition].Event.rowHeight);
@@ -3054,7 +3044,7 @@ angular.module('zmApp.controllers')
       var maxRowHeight;
 
       if (ld.eventViewThumbsSize == 'large') {
-        maxRowHeight = $scope.rowHeight - 170;
+        maxRowHeight = 350;
         if (landscape) {
           // go till 90% of width in large landscape, but restricted to useable row height 
           return calculateAspectRatioFit(mw, mh, 0.9* $rootScope.devWidth, maxRowHeight);
@@ -3065,7 +3055,7 @@ angular.module('zmApp.controllers')
         }
 
       } else { // small
-        maxRowHeight = $scope.rowHeight - 150;
+        maxRowHeight = 70;
         if (landscape) {
           // go till 50% of width in small landscape, but restricted to useable row height 
           return calculateAspectRatioFit(mw, mh, 0.5* $rootScope.devWidth, maxRowHeight);
