@@ -1116,6 +1116,10 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     viewCleanup();
     viewCleaned = true;
 
+    document.removeEventListener("pause", onPause, false);
+    document.removeEventListener("resume", onResume, false);
+
+
 
     // if ($scope.modal) $scope.modal.remove();
     NVR.log("Cancelling event query timer");

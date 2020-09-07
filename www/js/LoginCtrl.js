@@ -328,6 +328,9 @@ angular.module('zmApp.controllers').controller('zmApp.LoginCtrl', ['$scope', '$r
 
   $scope.$on('$ionicView.beforeLeave', function () {
     //console.log("**VIEW ** LoginCtrl  Entered");
+    document.removeEventListener("pause", onPause, false);
+    document.removeEventListener("resume", onResume, false);
+
     var newLoginData = JSON.stringify($scope.loginData);
     if ($scope.loginData.serverName && newLoginData != oldLoginData) {
       NVR.log("Login data changed, saving...");

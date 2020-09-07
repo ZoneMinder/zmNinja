@@ -1125,6 +1125,11 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
   });
 
+  $scope.$on('$ionicView.beforeLeave', function () {
+  document.removeEventListener("pause", onPause, false);
+  ddocument.removeEventListener("resume", onResume, false);
+  });
+
   $scope.showHideControls = function () {
 
     if (videoPlaybarClicked) {
