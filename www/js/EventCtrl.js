@@ -209,6 +209,12 @@ angular.module('zmApp.controllers')
       broadcastHandles = [];
     });
 
+    $scope.$on('$ionicView.afterEnter', function () {
+      // don't know why but on app start, dimensions are wrong
+      NVR.computeDeviceSize();
+    });
+
+
     $scope.$on('$ionicView.beforeEnter', function () {
 
       /*

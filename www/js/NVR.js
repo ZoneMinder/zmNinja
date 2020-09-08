@@ -326,6 +326,21 @@ angular.module('zmApp.controllers')
         return  p? loginData.unsupported[p]:loginData.unsupported;
       }
 
+      function computeDeviceSize() {
+        var pixelRatio = window.devicePixelRatio || 1;
+        $rootScope.pixelRatio = pixelRatio;
+        $rootScope.devWidth = ((window.innerWidth > 0) ? window.innerWidth : screen.width);
+        $rootScope.devHeight = ((window.innerHeight > 0) ? window.innerHeight : screen.height);
+        $rootScope.videoHeight = $rootScope.devHeight - 20;
+        $rootScope.devWidthIgnorePix = $rootScope.devWidth;
+          
+        $rootScope.devWidth *= pixelRatio;
+        $rootScope.devHeight *= pixelRatio;
+
+        debug("resize/orient: " + $rootScope.devWidth + "(w) * " + $rootScope.devHeight+"(h)");
+
+      }
+
       function getBandwidth() {
         // if mode is not on always return high
         if (loginData.enableLowBandwidth == false) {
@@ -2866,6 +2881,9 @@ angular.module('zmApp.controllers')
 
         getSnapshotFrame: function () {
           return snapshotFrame;
+        },
+        computeDeviceSize: function () {
+          return computeDeviceSize();
         },
 
         //-----------------------------------------------------------------------------

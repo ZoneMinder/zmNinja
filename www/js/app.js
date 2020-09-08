@@ -1153,7 +1153,7 @@ angular.module('zmApp', [
       NVR.log ("setting size");
       $timeout (function () {
 
-        computeDeviceSize();
+        NVR.computeDeviceSize();
 
       },30);
       
@@ -1421,20 +1421,7 @@ angular.module('zmApp', [
         });
       }
 
-      function computeDeviceSize() {
-        var pixelRatio = window.devicePixelRatio || 1;
-        $rootScope.pixelRatio = pixelRatio;
-        $rootScope.devWidth = ((window.innerWidth > 0) ? window.innerWidth : screen.width);
-        $rootScope.devHeight = ((window.innerHeight > 0) ? window.innerHeight : screen.height);
-        $rootScope.videoHeight = $rootScope.devHeight - 20;
-        $rootScope.devWidthIgnorePix = $rootScope.devWidth;
-          
-        $rootScope.devWidth *= pixelRatio;
-        $rootScope.devHeight *= pixelRatio;
-
-        NVR.debug("resize/orient: " + $rootScope.devWidth + "(w) * " + $rootScope.devHeight+"(h)");
-
-      }
+      
 
       function onOnline() {
         $timeout(function () {
@@ -1497,7 +1484,7 @@ angular.module('zmApp', [
         // give rotation time to actually rotate, or width/height will be bogus
         $timeout ( function() {
       
-        computeDeviceSize();
+        NVR.computeDeviceSize();
         $rootScope.$broadcast('sizechanged');
 
         },300);
