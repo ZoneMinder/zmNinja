@@ -1139,7 +1139,6 @@ angular.module('zmApp', [
 
 
 
-      $rootScope.enteringEventFilter=false;
       $rootScope.dpadId = 0;
       $rootScope.textScaleFactor = 1.0;
       $rootScope.isLoggedIn = false;

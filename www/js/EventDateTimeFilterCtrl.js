@@ -25,10 +25,7 @@ angular.module('zmApp.controllers')
         }
       };
 
-      $scope.$on('$ionicView.beforeLeave', function () {
-        $rootScope.enteringEventFilter=false;
-      });
-
+      
       $scope.$on('$ionicView.beforeEnter', function () {
         $scope.today = moment().format("YYYY-MM-DD");
         $scope.monitors = NVR.getMonitorsNow();
