@@ -1,7 +1,7 @@
 <ion-popover-view class="fit">
   <ion-content class="notch-ready">
     <div class="list" ng-click="popover.hide()">
-      <a class="item" ng-href="" ng-click="popover.hide();$state.go('app.events-date-time-filter');">{{'kFilterByDateTime'
+      <a class="item" ng-href="" ng-click="popover.hide();$rootScope.enteringEventFilter=true;$state.go('app.events-date-time-filter');">{{'kFilterByDateTime'
         | translate}}</a>
       <!-- <a class="item" ng-href="" ng-click=" popover.hide();$state.go('events-graphs');" >
               Event Graphs
