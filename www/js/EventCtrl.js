@@ -80,7 +80,7 @@ angular.module('zmApp.controllers')
 
     $scope.$on('sizechanged', function() {
       $timeout (function () {
-        recomputeThumbSize();
+        recomputeEventCollectionSize();
       },10);
   
     });
@@ -3004,7 +3004,7 @@ angular.module('zmApp.controllers')
     }
 
 
-    function recomputeThumbSize() {
+    function recomputeEventCollectionSize() {
     //  NVR.debug("EventCtrl: recompute thumbnails");
 
     // remember, devHeight/devWidth upate 300ms after rotation
@@ -3022,8 +3022,12 @@ angular.module('zmApp.controllers')
             $scope.events[i].Event.thumbHeight = th.h;
             //console.log ("Setting to "+th.w+"*"+th.h);
             
-            eventHeight = document.getElementById('item-0').offsetHeight;
-  
+            $scope.rowHeight = th.h + 144;
+            $scope.rowHeightRegular = th.h;
+            $scope.rowHeightExpanded = th.h + 230;
+            $scope.events[i].Event.rowHeight = th.h + 144;
+            
+            console.log ("th.w: " + th.w + " th.h: " + th.h + " rowHeight: " + (th.h + 144));
           }
   
   

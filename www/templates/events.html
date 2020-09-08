@@ -55,7 +55,7 @@
                   <!-- for largeThumbs show image in this column -->
                     <img  bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"
                     on-tap="closeIfOpen(event);openModalWithSnapshot(event)" fallback-src="img/noimage.png"
-                    style="width: auto; height: auto; max-width: 100%; max-height: 300px; margin: auto;" />
+                    style="margin: auto;" width="{{event.Event.thumbWidth}}px" height="{{event.Event.thumbHeight}}px" />
             </div>
             <div class="row" style="font-size:80%; color:rgb(110,110,110)">
               <div class="item-text-wrap"> <!-- data -->
