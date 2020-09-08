@@ -180,11 +180,12 @@ angular.module('zmApp.controllers')
 
     }
 
-
-    $scope.$on('$ionicView.beforeLeave', function () {
-      //$window.removeEventListener('orientationchange', updateUI);
-
-      if ($stateParams.lastCheckTime != undefined && $stateParams.lastCheckTime != '' && moment($stateParams.lastCheckTime).isValid() && !$rootScope.enteringEventFilter) {
+    $scope.$on("$stateChangeStart", function(event, toState){
+        //console.log(event);
+        //console.log(toState);
+        
+        // clear the seach except when we are going to /events-date-time-filter
+        if (toState.url != "/events-date-time-filter") {
           NVR.debug ("removing montage temporary filter");
           $rootScope.isEventFilterOn = false;
           $rootScope.fromDate = "";
@@ -194,7 +195,12 @@ angular.module('zmApp.controllers')
           $rootScope.fromString = "";
           $rootScope.toString = "";
           $rootScope.monitorsFilter="";
-      }
+        }
+    });
+    
+    $scope.$on('$ionicView.beforeLeave', function () {
+      //$window.removeEventListener('orientationchange', updateUI);
+
       NVR.debug ("Cancelling page reload timer");
       $interval.cancel(intervalReloadEvents);
       document.removeEventListener("pause", onPause, false);
