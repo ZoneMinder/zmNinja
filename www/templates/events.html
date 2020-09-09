@@ -51,12 +51,13 @@
             </span>
 
             <div class="row" style="font-size:80%; color:rgb(110,110,110)">
-              <div class="col item-text-wrap"> <!-- data -->
+              <div class="item-text-wrap" style="width: 100%;"> <!-- data -->
                   <!-- for largeThumbs show image in this column -->
-                  <div ng-if="loginData.eventViewThumbs!='none' && thumbClass=='large'">
-                    <br/><img  bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"
+                  <div ng-if="loginData.eventViewThumbs!='none' && thumbClass=='large'" style="width: 100%;">
+                    <img  bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"
                     on-tap="closeIfOpen(event);openModalWithSnapshot(event)" width="{{event.Event.thumbWidth}}px"
-                    height="{{event.Event.thumbHeight}}px" fallback-src="img/noimage.png" />
+-                   height="{{event.Event.thumbHeight}}px" style="display: block; margin:auto;"
+                    fallback-src="img/noimage.png" />
                   </div>
                   
                   <!-- this ngswitch displays different icons
