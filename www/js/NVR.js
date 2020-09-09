@@ -334,8 +334,8 @@ angular.module('zmApp.controllers')
         $rootScope.videoHeight = $rootScope.devHeight - 20;
         $rootScope.devWidthIgnorePix = $rootScope.devWidth;
           
-        $rootScope.devWidth *= pixelRatio;
-        $rootScope.devHeight *= pixelRatio;
+        //$rootScope.devWidth *= pixelRatio;
+        //$rootScope.devHeight *= pixelRatio;
 
         debug("resize/orient: " + $rootScope.devWidth + "(w) * " + $rootScope.devHeight+"(h)");
 
