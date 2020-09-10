@@ -1487,7 +1487,7 @@ angular.module('zmApp', [
         NVR.computeDeviceSize();
         $rootScope.$broadcast('sizechanged');
 
-        },300);
+        },100);
         
 
       };

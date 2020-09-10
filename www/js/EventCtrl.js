@@ -79,9 +79,12 @@ angular.module('zmApp.controllers')
 
 
     $scope.$on('sizechanged', function() {
-      $timeout (function () {
+        recomputeRowHeights();
         recomputeThumbSize();
-      },10);
+       $scope.eventsBeingLoaded = true;
+       $timeout (function() {
+          $scope.eventsBeingLoaded =  false;
+        },20);
   
     });
 
@@ -214,6 +217,32 @@ angular.module('zmApp.controllers')
       NVR.computeDeviceSize();
     });
 
+    
+    function recomputeRowHeights() {
+      NVR.debug ("recomputing row height");
+      var ld = NVR.getLogin();
+      if (ld.eventViewThumbs != 'none') {
+        if (ld.eventViewThumbsSize == 'large') {
+          NVR.debug ('Switching to big thumbs style');
+          $scope.thumbClass = 'large';
+          $scope.rowHeightRegular = Math.min(450, $rootScope.devWidth);
+          $scope.rowHeightExpanded = $scope.rowHeightRegular + 230;
+        } else {
+          NVR.debug ('using small thumbs style');
+          $scope.thumbClass = 'small';
+          $scope.rowHeightRegular = Math.min(250, $rootScope.devWidth);
+          $scope.rowHeightExpanded = $scope.rowHeightRegular + 230;
+  
+        }
+      } else {
+          NVR.debug ('No thumbs');
+          $scope.rowHeightRegular = 170;
+          $scope.rowHeightExpanded = $scope.rowHeightRegular + 230;
+      }
+      
+
+      $scope.rowHeight = $scope.rowHeightRegular;
+    }
 
     $scope.$on('$ionicView.beforeEnter', function () {
 
@@ -232,30 +261,9 @@ angular.module('zmApp.controllers')
         The max size of the image is in computeThumbnailSize()
       */
 
-      var ld = NVR.getLogin();
-      if (ld.eventViewThumbs != 'none') {
-        if (ld.eventViewThumbsSize == 'large') {
-          NVR.debug ('Switching to big thumbs style');
-          $scope.thumbClass = 'large';
-          $scope.rowHeightRegular = 450;
-          $scope.rowHeightExpanded = $scope.rowHeightRegular + 230;
-        } else {
-          NVR.debug ('using small thumbs style');
-          $scope.thumbClass = 'small';
-          $scope.rowHeightRegular = 250;
-          $scope.rowHeightExpanded = $scope.rowHeightRegular + 200;
-  
-        }
-      } else {
-          NVR.debug ('No thumbs');
-          $scope.rowHeightRegular = 170;
-          $scope.rowHeightExpanded = $scope.rowHeightRegular + 200;
-      }
-      
-
-      $scope.rowHeight = $scope.rowHeightRegular;
+      recomputeRowHeights();
       $scope.mid = '';
-
+      var ld = NVR.getLogin();
       if (ld.eventViewThumbs != 'objdetect_gif') {
         maxEventsToLoad = 50; 
       } else {
@@ -2369,7 +2377,6 @@ angular.module('zmApp.controllers')
 
         NVR.debug("EventCtrl:Old event scrub will hide now");
         oldEvent.Event.ShowScrub = false;
-        event.Event.rowHeight = $scope.rowHeightRegular;
         oldEvent = "";
       }
 
@@ -2396,7 +2403,6 @@ angular.module('zmApp.controllers')
       if (event.Event.ShowScrub == true) // turn on display now
       {
 
-        event.Event.rowHeight = $scope.rowHeightExpanded;
         if (groupType == 'alarms') {
           // $ionicListDelegate.canSwipeItems(false);
           //NVR.debug ("Disabling flag swipe as alarms are swipable");
@@ -2504,7 +2510,6 @@ angular.module('zmApp.controllers')
 
           };
 
-          event.Event.rowHeight = $scope.rowHeightExpanded;
           $ionicScrollDelegate.resize();
 
           $scope.mycarousel.index = 0;
@@ -2630,7 +2635,6 @@ angular.module('zmApp.controllers')
         // 
         // $ionicListDelegate.canSwipeItems(true);
         // NVR.debug ("enabling options swipe");
-        event.Event.rowHeight = $scope.rowHeightRegular;
         $ionicSideMenuDelegate.canDragContent(true);
         $ionicScrollDelegate.resize();
 
@@ -3317,9 +3321,8 @@ angular.module('zmApp.controllers')
 
     function recomputeThumbSize() {
     //  NVR.debug("EventCtrl: recompute thumbnails");
-
+    NVR.debug ("recompute thumbs size");
     // remember, devHeight/devWidth upate 300ms after rotation
-      $timeout ( function () {
         for (var i = 0; i < $scope.events.length; i++) {
           var tempMon = NVR.getMonitorObject($scope.events[i].Event.MonitorId);
           if (tempMon != undefined) {
@@ -3339,7 +3342,6 @@ angular.module('zmApp.controllers')
   
   
         }
-      },500);
       
 
     }
@@ -3366,21 +3368,21 @@ angular.module('zmApp.controllers')
         maxRowHeight = $scope.rowHeight - 190;
         if (landscape) {
           // go till 90% of width in large landscape, but restricted to useable row height 
-          return calculateAspectRatioFit(mw, mh, 0.9* $rootScope.devWidth, maxRowHeight);
+          return calculateAspectRatioFit(mw, mh, 0.95* $rootScope.devWidth, maxRowHeight);
         } else {
                     // go till 80% of width in large portrait, but restricted to useable row height 
 
-          return calculateAspectRatioFit(mw, mh, 0.8* $rootScope.devWidth, maxRowHeight);
+          return calculateAspectRatioFit(mw, mh, 0.95* $rootScope.devWidth, maxRowHeight);
         }
 
       } else { // small
-        maxRowHeight = $scope.rowHeight - 150;
+        maxRowHeight = $scope.rowHeight - 120;
         if (landscape) {
           // go till 50% of width in small landscape, but restricted to useable row height 
           return calculateAspectRatioFit(mw, mh, 0.5* $rootScope.devWidth, maxRowHeight);
         } else {
                     // go till 30% of width in small portrait, but restricted to useable row height 
-          return calculateAspectRatioFit(mw, mh, 0.3* $rootScope.devWidth, maxRowHeight);
+          return calculateAspectRatioFit(mw, mh, 0.5* $rootScope.devWidth, maxRowHeight);
         }
 
       }
