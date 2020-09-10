@@ -84,7 +84,7 @@ angular.module('zmApp.controllers')
        $scope.eventsBeingLoaded = true;
        $timeout (function() {
           $scope.eventsBeingLoaded =  false;
-        },20);
+        },300);
   
     });
 
@@ -3336,7 +3336,7 @@ angular.module('zmApp.controllers')
             $scope.events[i].Event.thumbHeight = th.h;
             //console.log ("Setting to "+th.w+"*"+th.h);
             
-            eventHeight = document.getElementById('item-0').offsetHeight;
+           // eventHeight = document.getElementById('item-0').offsetHeight;
   
           }
   
