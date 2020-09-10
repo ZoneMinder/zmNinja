@@ -3359,24 +3359,24 @@ angular.module('zmApp.controllers')
       var maxRowHeight;
 
       if (ld.eventViewThumbsSize == 'large') {
-        maxRowHeight = 350;
+        maxRowHeight = 0.7* $rootScope.devHeight;
         if (landscape) {
           // go till 90% of width in large landscape, but restricted to useable row height 
           return calculateAspectRatioFit(mw, mh, 0.9* $rootScope.devWidth, maxRowHeight);
         } else {
                     // go till 80% of width in large portrait, but restricted to useable row height 
 
-          return calculateAspectRatioFit(mw, mh, 0.8* $rootScope.devWidth, maxRowHeight);
+          return calculateAspectRatioFit(mw, mh, 0.9* $rootScope.devWidth, maxRowHeight);
         }
 
       } else { // small
-        maxRowHeight = 70;
+        maxRowHeight = 120;
         if (landscape) {
           // go till 50% of width in small landscape, but restricted to useable row height 
-          return calculateAspectRatioFit(mw, mh, 0.5* $rootScope.devWidth, maxRowHeight);
+          return calculateAspectRatioFit(mw, mh, 0.4* $rootScope.devWidth, maxRowHeight);
         } else {
                     // go till 30% of width in small portrait, but restricted to useable row height 
-          return calculateAspectRatioFit(mw, mh, 0.3* $rootScope.devWidth, maxRowHeight);
+          return calculateAspectRatioFit(mw, mh, 0.4* $rootScope.devWidth, maxRowHeight);
         }
 
       }
