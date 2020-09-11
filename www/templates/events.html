@@ -50,10 +50,10 @@
               <i class="ion-calendar"></i>&nbsp;&nbsp;{{prettifyDate(event.Event.StartTime)}} &nbsp;{{tzAbbr}}&nbsp;
             </span>
 
-            <div class="row" style="font-size:80%; color:rgb(110,110,110)">
-              <div class="col events-list-text"> <!-- data -->
+            <div class="row" style="font-size:80%; color:rgb(110,110,110); padding-bottom: 0px;">
+              <div class="col events-list-text" style="padding-bottom: 0px;"> <!-- data -->
                   <!-- for largeThumbs show image in this column -->
-                  <div ng-if="loginData.eventViewThumbs!='none' && thumbClass=='large'" width="100%">
+                  <div ng-if="loginData.eventViewThumbs!='none' && thumbClass=='large'" width="100%" style="padding-bottom: 5px;">
                     <img  bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"
                     on-tap="closeIfOpen(event);openModalWithSnapshot(event)" width="{{event.Event.thumbWidth}}px"
                     height="{{event.Event.thumbHeight}}px" fallback-src="img/noimage.png" style="display: block;margin: auto;"/>
