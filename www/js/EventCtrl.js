@@ -81,10 +81,11 @@ angular.module('zmApp.controllers')
     $scope.$on('sizechanged', function() {
         recomputeRowHeights();
         recomputeThumbSize();
-       $scope.eventsBeingLoaded = true;
-       $timeout (function() {
+        $scope.$apply();
+      // $scope.eventsBeingLoaded = true;
+     /*  $timeout (function() {
           $scope.eventsBeingLoaded =  false;
-        },300);
+        },300);*/
   
     });
 
