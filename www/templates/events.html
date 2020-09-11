@@ -52,6 +52,12 @@
 
             <div class="row" style="font-size:80%; color:rgb(110,110,110)">
               <div class="col events-list-text"> <!-- data -->
+                <!-- for largeThumbs show image in this column -->
+                <div ng-if="loginData.eventViewThumbs!='none' && thumbClass=='large'">
+                  <br/><img  bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"
+                  on-tap="closeIfOpen(event);openModalWithSnapshot(event)" width="{{event.Event.thumbWidth}}px"
+                  height="{{event.Event.thumbHeight}}px" fallback-src="img/noimage.png" />
+                </div>
                   <!-- this ngswitch displays different icons
                     depending on the cause of the event -->
                   <span ng-switch on="event.Event.Cause" ng-class="::{'largeThumbsSpan': thumbClass=='large', 'smallThumbsSpan': thumbClass=='small'}">
@@ -76,14 +82,6 @@
                     {{humanize(event.Event.Length)}} &nbsp;
                   </span>
                   <br/><i class="ion-ios-pricetags-outline"></i>&nbsp; {{event.Event.Name}}
-
-                  <!-- for largeThumbs show image in this column -->
-                  <div ng-if="loginData.eventViewThumbs!='none' && thumbClass=='large'">
-                    <br/><img  bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"
-                    on-tap="closeIfOpen(event);openModalWithSnapshot(event)" width="{{event.Event.thumbWidth}}px"
-                    height="{{event.Event.thumbHeight}}px" fallback-src="img/noimage.png" />
-                  </div>
-
               </div> <!-- col-->
               <!-- 2 col format for small, 1 col format for large -->
               <span ng-if="thumbClass=='small' && loginData.eventViewThumbs!='none'">
