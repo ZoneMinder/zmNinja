@@ -75,7 +75,9 @@
                   <span style="font-size:80%; color:rgb(110,110,110)">
                     {{humanize(event.Event.Length)}} &nbsp;
                   </span>
-                  <br/><i class="ion-ios-pricetags-outline"></i>&nbsp; {{event.Event.Name}}
+                  <span ng-switch on="event.Event.Cause" ng-class="::{'largeThumbsSpan': thumbClass=='large', 'smallThumbsSpan': thumbClass=='small'}">
+                    <i class="ion-ios-pricetags-outline"></i>&nbsp; {{event.Event.Name}}
+                  </span>
 
                   <!-- for largeThumbs show image in this column -->
                   <div ng-if="loginData.eventViewThumbs!='none' && thumbClass=='large'">
