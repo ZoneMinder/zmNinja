@@ -226,8 +226,8 @@ angular.module('zmApp.controllers')
         if (ld.eventViewThumbsSize == 'large') {
           NVR.debug ('Switching to big thumbs style');
           $scope.thumbClass = 'large';
-          $scope.rowHeightRegular = Math.min(450, $rootScope.devWidth);
-          $scope.rowHeightExpanded = $scope.rowHeightRegular + 230;
+          $scope.rowHeightRegular = Math.min(400, $rootScope.devWidth);
+          $scope.rowHeightExpanded = $scope.rowHeightRegular + 260;
         } else {
           NVR.debug ('using small thumbs style');
           $scope.thumbClass = 'small';
@@ -3366,7 +3366,7 @@ angular.module('zmApp.controllers')
       var maxRowHeight;
 
       if (ld.eventViewThumbsSize == 'large') {
-        maxRowHeight = $scope.rowHeight - 190;
+        maxRowHeight = $scope.rowHeight - 140;
         if (landscape) {
           // go till 90% of width in large landscape, but restricted to useable row height 
           return calculateAspectRatioFit(mw, mh, 0.95* $rootScope.devWidth, maxRowHeight);
