@@ -82,6 +82,9 @@
                     {{humanize(event.Event.Length)}} &nbsp;
                   </span>
                   <br/><i class="ion-ios-pricetags-outline"></i>&nbsp; {{event.Event.Name}}
+                  <div ng-if="event.Event.Notes" >
+                    <i class="ion-clipboard"></i>&nbsp; {{event.Event.Notes}}
+                  </div>
               </div> <!-- col-->
               <!-- 2 col format for small, 1 col format for large -->
               <span ng-if="thumbClass=='small' && loginData.eventViewThumbs!='none'">
@@ -91,10 +94,10 @@
                     height="{{event.Event.thumbHeight}}px" fallback-src="img/noimage.png" />
                   </div> <!--col--->
               </span> <!-- thumbs -->
+
+              
              </div> <!--row-->
-            <div ng-if="event.Event.Notes" class="row" style="font-size:80%; color:rgb(110,110,110)">
-              <i class="ion-clipboard"></i>&nbsp; {{event.Event.Notes}}
-            </div>
+            
             <div class="row" style="float:right; margin-right: 10px; display: block;">
               <span style="float:right">
                 <div ng-if="event.Event.EndTime || 1">
