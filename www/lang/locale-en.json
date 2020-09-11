@@ -336,7 +336,7 @@
     "kReachabilityFailed"        :"primary login failed, trying fallbacks",
     "kRecaptcha"                 :"Looks like you have enabled reCaptcha. It needs to be turned off for the app to work",
     "kReconfirmPin"              :"Reconfirm PIN",
-    "kRecordingProgress"         :"recording in progress",
+    "kRecordingProgress"         :"in progress",
     "kReflow"                    :"reflow",
     "kRefresh"                   :"Refresh",
     "kRefreshedView"             :"refreshed view",

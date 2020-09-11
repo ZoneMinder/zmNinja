@@ -35,20 +35,28 @@
          <ion-item force-refresh-images="true" collection-repeat="event in events| filter:search.text |  eventListFilter" force-refresh-images=true 
           item-height="event.Event.ShowScrub? rowHeightExpanded:rowHeight" id="item-{{$index}}" on-swipe-left="checkSwipe($index);" force-refresh-images="true" >
          
-            <span
-              style="float:left;margin-top:-18px;background-color:#96281B;color:#fff;font-size:11px;opacity:0.7;border-radius: 0px 0px 5px 5px;">&nbsp;&nbsp;&nbsp;
-              <i
-                class="ion-clock"></i>&nbsp;&nbsp;{{prettifyTime(event.Event.StartTime)}}&nbsp;{{tzAbbr}}&nbsp;</span>&nbsp;&nbsp;
-            <span
-              style="float:left;margin-top:-18px;background-color:#fff;color:#888;font-size:11px;opacity:1;">&nbsp;&nbsp;
-              <i class="ion-arrow-right-b"></i>&nbsp;{{event.Event.humanizeTime}}
-              <span ng-if="!event.Event.EndTime">(
-                <span translate="kRecordingProgress"></span>)</span>
-            </span>
-            <span
-              style="float:right;margin-top:-18px;background-color:#444444;color:#fff;font-size:11px;opacity:0.7;border-radius: 0px 0px 5px 5px;">&nbsp;&nbsp;&nbsp;
-              <i class="ion-calendar"></i>&nbsp;&nbsp;{{prettifyDate(event.Event.StartTime)}} &nbsp;{{tzAbbr}}&nbsp;
-            </span>
+            <!-- item headers: date/time -->
+            <div class="row" style="padding-top:0px; padding-bottom:10px">
+              
+              <div class="col events-list-text" style="margin-top:-20px;padding:0px; ">
+                <div style="float:left;background-color:#96281B;color:#fff;font-size:11px;opacity:0.7;border-radius: 0px 0px 5px 5px;">
+                  &nbsp;&nbsp;<i class="ion-clock"></i>&nbsp;&nbsp;{{prettifyTime(event.Event.StartTime)}}&nbsp;{{tzAbbr}}&nbsp;&nbsp;&nbsp;
+                </div> 
+                <div  style="float:left;color:#444;font-size:11px;opacity:0.7;">
+                  &nbsp;<i class="ion-arrow-right-b"></i>&nbsp;{{event.Event.humanizeTime}}
+                  <span ng-if="!event.Event.EndTime">(
+                    <span translate="kRecordingProgress"></span>)
+                  </span>
+                </div>
+
+              </div>
+              <div class="col " style="margin-top:-20px;padding:0px; ">
+                <div  style="float:right;background-color:#444;color:#fff;font-size:11px;opacity:0.7;border-radius: 0px 0px 5px 5px;">
+                  &nbsp;&nbsp;<i class="ion-calendar"></i>&nbsp;&nbsp;{{prettifyDate(event.Event.StartTime)}} &nbsp;{{tzAbbr}}&nbsp;&nbsp;&nbsp;
+                </div>
+              </div>
+            </div> <!--row-->
+            
 
             <div class="row" style="font-size:80%; color:rgb(110,110,110)">
               <div class="col events-list-text"> <!-- data -->
