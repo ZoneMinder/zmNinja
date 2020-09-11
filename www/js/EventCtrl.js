@@ -226,18 +226,18 @@ angular.module('zmApp.controllers')
           NVR.debug ('Switching to big thumbs style');
           $scope.thumbClass = 'large';
           $scope.rowHeightRegular = Math.min(400, $rootScope.devWidth);
-          $scope.rowHeightExpanded = $scope.rowHeightRegular + 230;
+          $scope.rowHeightExpanded = $scope.rowHeightRegular + 260;
         } else {
           NVR.debug ('using small thumbs style');
           $scope.thumbClass = 'small';
           $scope.rowHeightRegular = Math.min(250, $rootScope.devWidth);
-          $scope.rowHeightExpanded = $scope.rowHeightRegular + 230;
+          $scope.rowHeightExpanded = $scope.rowHeightRegular + 260;
   
         }
       } else {
           NVR.debug ('No thumbs');
           $scope.rowHeightRegular = 170;
-          $scope.rowHeightExpanded = $scope.rowHeightRegular + 230;
+          $scope.rowHeightExpanded = $scope.rowHeightRegular + 260;
       }
       
 
