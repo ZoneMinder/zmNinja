@@ -80,10 +80,10 @@
                   </span>
 
                   <!-- for largeThumbs show image in this column -->
-                  <div ng-if="loginData.eventViewThumbs!='none' && thumbClass=='large'">
+                  <div ng-if="loginData.eventViewThumbs!='none' && thumbClass=='large'" width="100%">
                     <br/><img  bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"
                     on-tap="closeIfOpen(event);openModalWithSnapshot(event)" width="{{event.Event.thumbWidth}}px"
-                    height="{{event.Event.thumbHeight}}px" fallback-src="img/noimage.png" />
+                    height="{{event.Event.thumbHeight}}px" fallback-src="img/noimage.png" style="display: block;margin: auto;"/>
                   </div>
 
               </div> <!-- col-->
