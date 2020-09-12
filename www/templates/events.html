@@ -84,14 +84,14 @@
                       style="color:red">&nbsp;</i>{{event.Event.MonitorName}}</b>
                   </span>
 
-                  <span g-class="::{'largeThumbsSpan': thumbClass=='large', 'smallThumbsSpan': thumbClass=='small'}">
+                  <span ng-class="::{'largeThumbsSpan': thumbClass=='large', 'smallThumbsSpan': thumbClass=='small'}">
                     <i class="ion-images"></i> {{event.Event.Frames}} &nbsp;
                     <i class="ion-ios-bell-outline"></i> {{event.Event.AlarmFrames}} &nbsp;
                     <span style="font-size:80%; color:rgb(110,110,110)">
                       {{humanize(event.Event.Length)}} &nbsp;
                     </span>
                   </span>
-                  <span g-class="::{'largeThumbsSpan': thumbClass=='large', 'smallThumbsSpan': thumbClass=='small'}">
+                  <span ng-class="::{'largeThumbsSpan': thumbClass=='large', 'smallThumbsSpan': thumbClass=='small'}">
                     <i class="ion-ios-pricetags-outline"></i>&nbsp; {{event.Event.Name}}
                   </span>
                   <div ng-if="event.Event.Notes" >
