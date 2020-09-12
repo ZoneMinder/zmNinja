@@ -48,16 +48,16 @@
                     <span translate="kRecordingProgress"></span>)
                   </span>
                 </div>
-
               </div>
-              <div class="col " style="margin-top:-20px;padding:0px; ">
+
+              <div class="col events-list-text" style="margin-top:-20px;padding:0px; ">
                 <div  style="float:right;background-color:#444;color:#fff;font-size:11px;opacity:0.7;border-radius: 0px 0px 5px 5px;">
                   &nbsp;&nbsp;<i class="ion-calendar"></i>&nbsp;&nbsp;{{prettifyDate(event.Event.StartTime)}} &nbsp;{{tzAbbr}}&nbsp;&nbsp;&nbsp;
                 </div>
               </div>
             </div> <!--row-->
             
-
+            <!-- body of events-->
             <div class="row" style="font-size:80%; color:rgb(110,110,110)">
               <div class="col events-list-text"> <!-- data -->
                 <!-- for largeThumbs show image in this column -->
@@ -90,9 +90,9 @@
                     {{humanize(event.Event.Length)}} &nbsp;
                   </span>
                   <br/><i class="ion-ios-pricetags-outline"></i>&nbsp; {{event.Event.Name}}
-                  <div ng-if="event.Event.Notes" >
-                    <i class="ion-clipboard"></i>&nbsp; {{event.Event.Notes}}
-                  </div>
+                  <span ng-if="event.Event.Notes" >
+                    <br/><i class="ion-clipboard"></i>&nbsp; {{event.Event.Notes}}
+                  </span>
               </div> <!-- col-->
               <!-- 2 col format for small, 1 col format for large -->
               <span ng-if="thumbClass=='small' && loginData.eventViewThumbs!='none'">
@@ -106,6 +106,7 @@
               
              </div> <!--row-->
             
+             <!-- buttons -->
             <div class="row" style="float:right; margin-right: 10px; display: block;">
               <span style="float:right">
                 <div ng-if="event.Event.EndTime || 1">

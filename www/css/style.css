@@ -568,6 +568,7 @@ http://www.cssportal.com/tryit/index.php?file=blog/css-notification-badge */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  display: inline-block;
 }
 
 .popup80 .popup {
