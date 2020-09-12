@@ -79,15 +79,45 @@ angular.module('zmApp.controllers')
 
 
     $scope.$on('sizechanged', function() {
-        recomputeRowHeights();
-        recomputeThumbSize();
+        //recomputeRowHeights();
+        //recomputeThumbSize();
         $scope.$apply();
       // $scope.eventsBeingLoaded = true;
-     /*  $timeout (function() {
-          $scope.eventsBeingLoaded =  false;
-        },300);*/
+        $timeout (function() {
+          navTitle();
+        },300);
   
     });
+    
+    $scope.getRowHeight = function (event) {
+        var ld = NVR.getLogin();
+        var rowHeight = 134; // ViewThumbs == none
+        var scrubHeight = 274;
+        if (ld.eventViewThumbs != 'none') {
+            var tempMon = NVR.getMonitorObject(event.Event.MonitorId);
+            if (tempMon != undefined) {
+                var mw = parseInt(tempMon.Monitor.Width);
+                var mh = parseInt(tempMon.Monitor.Height);
+                var mo = parseInt(tempMon.Monitor.Orientation);
+                var th = computeThumbnailSize(mw, mh, mo);
+                event.Event.thumbWidth = th.w;
+                event.Event.thumbHeight = th.h;
+                
+                if (ld.eventViewThumbsSize == 'large') {
+                    rowHeight = th.h + 144;
+                }
+                else {
+                    rowHeight = th.h + 82;
+                }
+            }
+        }
+        if (event.Event.ShowScrub) {
+            return (rowHeight + scrubHeight);
+        }
+        else {
+            return (rowHeight);
+        }
+    };
 
     //we come here is TZ is updated after the view loads
     var tzu = $scope.$on('tz-updated', function () {
@@ -226,19 +256,12 @@ angular.module('zmApp.controllers')
         if (ld.eventViewThumbsSize == 'large') {
           NVR.debug ('Switching to big thumbs style');
           $scope.thumbClass = 'large';
-          $scope.rowHeightRegular = Math.min(450, $rootScope.devWidth);
-          $scope.rowHeightExpanded = $scope.rowHeightRegular + 230;
         } else {
           NVR.debug ('using small thumbs style');
           $scope.thumbClass = 'small';
-          $scope.rowHeightRegular = Math.min(250, $rootScope.devWidth);
-          $scope.rowHeightExpanded = $scope.rowHeightRegular + 230;
-  
         }
       } else {
           NVR.debug ('No thumbs');
-          $scope.rowHeightRegular = 170;
-          $scope.rowHeightExpanded = $scope.rowHeightRegular + 230;
       }
       
 
@@ -483,6 +506,7 @@ angular.module('zmApp.controllers')
       $scope.monitors = message;
       currEventsPage = 1;
       maxEventsPage = 1;
+      $scope.navTitle = "";
 
       if ($scope.monitors.length == 0) {
         var pTitle = $translate.instant('kNoMonitors');
@@ -574,7 +598,7 @@ angular.module('zmApp.controllers')
 
             myevents[i].Event.MonitorName = NVR.getMonitorName(myevents[i].Event.MonitorId);
             myevents[i].Event.ShowScrub = false;
-            myevents[i].Event.rowHeight = $scope.rowHeightRegular;
+            //myevents[i].Event.rowHeight = $scope.rowHeightRegular;
             // now construct base path
         
 
@@ -2272,21 +2296,20 @@ angular.module('zmApp.controllers')
       if (!$ionicScrollDelegate.$getByHandle("mainScroll")) $scope.navTitle = "";
       if (!$ionicScrollDelegate.$getByHandle("mainScroll").getScrollPosition()) $scope.navTitle = "";
       var scrl = parseFloat($ionicScrollDelegate.$getByHandle("mainScroll").getScrollPosition().top);
-      eventHeight = $scope.rowHeight;
-      if (eventHeight == 0 && !$scope.eventsBeingLoaded && document.getElementById('item-0') != null) {
-        eventHeight = document.getElementById('item-0').offsetHeight;
-        //NVR.debug("scrl: " + scrl + ", eventHeight: " + eventHeight);
-      }
-      var item = 0;
-      if (eventHeight) {
-        item = Math.floor(scrl / eventHeight);
-      }
+
       //NVR.debug("scrl: " + scrl + ", events[0].Event.Height: " + eventHeight + ", item: " + item);
-      if ($scope.events == undefined || !$scope.events.length || $scope.events[item] == undefined) {
+      if ($scope.events == undefined || !$scope.events.length) {
         $scope.navTitle = "";
       } else {
-        //return prettifyDate($scope.events[item].Event.StartTime);
-        $scope.navTitle = ($scope.events[item].Event.humanizeTime);
+        var eventHeightCounter = 0;
+        //loop until we pass the event...
+        for (var i = 0; i < $scope.events.length; i++) {
+            eventHeightCounter = eventHeightCounter + $scope.getRowHeight($scope.events[i]);
+            if ( eventHeightCounter > scrl ) {
+                $scope.navTitle = ($scope.events[i].Event.humanizeTime);
+                break;
+            }
+        }
       }
       $scope.$evalAsync();
       //return Math.random();
@@ -2380,6 +2403,8 @@ angular.module('zmApp.controllers')
         oldEvent.Event.ShowScrub = false;
         oldEvent = "";
       }
+      
+      var currentRowHeight = $scope.getRowHeight(event);
 
       event.Event.ShowScrub = !event.Event.ShowScrub;
 
@@ -2621,9 +2646,9 @@ angular.module('zmApp.controllers')
           // console.log("top location is " + toplocation);
           var distdiff = parseInt($rootScope.devHeight) - toplocation - objheight;
 
-          if (distdiff < $scope.rowHeight) // size of the scroller with bars
+          if (distdiff < currentRowHeight) // size of the scroller with bars
           {
-            scrollbynumber = $scope.rowHeight - distdiff;
+            scrollbynumber = currentRowHeight - distdiff;
             $ionicScrollDelegate.$getByHandle("mainScroll").scrollBy(0, scrollbynumber, true);
 
             // we need to scroll up to make space
@@ -3092,7 +3117,7 @@ angular.module('zmApp.controllers')
               //  console.log ("***** MULTISERVER BASE URL FOR EVENTS " + myevents[i].Event.recordingURL);
 
               myevents[i].Event.ShowScrub = false;
-              myevents[i].Event.rowHeight = $scope.rowHeightRegular;
+              //myevents[i].Event.rowHeight = $scope.rowHeightRegular;
 
 
               // get thumbW/H
@@ -3291,7 +3316,7 @@ angular.module('zmApp.controllers')
               var th = computeThumbnailSize(mw, mh, mo);
               myevents[currentPagePosition].Event.thumbWidth = th.w;
               myevents[currentPagePosition].Event.thumbHeight = th.h;
-              myevents[currentPagePosition].Event.rowHeight = $scope.rowHeight;
+              //myevents[currentPagePosition].Event.rowHeight = $scope.rowHeight;
              // myevents[currentPagePosition].Event.rowHeight = th.h + 50;
              // console.log ("************* RH:"+myevents[currentPagePosition].Event.rowHeight);
             }
@@ -3366,7 +3391,7 @@ angular.module('zmApp.controllers')
       var maxRowHeight;
 
       if (ld.eventViewThumbsSize == 'large') {
-        maxRowHeight = $scope.rowHeight - 190;
+        maxRowHeight = Math.min(0.7* $rootScope.devHeight, 450);
         if (landscape) {
           // go till 90% of width in large landscape, but restricted to useable row height 
           return calculateAspectRatioFit(mw, mh, 0.95* $rootScope.devWidth, maxRowHeight);
@@ -3377,7 +3402,7 @@ angular.module('zmApp.controllers')
         }
 
       } else { // small
-        maxRowHeight = $scope.rowHeight - 120;
+        maxRowHeight = 250;
         if (landscape) {
           // go till 50% of width in small landscape, but restricted to useable row height 
           return calculateAspectRatioFit(mw, mh, 0.5* $rootScope.devWidth, maxRowHeight);

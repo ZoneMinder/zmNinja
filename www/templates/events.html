@@ -33,7 +33,7 @@
       <ion-list show-delete="eventList.showDelete">
         
          <ion-item force-refresh-images="true" collection-repeat="event in events| filter:search.text |  eventListFilter" force-refresh-images=true 
-          item-height="event.Event.ShowScrub? rowHeightExpanded:rowHeight" id="item-{{$index}}" on-swipe-left="checkSwipe($index);" force-refresh-images="true" >
+          item-height="getRowHeight(event)" id="item-{{$index}}" on-swipe-left="checkSwipe($index);" force-refresh-images="true" >
          
             <!-- item headers: date/time -->
             <div class="row" style="padding-top:0px; padding-bottom:10px">
@@ -62,7 +62,7 @@
               <div class="col events-list-text"> <!-- data -->
                 <!-- for largeThumbs show image in this column -->
                 <div ng-if="loginData.eventViewThumbs!='none' && thumbClass=='large'"  width="100%" style="padding: 5px;">
-                  <br/><img  bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"
+                  <img  bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"
                   on-tap="closeIfOpen(event);openModalWithSnapshot(event)" width="{{event.Event.thumbWidth}}px"
                   height="{{event.Event.thumbHeight}}px" fallback-src="img/noimage.png" style="display: block; margin: auto;" />
                 </div>
@@ -145,10 +145,8 @@
             | translate}}</ion-option-button>
 
             <!-- this is the event scrub/alarm frames area -->
-            <div ng-if="isGroupShown(event)" style="min-height: 50px;">
+            <div class="row" ng-if="isGroupShown(event)" style="min-height: 50px;padding-top: 5px;margin-top: 0px;">
               <div ng-if="groupType=='alarms'">
-                <br />
-                <br />
                 <div>
                   <p>
                     <!--scroll <i class="icon ion-arrow-left-c"></i> 
@@ -188,9 +186,6 @@
               </div>
               <div ng-if="groupType=='scrub'">
                 <div ng-if="event.Event.DefaultVideo=='' || loginData.enableh264==false">
-                  <br />
-                  <br />
-                  <br />
                   <div style="width:90%">
                     <input ng-model="ionRange.index" type="text" id="mySlider1" slider options="slider_options" />
                   </div>
@@ -214,9 +209,6 @@
                 </div>
                 <!-- no DefaultVideo -->
                 <div ng-if="event.Event.DefaultVideo!='' && loginData.enableh264 == true">
-                  <br />
-                  <br />
-                  <br />
                   <div class="videogular-container">
                     <videogular vg-theme="event.Event.video.config.theme" vg-plays-inline="'true'" vg-auto-play="'true'"
                       vg-responsive="true" vg-can-play="eventCanPlay()" vg-player-ready="readyToPlay($API)">
