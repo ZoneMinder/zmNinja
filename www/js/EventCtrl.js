@@ -3467,6 +3467,20 @@ angular.module('zmApp.controllers')
 
     };
     
+    $scope.toggleThumbSize = function() {
+      var ld = NVR.getLogin();
+      ld.eventViewThumbsSize = (ld.eventViewThumbsSize == 'large')?'small':'large';
+      NVR.setLogin(ld);
+      $scope.loginData = ld;
+      recomputeRowHeights();
+     // $scope.$apply();
+      $ionicScrollDelegate.resize();
+    // $scope.eventsBeingLoaded = true;
+      $timeout (function() {
+        navTitle();
+      },300);
+    };
+
     $scope.toggleObjectDetectionFilter = function () {
       
       var ld = NVR.getLogin();

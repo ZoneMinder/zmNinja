@@ -6,6 +6,9 @@
       <!-- <a class="item" ng-href="" ng-click=" popover.hide();$state.go('events-graphs');" >
               Event Graphs
             </a>-->
+      <a class="item" style="text-transform:capitalize;" ng-href="" ng-click="popover.hide();toggleThumbSize();doRefresh();">
+        {{'kEventViewThumbsSize' | translate}}:{{(loginData.eventViewThumbsSize == 'small' ? 'kEventViewThumbsSmall': 'kEventViewThumbsLarge') | translate}}
+      </a>
       <a class="item" ng-href="" ng-click="popover.hide();doRefresh();">
         {{'kRefresh' | translate}}
       </a>
