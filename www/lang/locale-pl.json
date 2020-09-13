@@ -336,7 +336,7 @@
     "kReachabilityFailed"        :"podstawowe logowanie nie powiodło się, próbuję zapasowego",
     "kRecaptcha"                 :"Wygląda na to, że właczyłeś reCaptcha. Powinna być wyłączona, żeby aplikacja działała.",
     "kReconfirmPin"              :"Potwierdź PIN",
-    "kRecordingProgress"         :"trwa nagrywanie",
+    "kRecordingProgress"         :"w trakcie",
     "kReflow"                    :"uporządkuj Monitory",
     "kRefresh"                   :"odśwież",
     "kRefreshedView"             :"odśwież podgląd",
