@@ -82,6 +82,7 @@ angular.module('zmApp.controllers')
         //recomputeRowHeights();
         //recomputeThumbSize();
         $scope.$apply();
+        $ionicScrollDelegate.resize();
       // $scope.eventsBeingLoaded = true;
         $timeout (function() {
           navTitle();
