@@ -3389,27 +3389,30 @@ angular.module('zmApp.controllers')
       }
       var ld = NVR.getLogin();
       var landscape = ($rootScope.devWidth > $rootScope.devHeight) ? true:false;
-      var maxRowHeight;
+      var maxThumbHeight;
+      var maxThumbWidth;
 
       if (ld.eventViewThumbsSize == 'large') {
-        maxRowHeight = Math.min(0.7* $rootScope.devHeight, 450);
+        maxThumbHeight = Math.min(0.7* $rootScope.devHeight, 450);
+        maxThumbWidth = Math.min(0.95* $rootScope.devWidth, $rootScope.devWidth - 44);
         if (landscape) {
           // go till 90% of width in large landscape, but restricted to useable row height 
-          return calculateAspectRatioFit(mw, mh, 0.95* $rootScope.devWidth, maxRowHeight);
+          return calculateAspectRatioFit(mw, mh, maxThumbWidth, maxThumbHeight);
         } else {
                     // go till 80% of width in large portrait, but restricted to useable row height 
 
-          return calculateAspectRatioFit(mw, mh, 0.95* $rootScope.devWidth, maxRowHeight);
+          return calculateAspectRatioFit(mw, mh, maxThumbWidth, maxThumbHeight);
         }
 
       } else { // small
-        maxRowHeight = 250;
+        maxThumbHeight = 250;
+        maxThumbWidth = 0.5* $rootScope.devWidth;
         if (landscape) {
           // go till 50% of width in small landscape, but restricted to useable row height 
-          return calculateAspectRatioFit(mw, mh, 0.5* $rootScope.devWidth, maxRowHeight);
+          return calculateAspectRatioFit(mw, mh, maxThumbWidth, maxThumbHeight);
         } else {
                     // go till 30% of width in small portrait, but restricted to useable row height 
-          return calculateAspectRatioFit(mw, mh, 0.5* $rootScope.devWidth, maxRowHeight);
+          return calculateAspectRatioFit(mw, mh, maxThumbWidth, maxThumbHeight);
         }
 
       }
