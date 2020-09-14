@@ -24,218 +24,230 @@
     </ion-header-bar>
   </div>
   <!-- collection repeat forces js scrolling, thing to remember -->
-  <ion-content class="notch-ready" ng-cloak on-tap="tapped();" delegate-handle="mainScroll" mouse-wheel-scroll on-scroll="scrolling();" >
-  
+  <ion-content class="notch-ready" ng-cloak on-tap="tapped();" delegate-handle="mainScroll" mouse-wheel-scroll
+    on-scroll="scrolling();">
+
     <!-- needed for header-shrink so first item doesn't go below header-->
     <!-- <div style="height: 64px;"></div>-->
     <!-- lets make sure the events list is not empty as collection repeat needs height -->
     <div ng-if="!eventsBeingLoaded">
       <ion-list show-delete="eventList.showDelete">
-        
-         <ion-item force-refresh-images="true" collection-repeat="event in events| filter:search.text |  eventListFilter" force-refresh-images=true 
-          item-height="getRowHeight(event)" id="item-{{$index}}" on-swipe-left="checkSwipe($index);" force-refresh-images="true" >
-         
-            <!-- item headers: date/time -->
-            <div class="row" style="padding-top:0px; padding-bottom:10px">
-              
-              <div class="col events-list-text" style="margin-top:-20px;padding:0px; ">
-                <div style="float:left;background-color:#96281B;color:#fff;font-size:11px;opacity:0.7;border-radius: 0px 0px 5px 5px;">
-                  &nbsp;&nbsp;<i class="ion-clock"></i>&nbsp;&nbsp;{{prettifyTime(event.Event.StartTime)}}&nbsp;{{tzAbbr}}&nbsp;&nbsp;&nbsp;
-                </div> 
-                <span  style="color:#444;font-size:11px;opacity:0.7;">
-                  &nbsp;<i class="ion-arrow-right-b"></i>&nbsp;{{event.Event.humanizeTime}}
-                  <span ng-if="!event.Event.EndTime">(
-                    <span translate="kRecordingProgress"></span>)
-                  </span>
+
+        <ion-item force-refresh-images="true" collection-repeat="event in events| filter:search.text |  eventListFilter"
+          force-refresh-images=true item-height="getRowHeight(event)" id="item-{{$index}}"
+          on-swipe-left="checkSwipe($index);" force-refresh-images="true">
+
+          <!-- item headers: date/time -->
+          <div class="row" style="padding-top:0px; padding-bottom:10px">
+
+            <div class="col events-list-text" style="margin-top:-20px;padding:0px; ">
+              <div
+                style="float:left;background-color:#96281B;color:#fff;font-size:11px;opacity:0.7;border-radius: 0px 0px 5px 5px;">
+                &nbsp;&nbsp;<i
+                  class="ion-clock"></i>&nbsp;&nbsp;{{prettifyTime(event.Event.StartTime)}}&nbsp;{{tzAbbr}}&nbsp;&nbsp;&nbsp;
+              </div>
+              <span style="color:#444;font-size:11px;opacity:0.7;">
+                &nbsp;<i class="ion-arrow-right-b"></i>&nbsp;{{event.Event.humanizeTime}}
+                <span ng-if="!event.Event.EndTime">(
+                  <span translate="kRecordingProgress"></span>)
                 </span>
-              </div>
-
-              <div class="col events-list-text" style="margin-top:-20px;padding:0px; ">
-                <div  style="float:right;background-color:#444;color:#fff;font-size:11px;opacity:0.7;border-radius: 0px 0px 5px 5px;">
-                  &nbsp;&nbsp;<i class="ion-calendar"></i>&nbsp;&nbsp;{{prettifyDate(event.Event.StartTime)}} &nbsp;{{tzAbbr}}&nbsp;&nbsp;&nbsp;
-                </div>
-              </div>
-            </div> <!--row-->
-            
-            <!-- body of events-->
-            <div class="row" style="font-size:80%; color:rgb(110,110,110)">
-              <div class="col events-list-text"> <!-- data -->
-                <!-- for largeThumbs show image in this column -->
-                <div ng-if="loginData.eventViewThumbs!='none' && thumbClass=='large'"  width="100%" style="padding: 5px;">
-                  <img  bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"
-                  on-tap="closeIfOpen(event);openModalWithSnapshot(event)" width="{{event.Event.thumbWidth}}px"
-                  height="{{event.Event.thumbHeight}}px" fallback-src="img/noimage.png" style="display: block; margin: auto;" />
-                </div>
-                  <!-- this ngswitch displays different icons
-                    depending on the cause of the event -->
-                  <span ng-switch on="event.Event.Cause" ng-class="::{'largeThumbsSpan': thumbClass=='large', 'smallThumbsSpan': thumbClass=='small'}">
-                    <span ng-switch-when="Motion">
-                      <i class="ion-android-walk" style="font-size:150%;"></i>&nbsp;
-                      <!-- <i ng-class="(event.Event.DefaultVideo !== undefined && event.Event.DefaultVideo!='')? 'ion-ios-videocam':'ion-images'" style="float:left; padding-left:5px; font-size:100%;"></i>-->
-
-                    </span>
-                    <span ng-switch-when="Signal">
-                      <i class="ion-wifi" style="font-size:150%;"></i>&nbsp;
-                    </span>
-                    <span ng-switch-default>
-                      <i class="ion-ionic" style="font-size:150%;"></i>&nbsp;
-                    </span>
-                    <b><i ng-if="event.Event.Archived=='1'" class="ion-ios-flag"
-                      style="color:red">&nbsp;</i>{{event.Event.MonitorName}}</b>
-                  </span>
-
-                  <i class="ion-images"></i> {{event.Event.Frames}} &nbsp;
-                  <i class="ion-ios-bell-outline"></i> {{event.Event.AlarmFrames}} &nbsp;
-                  <span style="font-size:80%; color:rgb(110,110,110)">
-                    {{humanize(event.Event.Length)}} &nbsp;
-                  </span>
-                  <br/><i class="ion-ios-pricetags-outline"></i>&nbsp; {{event.Event.Name}}
-                  <span ng-if="event.Event.Notes" >
-                    <br/><i class="ion-clipboard"></i>&nbsp; {{event.Event.Notes}}
-                  </span>
-              </div> <!-- col-->
-              <!-- 2 col format for small, 1 col format for large -->
-              <span ng-if="thumbClass=='small' && loginData.eventViewThumbs!='none'">
-                  <div class="col">
-                    <img  bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"
-                    on-tap="closeIfOpen(event);openModalWithSnapshot(event)" width="{{event.Event.thumbWidth}}px"
-                    height="{{event.Event.thumbHeight}}px" fallback-src="img/noimage.png" />
-                  </div> <!--col--->
-              </span> <!-- thumbs -->
-
-              
-             </div> <!--row-->
-            
-             <!-- buttons -->
-            <div class="row" style="float:right; margin-right: 10px; display: block;">
-              <span style="float:right">
-                <div ng-if="event.Event.EndTime || 1">
-                  <button class="button button-stable button-small button-outline icon icon-left ion-stats-bars"
-                    ng-click="closeIfOpen(event);analyzeEvent(event)">
-                    <span translate="kAnalyze"></span>
-                  </button>
-                  <button class="button button-stable button-outline button-small icon icon-left ion-ios-eye"
-                    ng-click="toggleGroupScrub(event,$index,event.Event.Frames)">
-                    <span translate="kScrub"></span>
-                  </button>
-                  <button ng-if="event.Event.AlarmFrames > 0"
-                    class="button button-stable button-outline button-small icon icon-left ion-ios-bell"
-                    ng-click="toggleGroupAlarms(event,$index,event.Event.Frames)">
-                    <span translate="kAlarms"></span>
-                  </button>
-                  <button id='testaut_events_footage_button-{{$index}}'
-                    class="button button-stable button-outline button-small icon icon-left ion-ios-eye"
-                    ng-click="closeIfOpen(event);openModal(event)">
-                    <span translate="kFootage"></span>
-                  </button>
-                </div>
               </span>
             </div>
 
-            <ion-delete-button class="ion-minus-circled" ng-click="deleteEvent(event.Event.Id, $index)">
-            </ion-delete-button>
-
-
-            <ion-option-button ng-if="event.Event.Archived == 1" class="button-balanced"
-              ng-click="archiveUnarchiveEvent($index,event.Event.Id)">{{'kUnflag'
-            | translate}}</ion-option-button>
-
-            <ion-option-button ng-if="event.Event.Archived == 0" class="button-assertive"
-              ng-click="archiveUnarchiveEvent($index, event.Event.Id)">{{'kFlag'
-            | translate}}</ion-option-button>
-
-            <!-- this is the event scrub/alarm frames area -->
-            <div class="row" ng-if="isGroupShown(event)" style="min-height: 50px;padding-top: 5px;margin-top: 0px;">
-              <div ng-if="groupType=='alarms'">
-                <div>
-                  <p>
-                    <!--scroll <i class="icon ion-arrow-left-c"></i> 
-                                <i class="icon ion-arrow-right-c"></i>-->
-                    <button ng-click="toggleTypeOfAlarms()"
-                      class="button button-small button-assertive button-stable button-outline">
-                      <span translate="kType"></span>:{{typeOfFrames}}
-                    </button>
-                    <button ng-click="toggleMotionOutline()"
-                      class="button button-small button-assertive button-stable button-outline">
-                      <span translate="kOutlineMotion"></span>:{{outlineMotion}}
-                    </button>
-                  </p>
-
-
-                  <ion-scroll direction="x" overflow-scroll="false">
-                    <span ng-repeat="alarm in alarm_images | selectFrames: typeOfFrames">
-
-                      <figure class="animated slideInLeft" style="display:inline-block">
-                        <!--{{event.Event.recordingURL}} p:{{event.Event.imageMode}}-->
-                        <figcaption class="smallnote">
-                          <span translate="kFrame"></span>:{{alarm.frameid}},
-                          <span translate="kScore"></span>:{{alarm.score}},
-                          <span translate="kTime"></span>: {{prettifyTimeSec(alarm.time)}}</figcaption>
-                        <img ng-src="{{constructAlarmFrame(event,alarm,true)}}"
-                          fallback-src="{{constructAlarmFrame(event,alarm,false)}}"
-                          style="width: auto; height: auto;max-width: 100%;max-height: 170px"
-                          on-tap="showImage(event.Event.recordingURL, alarm.fname, alarm.frameid, event.Event.Id, event.Event.imageMode, alarm.id, alarm_images, $index)" />
-
-
-                      </figure>
-                    </span>
-                  </ion-scroll>
-
-
-                </div>
+            <div class="events-list-text" style="margin-top:-20px;padding:0px; ">
+              <div
+                style="float:right;background-color:#444;color:#fff;font-size:11px;opacity:0.7;border-radius: 0px 0px 5px 5px;">
+                &nbsp;&nbsp;<i class="ion-calendar"></i>&nbsp;&nbsp;{{prettifyDate(event.Event.StartTime)}}
+                &nbsp;{{tzAbbr}}&nbsp;&nbsp;&nbsp;
               </div>
-              <div ng-if="groupType=='scrub'">
-                <div ng-if="event.Event.DefaultVideo=='' || loginData.enableh264==false">
-                  <div style="width:90%">
-                    <input ng-model="ionRange.index" type="text" id="mySlider1" slider options="slider_options" />
-                  </div>
-                  <br />
-                  <p>{{mycarousel.index+1}}/{{event.Event.Frames}}
-                    <span translate="kType"></span>: {{FrameArray[mycarousel.index].Type}}</p>
-                  <div style="height:190px">
-                    <ul rn-carousel rn-carousel-buffered rn-carousel-transition="none" rn-swipe-disabled="true"
-                      rn-carousel-index="mycarousel.index"
-                      rn-carousel-auto-slide="{{event.Event.Length/event.Event.Frames}}" rn-carousel-pause-on-hover
-                      rn-platform="{{$root.platformOS}}">
-                      <li ng-repeat="slide in slides">
-                        <img imageonload="finishedLoadingImage($index)"
-                          image-spinner-src="{{constructScrubFrame(event,slide)}}" image-spinner-loader="lines"
-                          height="190px" ; />
-
-                        <br />
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <!-- no DefaultVideo -->
-                <div ng-if="event.Event.DefaultVideo!='' && loginData.enableh264 == true">
-                  <div class="videogular-container">
-                    <videogular vg-theme="event.Event.video.config.theme" vg-plays-inline="'true'" vg-auto-play="'true'"
-                      vg-responsive="true" vg-can-play="eventCanPlay()" vg-player-ready="readyToPlay($API)">
-                      <vg-overlay-play></vg-overlay-play>
-                      <vg-controls>
-                        <vg-play-pause-button></vg-play-pause-button>
-                        <vg-scrub-bar>
-                          <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
-                        </vg-scrub-bar>
-                        <vg-time-display>{{ timeLeft | date:'mm:ss':'+0000' }}</vg-time-display>
-                        <vg-fullscreen-button></vg-fullscreen-button>
-                        <vg-volume>
-                          <vg-mute-button></vg-mute-button>
-                        </vg-volume>
-                      </vg-controls>
-                      <vg-media vg-src="event.Event.video.config.sources" vg-native-controls="false">
-                      </vg-media>
-                    </videogular>
-                  </div>
-                </div>
-                <!-- DefaultVideo -->
-              </div>
-              <!-- type = scrub -->
-              <!-- isGroupShown -->
             </div>
-          </ion-item>
-        
+          </div>
+          <!--row-->
+
+          <!-- body of events-->
+          <div class="row" style="font-size:80%; color:rgb(110,110,110)">
+            <div class="col events-list-text">
+              <!-- data -->
+              <!-- for largeThumbs show image in this column -->
+              <div ng-if="loginData.eventViewThumbs!='none' && thumbClass=='large'" width="100%" style="padding: 5px;">
+                <img bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"
+                  on-tap="closeIfOpen(event);openModalWithSnapshot(event)" width="{{event.Event.thumbWidth}}px"
+                  height="{{event.Event.thumbHeight}}px" fallback-src="img/noimage.png"
+                  style="display: block; margin: auto;" />
+              </div>
+              <!-- this ngswitch displays different icons
+                    depending on the cause of the event -->
+              <span ng-switch on="event.Event.Cause"
+                ng-class="::{'largeThumbsSpan': thumbClass=='large', 'smallThumbsSpan': thumbClass=='small'}">
+                <span ng-switch-when="Motion">
+                  <i class="ion-android-walk" style="font-size:150%;"></i>&nbsp;
+                  <!-- <i ng-class="(event.Event.DefaultVideo !== undefined && event.Event.DefaultVideo!='')? 'ion-ios-videocam':'ion-images'" style="float:left; padding-left:5px; font-size:100%;"></i>-->
+
+                </span>
+                <span ng-switch-when="Signal">
+                  <i class="ion-wifi" style="font-size:150%;"></i>&nbsp;
+                </span>
+                <span ng-switch-default>
+                  <i class="ion-ionic" style="font-size:150%;"></i>&nbsp;
+                </span>
+                <b><i ng-if="event.Event.Archived=='1'" class="ion-ios-flag"
+                    style="color:red">&nbsp;</i>{{event.Event.MonitorName}}</b>
+              </span>
+
+              <i class="ion-images"></i> {{event.Event.Frames}} &nbsp;
+              <i class="ion-ios-bell-outline"></i> {{event.Event.AlarmFrames}} &nbsp;
+              <span style="font-size:80%; color:rgb(110,110,110)">
+                {{humanize(event.Event.Length)}} &nbsp;
+              </span>
+              <br /><i class="ion-ios-pricetags-outline"></i>&nbsp; {{event.Event.Name}}
+              <span ng-if="event.Event.Notes">
+                <br /><i class="ion-clipboard"></i>&nbsp; {{event.Event.Notes}}
+              </span>
+            </div> <!-- col-->
+            <!-- 2 col format for small, 1 col format for large -->
+            <span ng-if="thumbClass=='small' && loginData.eventViewThumbs!='none'">
+              <div class="col">
+                <img bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"
+                  on-tap="closeIfOpen(event);openModalWithSnapshot(event)" width="{{event.Event.thumbWidth}}px"
+                  height="{{event.Event.thumbHeight}}px" fallback-src="img/noimage.png" />
+              </div>
+              <!--col--->
+            </span> <!-- thumbs -->
+
+
+          </div>
+          <!--row-->
+
+          <!-- buttons -->
+          <div class="row" style="float:right; margin-right: 10px; display: block;">
+            <span style="float:right">
+              <div ng-if="event.Event.EndTime || 1">
+                <button class="button button-stable button-small button-outline icon icon-left ion-stats-bars"
+                  ng-click="closeIfOpen(event);analyzeEvent(event)">
+                  <span translate="kAnalyze"></span>
+                </button>
+                <button class="button button-stable button-outline button-small icon icon-left ion-ios-eye"
+                  ng-click="toggleGroupScrub(event,$index,event.Event.Frames)">
+                  <span translate="kScrub"></span>
+                </button>
+                <button ng-if="event.Event.AlarmFrames > 0"
+                  class="button button-stable button-outline button-small icon icon-left ion-ios-bell"
+                  ng-click="toggleGroupAlarms(event,$index,event.Event.Frames)">
+                  <span translate="kAlarms"></span>
+                </button>
+                <button id='testaut_events_footage_button-{{$index}}'
+                  class="button button-stable button-outline button-small icon icon-left ion-ios-eye"
+                  ng-click="closeIfOpen(event);openModal(event)">
+                  <span translate="kFootage"></span>
+                </button>
+              </div>
+            </span>
+          </div>
+
+          <ion-delete-button class="ion-minus-circled" ng-click="deleteEvent(event.Event.Id, $index)">
+          </ion-delete-button>
+
+
+          <ion-option-button ng-if="event.Event.Archived == 1" class="button-balanced"
+            ng-click="archiveUnarchiveEvent($index,event.Event.Id)">{{'kUnflag'
+            | translate}}</ion-option-button>
+
+          <ion-option-button ng-if="event.Event.Archived == 0" class="button-assertive"
+            ng-click="archiveUnarchiveEvent($index, event.Event.Id)">{{'kFlag'
+            | translate}}</ion-option-button>
+
+          <!-- this is the event scrub/alarm frames area -->
+          <div class="row" ng-if="isGroupShown(event)" style="min-height: 50px;padding-top: 5px;margin-top: 0px;">
+            <div ng-if="groupType=='alarms'">
+              <div>
+                <p>
+                  <!--scroll <i class="icon ion-arrow-left-c"></i> 
+                                <i class="icon ion-arrow-right-c"></i>-->
+                  <button ng-click="toggleTypeOfAlarms()"
+                    class="button button-small button-assertive button-stable button-outline">
+                    <span translate="kType"></span>:{{typeOfFrames}}
+                  </button>
+                  <button ng-click="toggleMotionOutline()"
+                    class="button button-small button-assertive button-stable button-outline">
+                    <span translate="kOutlineMotion"></span>:{{outlineMotion}}
+                  </button>
+                </p>
+
+
+                <ion-scroll direction="x" overflow-scroll="false">
+                  <span ng-repeat="alarm in alarm_images | selectFrames: typeOfFrames">
+
+                    <figure class="animated slideInLeft" style="display:inline-block">
+                      <!--{{event.Event.recordingURL}} p:{{event.Event.imageMode}}-->
+                      <figcaption class="smallnote">
+                        <span translate="kFrame"></span>:{{alarm.frameid}},
+                        <span translate="kScore"></span>:{{alarm.score}},
+                        <span translate="kTime"></span>: {{prettifyTimeSec(alarm.time)}}</figcaption>
+                      <img ng-src="{{constructAlarmFrame(event,alarm,true)}}"
+                        fallback-src="{{constructAlarmFrame(event,alarm,false)}}"
+                        style="width: auto; height: auto;max-width: 100%;max-height: 170px"
+                        on-tap="showImage(event.Event.recordingURL, alarm.fname, alarm.frameid, event.Event.Id, event.Event.imageMode, alarm.id, alarm_images, $index)" />
+
+
+                    </figure>
+                  </span>
+                </ion-scroll>
+
+
+              </div>
+            </div>
+            <div ng-if="groupType=='scrub'">
+              <div ng-if="event.Event.DefaultVideo=='' || loginData.enableh264==false">
+                <div style="width:90%">
+                  <input ng-model="ionRange.index" type="text" id="mySlider1" slider options="slider_options" />
+                </div>
+                <br />
+                <p>{{mycarousel.index+1}}/{{event.Event.Frames}}
+                  <span translate="kType"></span>: {{FrameArray[mycarousel.index].Type}}</p>
+                <div style="height:190px">
+                  <ul rn-carousel rn-carousel-buffered rn-carousel-transition="none" rn-swipe-disabled="true"
+                    rn-carousel-index="mycarousel.index"
+                    rn-carousel-auto-slide="{{event.Event.Length/event.Event.Frames}}" rn-carousel-pause-on-hover
+                    rn-platform="{{$root.platformOS}}">
+                    <li ng-repeat="slide in slides">
+                      <img imageonload="finishedLoadingImage($index)"
+                        image-spinner-src="{{constructScrubFrame(event,slide)}}" image-spinner-loader="lines"
+                        height="190px" ; />
+
+                      <br />
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <!-- no DefaultVideo -->
+              <div ng-if="event.Event.DefaultVideo!='' && loginData.enableh264 == true">
+                <div class="videogular-container">
+                  <videogular vg-theme="event.Event.video.config.theme" vg-plays-inline="'true'" vg-auto-play="'true'"
+                    vg-responsive="true" vg-can-play="eventCanPlay()" vg-player-ready="readyToPlay($API)">
+                    <vg-overlay-play></vg-overlay-play>
+                    <vg-controls>
+                      <vg-play-pause-button></vg-play-pause-button>
+                      <vg-scrub-bar>
+                        <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                      </vg-scrub-bar>
+                      <vg-time-display>{{ timeLeft | date:'mm:ss':'+0000' }}</vg-time-display>
+                      <vg-fullscreen-button></vg-fullscreen-button>
+                      <vg-volume>
+                        <vg-mute-button></vg-mute-button>
+                      </vg-volume>
+                    </vg-controls>
+                    <vg-media vg-src="event.Event.video.config.sources" vg-native-controls="false">
+                    </vg-media>
+                  </videogular>
+                </div>
+              </div>
+              <!-- DefaultVideo -->
+            </div>
+            <!-- type = scrub -->
+            <!-- isGroupShown -->
+          </div>
+        </ion-item>
+
       </ion-list>
     </div>
     <!-- !eventsBeingLoaded-->
