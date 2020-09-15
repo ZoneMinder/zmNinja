@@ -69,7 +69,8 @@
             <div class="col events-list-text">
               <!-- data -->
               <!-- for largeThumbs show image in this column -->
-              <div ng-if="loginData.eventViewThumbs!='none' && thumbClass=='large'" width="100%" style="padding: 5px;">
+              <div ng-if="loginData.eventViewThumbs!='none' && thumbClass=='large'" width="100%"
+                style="padding-top: 5px; padding-bottom: 5px; margin-left: -5px; margin-right: -5px;">
                 <img bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"
                   on-tap="closeIfOpen(event);openModalWithSnapshot(event)" width="{{event.Event.thumbWidth}}px"
                   height="{{event.Event.thumbHeight}}px" fallback-src="img/noimage.png"
