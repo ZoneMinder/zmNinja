@@ -2752,7 +2752,7 @@ angular.module('zmApp.controllers')
       $rootScope.isAlarm = 0;
 
       // reset badge count
-      if (window.FirebasePlugin && $rootScope.platformOS == 'ios') {
+      if (window.FirebasePlugin && $rootScope.platformOS != 'desktop') {
         NVR.debug ('Clearing app badge count');
         window.FirebasePlugin.setBadgeNumber(0);
 
