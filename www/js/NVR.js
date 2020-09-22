@@ -3320,6 +3320,7 @@ angular.module('zmApp.controllers')
                     });
               });
             
+            $rootScope.$broadcast('monitors-hard-reload');
             return d.promise;
 
           } else // monitors are loaded

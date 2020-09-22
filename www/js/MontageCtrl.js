@@ -54,7 +54,13 @@ angular.module('zmApp.controllers')
     var broadcastHandles = [];
 
     
-  
+    $scope.$on("monitors-hard-reload", function () {
+
+      NVR.debug ("Monitors reloaded, reloading monitor array");
+      $scope.MontageMonitors = angular.copy($scope.monitors);
+
+
+    });
  
 
     var as = $scope.$on("auth-success", function () {
@@ -1705,7 +1711,8 @@ angular.module('zmApp.controllers')
     }
 
     function onResume() {
-
+      NVR.debug ("resume called, hard refreshing monitor lists just to make sure...");
+      NVR.getMonitors(1);
       // we should be going to portal login so no need here
       //NVR.debug ("Montage resume called, regenerating all connkeys");
       //NVR.regenConnKeys();
@@ -2602,7 +2609,7 @@ angular.module('zmApp.controllers')
         NVR.debug("MontageCtrl: Android detected, using cordova-multiwindow plugin for onStop/onStart instead");
         window.MultiWindowPlugin.registerOnStop("montage-pause", onPause);
       }
-      //  document.addEventListener("resume", onResume, false);
+      document.addEventListener("resume", onResume, false);
 
     });
 
@@ -2640,6 +2647,8 @@ angular.module('zmApp.controllers')
 
    };
     $scope.$on('$ionicView.beforeLeave', function () {
+
+      document.removeEventListener("resume", onResume, false);
 
      // window.removeEventListener("resize", jiggleMontage, false);
       currentStreamState = streamState.STOPPED;
