@@ -615,6 +615,21 @@ monitors as you need. Read
 `this <https://medium.com/zmninja/multi-port-storage-areas-and-more-d5836a336c93>`__
 post for more details.
 
+
+Montage is killing my server
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- Remember, that by default, zmNinja montage streaming works differently from ZM's web console. 
+  ZM's web console uses ``nph-zms`` (The MJPEG streamer) to stream live views. The problem with this
+  approach is you can't see more than 6 monitors at the same time, on Chrome. Read the note just above this.
+  The short therefore is if you want comparable performance, enable `multiport <https://medium.com/zmninja/multi-port-storage-areas-and-more-d5836a336c93>`__ 
+  as described above. As of today, zmNinja doesn't have a way to use constant streaming if you have less than
+  6 monitors. 
+- Make sure you close your browsers (ZM web) when testing zmNinja, if load is an issue.
+- Reduce "Montage Image Scale" in developer settings and see if it helps
+- Enable "Disable Alarm API in Montage" in developer settings
+
+
 Event images/streaming related
 ------------------------------
 
