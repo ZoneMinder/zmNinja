@@ -227,6 +227,11 @@ angular.module('zmApp.controllers')
         $rootScope.fromString = "";
         $rootScope.toString = "";
         $rootScope.monitorsFilter="";
+        for (var i=0; i < $scope.monitors.length; i++) {
+          if ($scope.monitors[i] != undefined) {
+            $scope.monitors[i].Monitor.isChecked = undefined;
+          }
+        }
     }
       
   });
@@ -550,6 +555,19 @@ angular.module('zmApp.controllers')
         nolangFrom = moment($rootScope.fromString).locale('en').format("YYYY-MM-DD HH:mm:ss");
       if ($rootScope.toString)
         nolangTo = moment($rootScope.toString).locale('en').format("YYYY-MM-DD HH:mm:ss");
+      if ($scope.id) {
+        $rootScope.monitorsFilter = "/MonitorId =:" + $scope.id;
+        //console.log("monitors.length: " + $scope.monitors.length);
+        for (var i=0; i < $scope.monitors.length; i++) {
+            if ($scope.monitors[i] != undefined) {
+                if ($scope.monitors[i].Monitor.Id == $scope.id)
+                    $scope.monitors[i].Monitor.isChecked = true;
+                else
+                    $scope.monitors[i].Monitor.isChecked = false;
+            }
+        }
+        $scope.id = 0;
+      }
 
       NVR.getEvents($scope.id, currEventsPage, "", nolangFrom, nolangTo, false, $rootScope.monitorsFilter)
         .then(function (data) {
@@ -2083,6 +2101,11 @@ angular.module('zmApp.controllers')
           $scope.id = 0;
           $scope.showEvent = false;
           $scope.footerState = ionPullUpFooterState.MINIMIZED;
+          for (var i=0; i < $scope.monitors.length; i++) {
+            if ($scope.monitors[i] != undefined) {
+              $scope.monitors[i].Monitor.isChecked = undefined;
+            }
+          }
           getInitialEvents();
 
           /*
