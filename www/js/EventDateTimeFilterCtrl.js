@@ -29,6 +29,7 @@ angular.module('zmApp.controllers')
       $scope.$on('$ionicView.beforeEnter', function () {
         $scope.today = moment().format("YYYY-MM-DD");
         $scope.monitors = NVR.getMonitorsNow();
+        var countChecked = 0;
         if (!$scope.monitors.length) {
           NVR.getMonitors(1)
           .then (function (data) {
@@ -36,6 +37,8 @@ angular.module('zmApp.controllers')
             for (var i=0; i < $scope.monitors.length; i++) {
               if ($scope.monitors[i].Monitor.isChecked == undefined)
                $scope.monitors[i].Monitor.isChecked = true;
+              if ($scope.monitors[i].Monitor.isChecked == true)
+               countChecked++;
             }
           });
         }
@@ -43,9 +46,14 @@ angular.module('zmApp.controllers')
           for (var i=0; i < $scope.monitors.length; i++) {
             if ($scope.monitors[i].Monitor.isChecked == undefined)
                $scope.monitors[i].Monitor.isChecked = true;
+            if ($scope.monitors[i].Monitor.isChecked == true)
+               countChecked++;
           }
         }
-        $scope.monitorsExpanded = false;
+        if (countChecked < $scope.monitors.length)
+          $scope.monitorsExpanded = true;
+        else
+          $scope.monitorsExpanded = false;
       });
 
       $scope.toggleMonitors = function() {
