@@ -79,7 +79,7 @@
               <!-- this ngswitch displays different icons
                     depending on the cause of the event -->
               <span ng-switch on="event.Event.Cause"
-                ng-class="::{'largeThumbsSpan': thumbClass=='large', 'smallThumbsSpan': thumbClass=='small'}">
+                ng-class="::{'largeThumbsSpan': thumbClass=='large', 'smallThumbsSpan': (thumbClass=='small' || thumbClass=='xsmall')}">
                 <span ng-switch-when="Motion">
                   <i class="ion-android-walk" style="font-size:150%;"></i>&nbsp;
                   <!-- <i ng-class="(event.Event.DefaultVideo !== undefined && event.Event.DefaultVideo!='')? 'ion-ios-videocam':'ion-images'" style="float:left; padding-left:5px; font-size:100%;"></i>-->
@@ -106,7 +106,7 @@
               </span>
             </div> <!-- col-->
             <!-- 2 col format for small, 1 col format for large -->
-            <span ng-if="thumbClass=='small' && loginData.eventViewThumbs!='none'">
+            <span ng-if="(thumbClass=='small' || thumbClass=='xsmall') && loginData.eventViewThumbs!='none'">
               <div class="col">
                 <img bg-color="#6C7A89" ng-src="{{constructThumbnail(event)}}"
                   on-tap="closeIfOpen(event);openModalWithSnapshot(event)" width="{{event.Event.thumbWidth}}px"

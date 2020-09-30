@@ -216,8 +216,9 @@ angular.module('zmApp.controllers').controller('zmApp.DevOptionsCtrl', ['$scope'
 
     var buttons = [
 
+      { text: $translate.instant('kEventViewThumbsXSmall'), value:'xsmall' },
       { text: $translate.instant('kEventViewThumbsSmall'), value:'small' },
-      { text: $translate.instant('kEventViewThumbsLarge'), value:'large' },
+      { text: $translate.instant('kEventViewThumbsLarge'), value:'large' }
 
     ];
 

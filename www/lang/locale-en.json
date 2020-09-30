@@ -114,6 +114,7 @@
     "kEventSingleImageScale"     :"Event single image scale",
     "kEventStillRecording"       :"event is still recording - showing live feed",
     "kEventViewThumbsSize"       :"thumbnail size",
+    "kEventViewThumbsXSmall"      :"x-small", 
     "kEventViewThumbsSmall"      :"small",
     "kEventViewThumbsLarge"      :"large",
     "kEvents"                    :"events",

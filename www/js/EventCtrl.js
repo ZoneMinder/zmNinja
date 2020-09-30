@@ -72,6 +72,12 @@ angular.module('zmApp.controllers')
     var eHandle;
     var scrubOngoing = false;
 
+    $scope.thumbSizeOptions = {
+      'xsmall': $translate.instant('kEventViewThumbsXSmall'),
+      'small': $translate.instant('kEventViewThumbsSmall'),
+      'large':$translate.instant('kEventViewThumbsLarge'),
+    };
+
 
     //---------------------------------------------------
     // initial code
@@ -257,9 +263,13 @@ angular.module('zmApp.controllers')
         if (ld.eventViewThumbsSize == 'large') {
           NVR.debug ('Switching to big thumbs style');
           $scope.thumbClass = 'large';
-        } else {
-          NVR.debug ('using small thumbs style');
+        } else if (ld.eventViewThumbsSize == 'small') {
+          NVR.debug ('Switching to small thumbs style');
           $scope.thumbClass = 'small';
+        } 
+        else {
+          NVR.debug ('using xsmall thumbs style');
+          $scope.thumbClass = 'xsmall';
         }
       } else {
           NVR.debug ('No thumbs');
@@ -281,14 +291,13 @@ angular.module('zmApp.controllers')
 
         The layout I am using:
         a) If you are using large thumbs, it's a single column format
-        b) If you are using small thumbs, it's a two column format
+        b) If you are using small or xsmall thumbs, it's a two column format
 
         The max size of the image is in computeThumbnailSize()
       */
-
+      var ld = NVR.getLogin();
       recomputeRowHeights();
       $scope.mid = '';
-      var ld = NVR.getLogin();
       if (ld.eventViewThumbs != 'objdetect_gif') {
         maxEventsToLoad = 50; 
       } else {
@@ -3404,9 +3413,20 @@ angular.module('zmApp.controllers')
           return calculateAspectRatioFit(mw, mh, maxThumbWidth, maxThumbHeight);
         }
 
-      } else { // small
+      } else if (ld.eventViewThumbsSize == 'small') { // small
         maxThumbHeight = 250;
         maxThumbWidth = 0.5* $rootScope.devWidth;
+        if (landscape) {
+          // go till 50% of width in small landscape, but restricted to useable row height 
+          return calculateAspectRatioFit(mw, mh, maxThumbWidth, maxThumbHeight);
+        } else {
+                    // go till 30% of width in small portrait, but restricted to useable row height 
+          return calculateAspectRatioFit(mw, mh, maxThumbWidth, maxThumbHeight);
+        }
+
+      } else { // xsmall
+        maxThumbHeight = 280;
+        maxThumbWidth = 0.2* $rootScope.devWidth;
         if (landscape) {
           // go till 50% of width in small landscape, but restricted to useable row height 
           return calculateAspectRatioFit(mw, mh, maxThumbWidth, maxThumbHeight);
@@ -3472,7 +3492,10 @@ angular.module('zmApp.controllers')
     
     $scope.toggleThumbSize = function() {
       var ld = NVR.getLogin();
-      ld.eventViewThumbsSize = (ld.eventViewThumbsSize == 'large')?'small':'large';
+      if (ld.eventViewThumbsSize=='xsmall') {ld.eventViewThumbsSize='small';}
+      else if (ld.eventViewThumbsSize=='small') {ld.eventViewThumbsSize='large';}
+      else if (ld.eventViewThumbsSize=='large') {ld.eventViewThumbsSize='xsmall';}
+      NVR.debug ('changing thumb size to:'+ld.eventViewThumbsSize);
       NVR.setLogin(ld);
       $scope.loginData = ld;
       recomputeRowHeights();
