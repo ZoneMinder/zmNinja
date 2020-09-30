@@ -161,7 +161,7 @@
           <div class="row" ng-if="isGroupShown(event)" style="min-height: 50px;padding-top: 5px;margin-top: 0px;">
             <div ng-if="groupType=='alarms'">
               <div>
-                <p>
+                <div style="float: right; margin-right: 10px; margin-bottom: 5px;">
                   <!--scroll <i class="icon ion-arrow-left-c"></i> 
                                 <i class="icon ion-arrow-right-c"></i>-->
                   <button ng-click="toggleTypeOfAlarms()"
@@ -172,10 +172,10 @@
                     class="button button-small button-assertive button-stable button-outline">
                     <span translate="kOutlineMotion"></span>:{{outlineMotion}}
                   </button>
-                </p>
+                </div>
 
 
-                <ion-scroll direction="x" overflow-scroll="false">
+                <ion-scroll direction="x" overflow-scroll="false" style="width: calc(100vw - 22px); margin-left: -10px; margin-right: -10px;">
                   <span ng-repeat="alarm in alarm_images | selectFrames: typeOfFrames">
 
                     <figure class="animated slideInLeft" style="display:inline-block">
