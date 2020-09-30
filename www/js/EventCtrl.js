@@ -111,10 +111,12 @@ angular.module('zmApp.controllers')
                 event.Event.thumbHeight = th.h;
                 
                 if (ld.eventViewThumbsSize == 'large') {
-                    rowHeight = th.h + 144;
+                    // 167 is the minimum size w need to not cut off buttons in large mode
+                    rowHeight = Math.max(th.h + 144, 167);
                 }
                 else {
-                    rowHeight = th.h + 82;
+                    // 156 is the minimum size w need to not cut off buttons in large mode
+                    rowHeight = Math.max (th.h + 82, 156);
                 }
             }
         }
@@ -122,6 +124,7 @@ angular.module('zmApp.controllers')
             return (rowHeight + scrubHeight);
         }
         else {
+            console.log (rowHeight);
             return (rowHeight);
         }
     };
@@ -3448,7 +3451,7 @@ angular.module('zmApp.controllers')
         }
 
       } else { // xsmall
-        maxThumbHeight = 280;
+        maxThumbHeight = 150;
         maxThumbWidth = 0.2* $rootScope.devWidth;
         if (landscape) {
           // go till 50% of width in small landscape, but restricted to useable row height 
