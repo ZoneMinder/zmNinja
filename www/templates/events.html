@@ -34,7 +34,7 @@
       <ion-list show-delete="eventList.showDelete">
 
         <ion-item force-refresh-images="true" collection-repeat="event in events| filter:search.text |  eventListFilter"
-          force-refresh-images=true item-height="getRowHeight(event)" id="item-{{$index}}"
+          force-refresh-images=true item-height="event.Event.rowHeight" id="item-{{$index}}"
           on-swipe-left="checkSwipe($index);" force-refresh-images="true">
 
           <!-- item headers: date/time -->
@@ -264,10 +264,8 @@
         </button>
       </div>
     </ion-item>
-    <div ng-if="!eventsBeingLoaded">
-      <ion-infinite-scroll ng-if="moreDataCanBeLoaded()" icon="ion-loading-c" on-infinite="loadMore()" distance="400px">
-      </ion-infinite-scroll>
-    </div>
+    <ion-infinite-scroll ng-if="moreDataCanBeLoaded()" icon="ion-loading-c" on-infinite="loadMore()" distance="400px">
+    </ion-infinite-scroll>
     <canvas id="canvas" class="hiddengifcanvas"></canvas>
 
 

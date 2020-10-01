@@ -96,7 +96,7 @@ angular.module('zmApp.controllers')
   
     });
     
-    $scope.getRowHeight = function (event) {
+    function getRowHeight(event) {
         var ld = NVR.getLogin();
         var rowHeight = 134; // ViewThumbs == none
         var scrubHeight = 274;
@@ -120,14 +120,9 @@ angular.module('zmApp.controllers')
                 }
             }
         }
-        if (event.Event.ShowScrub) {
-            return (rowHeight + scrubHeight);
-        }
-        else {
-            console.log (rowHeight);
-            return (rowHeight);
-        }
-    };
+        return event.Event.ShowScrub ? rowHeight + scrubHeight : rowHeight;
+       
+    }
 
     //we come here is TZ is updated after the view loads
     var tzu = $scope.$on('tz-updated', function () {
@@ -137,7 +132,7 @@ angular.module('zmApp.controllers')
     broadcastHandles.push(tzu);
 
     var lc = $scope.$on("language-changed", function () {
-      NVR.log(">>>>>>>>>>>>>>> language changed");
+      NVR.log("language changed");
       doRefresh();
     });
     broadcastHandles.push(lc);
@@ -284,7 +279,6 @@ angular.module('zmApp.controllers')
       }
       
 
-      $scope.rowHeight = $scope.rowHeightRegular;
     }
 
     $scope.$on('$ionicView.beforeEnter', function () {
@@ -511,6 +505,8 @@ angular.module('zmApp.controllers')
     // --------------------------------------------------------      
 
     function getInitialEvents() {
+
+      var d = $q.defer();
       NVR.debug("getInitialEvents called");
       var lData = NVR.getLogin();
       loadMoreTime = Date.now();
@@ -540,7 +536,7 @@ angular.module('zmApp.controllers')
         $state.go("app.login", {
           "wizard": false
         });
-        return;
+        return d.resolve(true);
       }
 
       $scope.events = [];
@@ -629,7 +625,7 @@ angular.module('zmApp.controllers')
 
             myevents[i].Event.MonitorName = NVR.getMonitorName(myevents[i].Event.MonitorId);
             myevents[i].Event.ShowScrub = false;
-            //myevents[i].Event.rowHeight = $scope.rowHeightRegular;
+            myevents[i].Event.rowHeight = getRowHeight(myevents[i]);
             // now construct base path
         
 
@@ -684,110 +680,9 @@ angular.module('zmApp.controllers')
             NVR.debug("EventCtrl:loading one more page just in case we don't have enough to display");
             loadMore();
           }
+          return d.resolve(true);
         });
-
-    }
-
-    function getInitiaNew() {
-      NVR.debug("getInitialEvents called");
-      $scope.eventsBeingLoaded = true;
-      $ionicScrollDelegate.$getByHandle("mainScroll").scrollTop();
-      var lData = NVR.getLogin();
-
-      // If you came from Monitors, disregard hidden monitors in montage
-      /* if (lData.persistMontageOrder && stackState != "Monitors") {
-           var tempMon = message;
-           $scope.monitors = NVR.applyMontageMonitorPrefs(tempMon, 2)[0];
-       } else*/
-      moreEvents = false;
-      $scope.monitors = message;
-      currEventsPage = 1;
-      maxEventsPage = 1;
-      currentPagePosition = 0;
-      currentPageLength = 0;
-
-      if ($scope.monitors.length == 0) {
-        var pTitle = $translate.instant('kNoMonitors');
-        $ionicPopup.alert({
-          title: pTitle,
-          template: "{{'kCheckCredentials' | translate }}",
-          okText: $translate.instant('kButtonOk'),
-          cancelText: $translate.instant('kButtonCancel'),
-        });
-        $ionicHistory.nextViewOptions({
-          disableBack: true
-        });
-        $state.go("app.login", {
-          "wizard": false
-        });
-        return;
-      }
-
-      $scope.events = [];
-      
-      if ($scope.id) {
-        $rootScope.monitorsFilter = "/MonitorId =:" + $scope.id;
-        //console.log("monitors.length: " + $scope.monitors.length);
-        for (var i=0; i <= $scope.monitors.length; i++) {
-            //console.log("i: " + i);
-            if ($scope.monitors[i] != undefined) {
-                //console.log("$scope.monitors[i].Id: " + $scope.monitors[i].Monitor.Id);
-                if ($scope.monitors[i].Monitor.Id == $scope.id)
-                    $scope.monitors[i].Monitor.isChecked = true;
-                else
-                    $scope.monitors[i].Monitor.isChecked = false;
-            }
-        }
-        $scope.id = 0;
-      }
-
-      nolangFrom = "";
-      nolangTo = "";
-      if ($rootScope.fromString)
-        nolangFrom = moment($rootScope.fromString).locale('en').format("YYYY-MM-DD HH:mm:ss");
-      if ($rootScope.toString)
-        nolangTo = moment($rootScope.toString).locale('en').format("YYYY-MM-DD HH:mm:ss");
-
-      //NVR.debug ("GETTING EVENTS USING "+$scope.id+" "+nolangFrom+" "+ nolangTo);
-      NVR.debug("EventCtrl: grabbing events for: id=" + $scope.id + " Date/Time:" + $rootScope.fromString +
-        "-" + $rootScope.toString);
-
-      if ($scope.loginData.eventViewThumbs != 'objdetect_gif') {
-          maxEventsToLoad = 50; //limit to 5 to minimise memory usage when displaying gifs
-      }
-      NVR.debug("maxEventsToLoad: " + maxEventsToLoad);
-      
-      NVR.getEvents($scope.id, currEventsPage, "", nolangFrom, nolangTo, false, $rootScope.monitorsFilter)
-        .then(function (data) {
-         // console.log(JSON.stringify(data.pagination));
-          if (data.pagination && data.pagination.pageCount)
-            maxEventsPage = data.pagination.pageCount;
-
-          NVR.debug("maxEventsPage: " + maxEventsPage + ", currEventsPage: " + currEventsPage);
-
-          // console.log ("WE GOT EVENTS="+JSON.stringify(data));
-
-          //NVR.debug("EventCtrl: success, got " + data.events.length + " events");
-          loadEvents(data);
-          
-          currentPageData = data;
-          //$scope.events = data.events;
-          // we only need to stop the template from loading when the list is empty
-          // so this can be false once we have _some_ content
-          $scope.eventsBeingLoaded = false;
-          moreEvents = true;
-       
-          // to avoid only few events being displayed
-          // if last page has less events
-          //console.log("**Loading Next Page ***");
-          if ($scope.events < maxEventsToLoad) {
-            //console.log ("EVENTS LOADED="+JSON.stringify($scope.events));
-            NVR.debug("EventCtrl:loading one more page just in case we don't have enough to display");
-            loadMore();
-          }
-          navTitle();
-        });
-        loadMoreTime = Date.now();
+        return (d.promise);
     }
 
     //-------------------------------------------------------
@@ -2329,9 +2224,9 @@ angular.module('zmApp.controllers')
     };
     
     function navTitle() {
-      if (!$ionicScrollDelegate.$getByHandle("mainScroll")) $scope.navTitle = "";
-      if (!$ionicScrollDelegate.$getByHandle("mainScroll").getScrollPosition()) $scope.navTitle = "";
-      var scrl = parseFloat($ionicScrollDelegate.$getByHandle("mainScroll").getScrollPosition().top);
+      var hnd = $ionicScrollDelegate.$getByHandle("mainScroll");
+      if ( (!hnd) || (!hnd.getScrollPosition())) $scope.navTitle = "";
+      var scrl = parseFloat(hnd.getScrollPosition().top);
 
       //NVR.debug("scrl: " + scrl + ", events[0].Event.Height: " + eventHeight + ", item: " + item);
       if ($scope.events == undefined || !$scope.events.length) {
@@ -2340,7 +2235,7 @@ angular.module('zmApp.controllers')
         var eventHeightCounter = 0;
         //loop until we pass the event...
         for (var i = 0; i < $scope.events.length; i++) {
-            eventHeightCounter = eventHeightCounter + $scope.getRowHeight($scope.events[i]);
+            eventHeightCounter = eventHeightCounter + getRowHeight($scope.events[i]);
             if ( eventHeightCounter > scrl ) {
                 $scope.navTitle = ($scope.events[i].Event.humanizeTime);
                 break;
@@ -2437,12 +2332,14 @@ angular.module('zmApp.controllers')
 
         NVR.debug("EventCtrl:Old event scrub will hide now");
         oldEvent.Event.ShowScrub = false;
+        oldEvent.Event.rowHeight = getRowHeight(oldEvent);
         oldEvent = "";
       }
       
-      var currentRowHeight = $scope.getRowHeight(event);
 
       event.Event.ShowScrub = !event.Event.ShowScrub;
+      var currentRowHeight = getRowHeight(event);
+      event.Event.rowHeight = currentRowHeight;
 
       if (event.Event.ShowScrub == false) {
         $ionicListDelegate.canSwipeItems(true);
@@ -3151,9 +3048,8 @@ angular.module('zmApp.controllers')
               // console.log ("***** MULTISERVER STREAMING URL FOR EVENTS " + myevents[i].Event.streamingURL);
 
               //  console.log ("***** MULTISERVER BASE URL FOR EVENTS " + myevents[i].Event.recordingURL);
-
+              myevents[i].Event.rowHeight = getRowHeight(myevents[i]);
               myevents[i].Event.ShowScrub = false;
-              //myevents[i].Event.rowHeight = $scope.rowHeightRegular;
 
 
               // get thumbW/H
@@ -3338,6 +3234,8 @@ angular.module('zmApp.controllers')
 
             myevents[currentPagePosition].Event.MonitorName = NVR.getMonitorName(myevents[currentPagePosition].Event.MonitorId);
             myevents[currentPagePosition].Event.ShowScrub = false;
+            myevents[currentPagePosition].Event.rowHeight = getRowHeight(myevents[currentPagePosition]);
+
             //myevents[currentPagePosition].Event.height = eventsListDetailsHeight;
             // now construct base path
 
@@ -3352,8 +3250,6 @@ angular.module('zmApp.controllers')
               var th = computeThumbnailSize(mw, mh, mo);
               myevents[currentPagePosition].Event.thumbWidth = th.w;
               myevents[currentPagePosition].Event.thumbHeight = th.h;
-              //myevents[currentPagePosition].Event.rowHeight = $scope.rowHeight;
-             // myevents[currentPagePosition].Event.rowHeight = th.h + 50;
              // console.log ("************* RH:"+myevents[currentPagePosition].Event.rowHeight);
             }
 
@@ -3451,8 +3347,8 @@ angular.module('zmApp.controllers')
         }
 
       } else { // xsmall
-        maxThumbHeight = 150;
-        maxThumbWidth = 0.2* $rootScope.devWidth;
+        maxThumbHeight = 170;
+        maxThumbWidth = 0.3* $rootScope.devWidth;
         if (landscape) {
           // go till 50% of width in small landscape, but restricted to useable row height 
           return calculateAspectRatioFit(mw, mh, maxThumbWidth, maxThumbHeight);
@@ -3633,7 +3529,6 @@ angular.module('zmApp.controllers')
       // console.log("***Pull to Refresh");
 
       
-
       NVR.debug("Reloading monitors");
       maxEventsPage = 1;
       currEventsPage = 1;
@@ -3653,7 +3548,13 @@ angular.module('zmApp.controllers')
              $scope.monitors = data;
          }*/
 
-        getInitialEvents();
+        getInitialEvents().then (function () {
+          NVR.debug ('giving time for collection to redraw...');
+          $scope.eventsBeingLoaded = true;
+          $timeout(function() {
+            $scope.eventsBeingLoaded = false;
+          },300);
+        });
         moreEvents = true;
 
       });
