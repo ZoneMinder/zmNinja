@@ -78,6 +78,11 @@ angular.module('zmApp.controllers')
       'large':$translate.instant('kEventViewThumbsLarge'),
     };
 
+    var currEventNum = 0;
+    var currEventPos = 0;
+    var enableScrollingUpdate = true;
+    var timer1;
+    var timer2;
 
     //---------------------------------------------------
     // initial code
@@ -85,15 +90,38 @@ angular.module('zmApp.controllers')
 
 
     $scope.$on('sizechanged', function() {
-        //recomputeRowHeights();
-        //recomputeThumbSize();
+        enableScrollingUpdate = false;
+        if (timer1)
+            $timeout.cancel(timer1);
+        if (timer2)
+            $timeout.cancel(timer2);
         $scope.$apply();
         $ionicScrollDelegate.resize();
-      // $scope.eventsBeingLoaded = true;
-        $timeout (function() {
-          navTitle();
-        },300);
-  
+
+        timer1 = $timeout (function() {
+          NVR.debug("sizechanged, scroll to item: " + currEventNum + ", postion: " + currEventPos);
+          var eventHeightCounter = 0;
+          var i = 0;
+          var lastEventHeight = 0;
+          //loop until we pass the event...
+          for (i = 0; i < $scope.events.length-1; i++) {
+            lastEventHeight = $scope.getRowHeight($scope.events[i]);
+            if ( i >= currEventNum ) {
+                //$scope.navTitle = ($scope.events[i].Event.humanizeTime);
+                break;
+            }
+            //console.log($scope.getRowHeight($scope.events[i]));
+            eventHeightCounter = eventHeightCounter + lastEventHeight;
+          }
+          var scrl = eventHeightCounter + (lastEventHeight * currEventPos);
+          //console.log("eventHeightCounter: " + eventHeightCounter + " lastEventHeight: " + lastEventHeight + ", scrl To " + scrl + ", len: " + $scope.events.length);
+          enableScrollingUpdate = false;
+          NVR.debug("sizechanged, scrl: " + scrl);
+          $ionicScrollDelegate.$getByHandle("mainScroll").scrollTo(0, scrl, false);
+          timer2 = $timeout (function () {
+              enableScrollingUpdate = true;
+          },300);
+        },100);
     });
     
     $scope.getRowHeight = function (event) {
@@ -2219,6 +2247,7 @@ angular.module('zmApp.controllers')
     };
 
     $scope.scrolling = function() {
+      if (enableScrollingUpdate === false) return;
       //console.log("scrolling : When Scrolling");
       navTitle();
     };
@@ -2233,14 +2262,19 @@ angular.module('zmApp.controllers')
         $scope.navTitle = "";
       } else {
         var eventHeightCounter = 0;
+        var i;
         //loop until we pass the event...
-        for (var i = 0; i < $scope.events.length; i++) {
+        for (i = 0; i < $scope.events.length-1; i++) {
+            //console.log("i: " + i + ", scrl: " + scrl + ", eventHeightCounter: " + eventHeightCounter);
             eventHeightCounter = eventHeightCounter + $scope.getRowHeight($scope.events[i]);
             if ( eventHeightCounter > scrl ) {
                 $scope.navTitle = ($scope.events[i].Event.humanizeTime);
                 break;
             }
         }
+        currEventNum = i;
+        currEventPos = 1 - ((eventHeightCounter - scrl) / $scope.getRowHeight($scope.events[i]));
+        //console.log("i: " + i + " scrl: " + scrl + " " + currEventPos);
       }
       $scope.$evalAsync();
       //return Math.random();
