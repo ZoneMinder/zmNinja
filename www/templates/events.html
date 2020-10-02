@@ -34,7 +34,7 @@
       <ion-list show-delete="eventList.showDelete">
 
         <ion-item force-refresh-images="true" collection-repeat="event in events| filter:search.text |  eventListFilter"
-          force-refresh-images=true item-height="event.Event.rowHeight" id="item-{{$index}}"
+          force-refresh-images=true item-height="getRowHeight(event)" id="item-{{$index}}"
           on-swipe-left="checkSwipe($index);" force-refresh-images="true">
 
           <!-- item headers: date/time -->

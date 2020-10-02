@@ -96,7 +96,7 @@ angular.module('zmApp.controllers')
   
     });
     
-    function getRowHeight(event) {
+    $scope.getRowHeight = function (event) {
         var ld = NVR.getLogin();
         var rowHeight = 134; // ViewThumbs == none
         var scrubHeight = 274;
@@ -625,7 +625,7 @@ angular.module('zmApp.controllers')
 
             myevents[i].Event.MonitorName = NVR.getMonitorName(myevents[i].Event.MonitorId);
             myevents[i].Event.ShowScrub = false;
-            myevents[i].Event.rowHeight = getRowHeight(myevents[i]);
+            myevents[i].Event.rowHeight = $scope.getRowHeight(myevents[i]);
             // now construct base path
         
 
@@ -2235,7 +2235,7 @@ angular.module('zmApp.controllers')
         var eventHeightCounter = 0;
         //loop until we pass the event...
         for (var i = 0; i < $scope.events.length; i++) {
-            eventHeightCounter = eventHeightCounter + getRowHeight($scope.events[i]);
+            eventHeightCounter = eventHeightCounter + $scope.getRowHeight($scope.events[i]);
             if ( eventHeightCounter > scrl ) {
                 $scope.navTitle = ($scope.events[i].Event.humanizeTime);
                 break;
@@ -2332,13 +2332,13 @@ angular.module('zmApp.controllers')
 
         NVR.debug("EventCtrl:Old event scrub will hide now");
         oldEvent.Event.ShowScrub = false;
-        oldEvent.Event.rowHeight = getRowHeight(oldEvent);
+        oldEvent.Event.rowHeight = $scope.getRowHeight(oldEvent);
         oldEvent = "";
       }
       
 
       event.Event.ShowScrub = !event.Event.ShowScrub;
-      var currentRowHeight = getRowHeight(event);
+      var currentRowHeight = $scope.getRowHeight(event);
       event.Event.rowHeight = currentRowHeight;
 
       if (event.Event.ShowScrub == false) {
@@ -3048,7 +3048,7 @@ angular.module('zmApp.controllers')
               // console.log ("***** MULTISERVER STREAMING URL FOR EVENTS " + myevents[i].Event.streamingURL);
 
               //  console.log ("***** MULTISERVER BASE URL FOR EVENTS " + myevents[i].Event.recordingURL);
-              myevents[i].Event.rowHeight = getRowHeight(myevents[i]);
+              myevents[i].Event.rowHeight = $scope.getRowHeight(myevents[i]);
               myevents[i].Event.ShowScrub = false;
 
 
@@ -3234,7 +3234,7 @@ angular.module('zmApp.controllers')
 
             myevents[currentPagePosition].Event.MonitorName = NVR.getMonitorName(myevents[currentPagePosition].Event.MonitorId);
             myevents[currentPagePosition].Event.ShowScrub = false;
-            myevents[currentPagePosition].Event.rowHeight = getRowHeight(myevents[currentPagePosition]);
+            myevents[currentPagePosition].Event.rowHeight = $scope.getRowHeight(myevents[currentPagePosition]);
 
             //myevents[currentPagePosition].Event.height = eventsListDetailsHeight;
             // now construct base path
