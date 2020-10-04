@@ -114,6 +114,7 @@
     "kEventSingleImageScale"     :"Ereignis Einzelbild Maßstab",
     "kEventStillRecording"       :"Aufnahme aktiv",
     "kEventViewThumbsSize"       :"Vorschaugröße",
+    "kEventViewThumbsXSmall"     :"x-klein",
     "kEventViewThumbsSmall"      :"klein",
     "kEventViewThumbsLarge"      :"groß",
     "kEvents"                    :"Ereignisse",
