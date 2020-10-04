@@ -90,6 +90,7 @@ angular.module('zmApp.controllers')
 
 
     $scope.$on('sizechanged', function() {
+        recomputeRowHeights();
         enableScrollingUpdate = false;
         if (timer1)
             $timeout.cancel(timer1);
@@ -286,26 +287,42 @@ angular.module('zmApp.controllers')
       NVR.computeDeviceSize();
     });
 
-    
-    function recomputeRowHeights() {
-      NVR.debug ("recomputing row height");
+    function switchThumbClass() {
+
       var ld = NVR.getLogin();
       if (ld.eventViewThumbs != 'none') {
         if (ld.eventViewThumbsSize == 'large') {
-          NVR.debug ('Switching to big thumbs style');
+          NVR.debug ('Using big thumbs');
           $scope.thumbClass = 'large';
         } else if (ld.eventViewThumbsSize == 'small') {
-          NVR.debug ('Switching to small thumbs style');
+          NVR.debug ('Using small thumbs ');
           $scope.thumbClass = 'small';
         } 
         else {
-          NVR.debug ('using xsmall thumbs style');
+          NVR.debug ('using xsmall thumbs ');
           $scope.thumbClass = 'xsmall';
         }
       } else {
           NVR.debug ('No thumbs');
       }
-      
+
+    }
+    
+    function recomputeRowHeights() {
+      switchThumbClass();
+      $scope.eventsBeingLoaded = true;
+      $timeout (function() {
+        NVR.debug ("recomputing all row heights");
+        for (var i = 0; i < $scope.events.length; i++) {
+          $scope.events[i].Event.rowHeight = getRowHeight($scope.events[i]);
+          }   
+      },10);
+    
+      NVR.debug ('giving time for collection to redraw...');
+        $scope.eventsBeingLoaded = false;
+        $timeout(function() {
+          NVR.debug ('ready for next resize');
+        },300);  
 
     }
 
@@ -325,8 +342,9 @@ angular.module('zmApp.controllers')
 
         The max size of the image is in computeThumbnailSize()
       */
+
       var ld = NVR.getLogin();
-      recomputeRowHeights();
+      switchThumbClass();
       $scope.mid = '';
       if (ld.eventViewThumbs != 'objdetect_gif') {
         maxEventsToLoad = 50; 
@@ -3311,32 +3329,7 @@ angular.module('zmApp.controllers')
     }
 
 
-    function recomputeThumbSize() {
-    //  NVR.debug("EventCtrl: recompute thumbnails");
-    NVR.debug ("recompute thumbs size");
-    // remember, devHeight/devWidth upate 300ms after rotation
-        for (var i = 0; i < $scope.events.length; i++) {
-          var tempMon = NVR.getMonitorObject($scope.events[i].Event.MonitorId);
-          if (tempMon != undefined) {
-  
-            var mw = parseInt(tempMon.Monitor.Width);
-            var mh = parseInt(tempMon.Monitor.Height);
-            var mo = parseInt(tempMon.Monitor.Orientation);
-  
-            var th = computeThumbnailSize(mw, mh, mo);
-            $scope.events[i].Event.thumbWidth = th.w;
-            $scope.events[i].Event.thumbHeight = th.h;
-            //console.log ("Setting to "+th.w+"*"+th.h);
-            
-           // eventHeight = document.getElementById('item-0').offsetHeight;
-  
-          }
-  
-  
-        }
-      
-
-    }
+    
 
     function calculateAspectRatioFit(srcWidth, srcHeight, maxWidth, maxHeight) {
       // credit: https://stackoverflow.com/a/14731922
