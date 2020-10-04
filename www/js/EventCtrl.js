@@ -78,6 +78,9 @@ angular.module('zmApp.controllers')
       'large':$translate.instant('kEventViewThumbsLarge'),
     };
 
+    var currEventNum = 0;
+    var currEventPos = 0;
+    var currOrientation;
 
     //---------------------------------------------------
     // initial code
@@ -87,11 +90,39 @@ angular.module('zmApp.controllers')
     $scope.$on('sizechanged', function() {
         recomputeRowHeights();
         $ionicScrollDelegate.resize();
-        $timeout (function() {
-          navTitle();
-        },300);
 
+        NVR.debug("screen.orientation.type: " + screen.orientation.type);
+        if (currOrientation != screen.orientation.type) {
+            //$scope.$apply();
+            NVR.debug("sizechanged, scroll to item: " + currEventNum + ", postion: " + currEventPos);
+            scrollTo(currEventNum, currEventPos);
+            currOrientation = screen.orientation.type;
+        } else {
+            $timeout (function() {
+              navTitle();
+            },300);
+        }
     });
+    
+    function scrollTo(eventNum, eventPos) {
+        var eventHeightCounter = 0;
+        var i = 0;
+        var lastEventHeight = 0;
+        //loop until we pass the event...
+        for (i = 0; i < $scope.events.length; i++) {
+        lastEventHeight = getRowHeight($scope.events[i]);
+        if ( i >= eventNum ) {
+            //$scope.navTitle = ($scope.events[i].Event.humanizeTime); // we don't need to update the navTitle as we're staying in the same place
+            break;
+        }
+        //console.log(getRowHeight($scope.events[i]));
+        eventHeightCounter = eventHeightCounter + lastEventHeight;
+        }
+        var scrl = eventHeightCounter + (lastEventHeight * eventPos);
+        //console.log("eventHeightCounter: " + eventHeightCounter + " lastEventHeight: " + lastEventHeight + ", scrl To " + scrl + ", len: " + $scope.events.length);
+        NVR.debug("scrollTo: " + scrl);
+        $ionicScrollDelegate.$getByHandle("mainScroll").scrollTo(0, scrl, false);
+    }
     
     function getRowHeight(event) {
         var ld = NVR.getLogin();
@@ -176,6 +207,7 @@ angular.module('zmApp.controllers')
         timedPageReload();
       }.bind(this), zm.eventPageRefresh);
 
+      currOrientation = screen.orientation.type;
     });
 
     function timedPageReload() {
@@ -2247,14 +2279,18 @@ angular.module('zmApp.controllers')
         $scope.navTitle = "";
       } else {
         var eventHeightCounter = 0;
+        var i;
         //loop until we pass the event...
-        for (var i = 0; i < $scope.events.length; i++) {
+        for (i = 0; i < $scope.events.length; i++) {
             eventHeightCounter = eventHeightCounter + getRowHeight($scope.events[i]);
             if ( eventHeightCounter > scrl ) {
                 $scope.navTitle = ($scope.events[i].Event.humanizeTime);
                 break;
             }
         }
+        currEventNum = i;
+        currEventPos = 1 - ((eventHeightCounter - scrl) / getRowHeight($scope.events[i]));
+        //console.log("i: " + i + " scrl: " + scrl + " " + currEventPos);
       }
       $scope.$evalAsync();
       //return Math.random();
