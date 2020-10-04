@@ -2643,6 +2643,10 @@ angular.module('zmApp.controllers')
           return (loginData.use24hr ? "HH:mm:ss" : "hh:mm:ss a");
         },
 
+        getTimeFormatMilliSec: function() {
+          return (loginData.use24hr ? "HH:mm:ss:sss" : "hh:mm:ss:sss a");
+
+        },
         //------------------------------------------------------------------
         // switches screen to 'always on' or 'auto'
         //------------------------------------------------------------------
