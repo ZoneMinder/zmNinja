@@ -544,10 +544,10 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
   };
 
 
-  $scope.saveEventVideoToPhoneWithPerms = function () {
+  $scope.saveEventVideoWithPerms = function (eid) {
 
     if ($rootScope.platformOS != 'android') {
-      saveNow();
+      saveEvent("video", eid);
       return;
     }
 
@@ -563,7 +563,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     }
 
     function succ(s) {
-      saveNow();
+      saveEvent("video", eid);
     }
 
     function err(e) {
@@ -577,10 +577,10 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
   // Saves a snapshot of the monitor image to phone storage
   //-----------------------------------------------------------------------
 
-  $scope.saveEventImageToPhoneWithPerms = function (onlyAlarms) {
+  $scope.saveEventImageWithPerms = function (onlyAlarms,eid) {
 
     if ($rootScope.platformOS != 'android') {
-      processSaveEventImageToPhone(onlyAlarms);
+      saveEventImage(onlyAlarms, eid);
       return;
     }
 
@@ -597,7 +597,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     }
 
     function succ(s) {
-      processSaveEventImageToPhone(onlyAlarms);
+      saveEventImage(onlyAlarms, eid);
     }
 
     function err(e) {
@@ -605,32 +605,18 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     }
   };
 
-  function processSaveEventImageToPhone(onlyAlarms) {
-
-
+  function saveEventImage(onlyAlarms, eid) {
 
     if ($scope.isSnapShot()) {
-
-
       $scope.selectEventUrl = $scope.constructStream();
       NVR.debug("just saving current snapshot:" + $scope.selectEventUrl);
-      saveNow("image");
-      return;
-
-    }
-
-    if ($scope.loginData.useNphZmsForEvents) {
-      NVR.log("Use ZMS stream to save to phone");
-
-      saveEventImageToPhoneZms(onlyAlarms);
-
+      saveEvent("image", eid);
     } else {
-      saveEventImageToPhone(onlyAlarms);
+      selectFrameAndSave(onlyAlarms,eid);
     }
-
   }
 
-  function saveEventImageToPhoneZms(onlyAlarms) {
+  function selectFrameAndSave(onlyAlarms, eid) {
     // The strategy here is to build the array now so we can grab frames
     // $scope.currentProgress.progress is the seconds where we are
     // $scope.eventId is the event Id
@@ -645,7 +631,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     sendCommand('1', $scope.connKey).
     then(function (resp) {
 
-        console.log("PAUSE ANSWER IS " + JSON.stringify(resp));
+       // console.log("PAUSE ANSWER IS " + JSON.stringify(resp));
 
         if (resp && resp.data && resp.data.status)
           $scope.currentProgress.progress = resp.data.status.progress;
@@ -735,7 +721,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
               //console.log ("I PUSHED:" + p+" BUT SLIDE LENGHT BEFORE DISPLAY:"+$scope.slides.length);
               //  console.log ("STEP 2 : calling Save Event To Phone");
               $ionicLoading.hide();
-              saveEventImageToPhone(onlyAlarms);
+              saveEventImageToPhone(onlyAlarms, eid);
 
             },
             function (err) {
@@ -760,8 +746,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
   }
 
   // don't think this is used anymore
-  function saveEventImageToPhone(onlyAlarms) {
-    // console.log ("________________UNUSED?_______________________");
+  function saveEventImageToPhone(onlyAlarms, eid) {
     var curState = carouselUtils.getStop();
     carouselUtils.setStop(true);
     var url;
@@ -772,19 +757,13 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
 
 
-    NVR.debug("ModalCtrl: SaveEventImageToPhone called");
+    NVR.debug("EventModalCtrl: SaveEventImageToPhone called");
     var canvas, context, imageDataUrl, imageData;
     var loginData = NVR.getLogin();
 
     // for alarms only
     if (onlyAlarms || ($scope.defaultVideo !== undefined && $scope.defaultVideo != ''))
       $scope.mycarousel.index = 1;
-
-
-    
-
-      console.log("SLIDES " + JSON.stringify($scope.slides));
-      console.log("CAROUSEL " + JSON.stringify($scope.mycarousel));
 
       url = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand +
         "&eid=" + $scope.eventId +
@@ -908,7 +887,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
           text: '',
           type: 'button-positive button-small ion-checkmark-round',
           onTap: function (e) {
-            saveNow("image");
+            saveEvent("image",eid);
 
           }
         }
@@ -919,9 +898,10 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
   }
 
-  function saveNow(t) {
+  function saveEvent(t,eid) {
 
-    var fname = "zmninja.jpg";
+    NVR.debug ("saveEvent  in EventModalCtrl called with "+t+" and "+ eid);
+    var fname;
     var fn = "cordova.plugins.photoLibrary.saveImage";
     var loginData = NVR.getLogin();
 
@@ -933,17 +913,17 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     if ($scope.defaultVideo !== undefined && $scope.defaultVideo != '' && t != "image") {
       $scope.selectEventUrl = $scope.video_url;
-      fname = "zmNinja.mp4";
+      fname = "zmNinja-eid-"+eid+".mp4";
       fn = "cordova.plugins.photoLibrary.saveVideo";
-
-
+    } else {
+      fname = "zmNinja-eid-"+eid+".jpg";
     }
 
     NVR.debug("-->Going to try and download " + $scope.selectEventUrl);
     var url = $scope.selectEventUrl;
 
 
-    NVR.log(">>saveNow: File path to grab is " + url);
+    NVR.log(">>saveEvent: File path to grab is " + url);
 
     if ($rootScope.platformOS != 'desktop') {
 
@@ -977,7 +957,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             function (entry) {
               NVR.debug("local download complete: " + entry.toURL());
               NVR.debug("Now trying to move it to album");
-              var pluginName = (fname == "zmNinja.mp4" ? "saveVideo" : "saveImage");
+              var pluginName = ((fname.indexOf('.mp4') != -1) ? "saveVideo" : "saveImage");
 
 
               cordova.plugins.photoLibrary[pluginName](entry.toURL(), album,
@@ -1031,13 +1011,41 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
       //desktop
 
       $ionicLoading.hide();
-
-      $rootScope.zmPopup = SecuredPopups.show('alert', {
-        title: $translate.instant('kNote'),
-        template: $translate.instant('kDownloadVideoImage') + "<br/><br/><center><a href='" + url + "' class='button button-assertive icon ion-android-download' download>" + " " + $translate.instant('kDownload') + "</a></center>",
-        okText: $translate.instant('kDismiss'),
-        okType: 'button-stable'
+      $ionicLoading.show({
+        template: $translate.instant('kPleaseWait') + "...",
+        noBackdrop: true
       });
+
+        fetch(url).then(function (resp) {
+          return resp.blob();
+        }).then(function (blob) {
+          $ionicLoading.hide();
+
+         // console.log (blob);
+          var url = window.URL.createObjectURL(blob);
+          $rootScope.zmPopup = SecuredPopups.show('alert', {
+            title: $translate.instant('kNote'),
+            template: $translate.instant('kDownloadVideoImage') + "<br/><br/><center><a href='" + url + "' class='button button-assertive icon ion-android-download' download='"+fname+"'>" + " " + $translate.instant('kDownload') + "</a></center>",
+            okText: $translate.instant('kDismiss'),
+            okType: 'button-stable'
+          });
+  
+          $rootScope.zmPopup.then (function (res) {
+            //console.log ('DONE RELEASE');
+            NVR.debug ('download successful');
+            window.URL.revokeObjectURL(url);
+            $ionicLoading.hide();
+
+  
+          });
+        }).catch(function () {
+          $ionicLoading.hide();
+          $ionicLoading.show({
+            template: $translate.instant('kErrorSave'),
+            noBackdrop: true,
+            duration: 2000
+          });
+        });
 
 
 

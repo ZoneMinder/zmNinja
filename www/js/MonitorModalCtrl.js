@@ -1181,9 +1181,9 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   // Saves a snapshot of the monitor image to phone storage
   //-----------------------------------------------------------------------
 
-  $scope.saveImageToPhoneWithPerms = function (mid) {
+  $scope.saveLiveImageToPhoneWithPerms = function (mid) {
     if ($rootScope.platformOS != 'android') {
-      saveImageToPhone(mid);
+      saveLiveImageToPhone(mid);
       return;
     }
 
@@ -1199,7 +1199,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     }
 
     function succ(s) {
-      saveImageToPhone(mid);
+      saveLiveImageToPhone(mid);
     }
 
     function err(e) {
@@ -1207,14 +1207,14 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     }
   };
 
-  function saveImageToPhone(mid) {
+  function saveLiveImageToPhone(mid) {
     $ionicLoading.show({
       template: $translate.instant('kSavingSnapshot') + '...',
       noBackdrop: true,
       duration: zm.httpTimeout
     });
 
-    NVR.debug("ModalCtrl: SaveImageToPhone called");
+    NVR.debug("ModalCtrl: SaveLiveImageToPhone called");
     var canvas, context, imageDataUrl, imageData;
     var loginData = NVR.getLogin();
     var url = loginData.streamingurl +
@@ -1235,8 +1235,9 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
           var fileTransfer = new FileTransfer();
           var urle = encodeURI(url);
-          var fname = "zmninja.jpg";
-
+          var timestamp=moment().format('MMM-Do-YY-HH-mm-ss');
+          var fname = "zmninja-mid-"+mid+'-'+timestamp+".jpg";
+    
           fileTransfer.download(urle, cordova.file.dataDirectory + fname,
             function (entry) {
               NVR.debug("local download complete: " + entry.toURL());
@@ -1289,13 +1290,40 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
       $ionicLoading.hide();
       //SaveSuccess();
 
-      $rootScope.zmPopup = SecuredPopups.show('alert', {
-        title: $translate.instant('kNote'),
-        template: $translate.instant('kDownloadVideoImage') + "<br/><br/><center><a href='" + url + "' class='button button-assertive icon ion-android-download' download=\"balls.jpg\">" + " " + $translate.instant('kDownload') + "</a></center>",
-        okText: $translate.instant('kDismiss'),
-        okType: 'button-stable'
+      $ionicLoading.show({
+        template: $translate.instant('kPleaseWait') + "...",
+        noBackdrop: true
       });
+      var timestamp=moment().format('MMM-Do-YY-HH-mm-ss');
+      var fname = "zmninja-mid-"+mid+'-'+timestamp+".jpg";
+      fetch(url).then(function (resp) {
+        return resp.blob();
+      }).then(function (blob) {
+        console.log (blob);
+        var url = window.URL.createObjectURL(blob);
+        $rootScope.zmPopup = SecuredPopups.show('alert', {
+          title: $translate.instant('kNote'),
+          template: $translate.instant('kDownloadVideoImage') + "<br/><br/><center><a href='" + url + "' class='button button-assertive icon ion-android-download' download='"+fname+"'>" + " " + $translate.instant('kDownload') + "</a></center>",
+          okText: $translate.instant('kDismiss'),
+          okType: 'button-stable'
+        });
 
+        $rootScope.zmPopup.then (function (res) {
+          //console.log ('DONE RELEASE');
+          NVR.debug ('download successful');
+          $ionicLoading.hide();
+          window.URL.revokeObjectURL(url);
+
+        });
+      }).catch(function () {
+        $ionicLoading.hide();
+        $ionicLoading.show({
+          template: $translate.instant('kErrorSave'),
+          noBackdrop: true,
+          duration: 2000
+        });
+      });
+    
     }
 
   }

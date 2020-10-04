@@ -201,7 +201,7 @@
             <i class="ion-ios-loop-strong"></i>-{{loginData.gapless? ('kOn' | translate): ('kOff' | translate)}}</a>
         </li>
         <li ng-if="isToggleListMenu">
-          <a href="" ng-click="saveEventImageToPhoneWithPerms(false, 'any')">
+          <a href="" ng-click="saveEventImageWithPerms(false, currentEvent.Event.Id)">
             <i class="ion-camera"></i>
           </a>
         </li>
@@ -209,14 +209,14 @@
 
 
         <li ng-if="isToggleListMenu && defaultVideo !='' && defaultVideo != undefined">
-          <a href="" ng-click="saveEventVideoToPhoneWithPerms()">
+          <a href="" ng-click="saveEventVideoWithPerms(currentEvent.Event.Id)">
             <i class="ion-android-download"></i>
           </a>
         </li>
 
 
         <li ng-if="defaultVideo=='' && isToggleListMenu">
-          <a href="" ng-click="saveEventImageToPhoneWithPerms(true)">
+          <a href="" ng-click="saveEventImageWithPerms(true, currentEvent.Event.Id)">
             <i class="ion-android-notifications"></i>
           </a>
         </li>
