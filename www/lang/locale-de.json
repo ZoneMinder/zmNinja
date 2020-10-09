@@ -80,7 +80,7 @@
     "kDismiss"                   :"verwerfen",
     "kDone"                      :"Erledigt",
     "kDownload"                  :"Herunterladen",
-    "kDownloadVideoImage"        :"Drücke den Knopf um das Video herunterzuladen. Bitte achte auf die Dateigröße, da es kein Fortschrittsbalken während des Downloads gibt.",
+    "kDownloadVideoImage"        :"Drücke den Knopf um das Video herunterzuladen.",
     "kEmailNotConfigured"        :"Email nicht eingerichtet",
     "kEnable24hr"                :"24-Stunden Zeitformat aktivieren",
     "kEnableDebug"               :"Aktiviere Debug Logs",
