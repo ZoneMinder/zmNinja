@@ -80,7 +80,7 @@
     "kDismiss"                   :"Dismiss",
     "kDone"                      :"done",
     "kDownload"                  :"Download",
-    "kDownloadVideoImage"        :"Tap the button below to download. If you are downloading a video, there is no progress indication, so please monitor file size",
+    "kDownloadVideoImage"        :"Tap button to save media",
     "kEmailNotConfigured"        :"Email not configured",
     "kEnable24hr"                :"enable 24hr time format",
     "kEnableDebug"               :"Enable debug logs",

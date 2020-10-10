@@ -1119,12 +1119,12 @@ angular.module('zmApp', [
 
 
     $ionicPlatform.ready(function () {
+
       //console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>INSIDE RUN");
 
       NVR.log("******* app .run device ready");
-
       $fileLogger.setStorageFilename(zm.logFile);
-      $fileLogger.setTimestampFormat('MMM d, y ' + NVR.getTimeFormatSec());
+      $fileLogger.setTimestampFormat('MMM d, y ' + NVR.getTimeFormatMilliSec());
 
       $fileLogger.checkFile().then(function (resp) {
         if (parseInt(resp.size) > zm.logFileMaxSize) {
@@ -1480,7 +1480,6 @@ angular.module('zmApp', [
       // http://stackoverflow.com/questions/1649086/detect-rotation-of-android-phone-in-the-browser-with-javascript
 
       var checkOrientation = function () {
-
         // give rotation time to actually rotate, or width/height will be bogus
         $timeout ( function() {
       
@@ -1945,6 +1944,8 @@ angular.module('zmApp', [
             NVR.log ("-->Re-registering online/offine");
             document.addEventListener("offline", onOffline, false);
             document.addEventListener("online", onOnline, false);
+            window.addEventListener("resize", checkOrientation, false);
+
 
 
             $rootScope.isDownloading = false;
@@ -1998,6 +1999,8 @@ angular.module('zmApp', [
           NVR.log ("-->Clearing online/offine");
           document.removeEventListener("offline", onOffline, false);
           document.removeEventListener("online", onOnline, false);
+          window.removeEventListener("resize", checkOrientation, false);
+
 
           NVR.setBackground(true);
           NVR.setJustResumed(false);

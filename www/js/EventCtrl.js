@@ -781,13 +781,15 @@ angular.module('zmApp.controllers')
     }
 
 
-    function saveNow(imgsrc) {
+    function saveNow(imgsrc,eid) {
 
-      var fname = "zmninja.jpg";
+      NVR.debug ("saveNow in EventCtrl called with "+imgsrc+" and "+ eid);
+      var fname;
+      //var timestamp=moment().format('-MMM-Do-YY-HH-mm-ss');
+
       var fn = "cordova.plugins.photoLibrary.saveImage";
       var loginData = NVR.getLogin();
-
-
+      fname = "zmNinja-eid-"+eid+".jpg";
       $ionicLoading.show({
         template: $translate.instant('kSavingSnapshot') + "...",
         noBackdrop: true,
@@ -828,7 +830,7 @@ angular.module('zmApp.controllers')
               function (entry) {
                 NVR.debug("local download complete: " + entry.toURL());
                 NVR.debug("Now trying to move it to album");
-                var pluginName = (fname == "zmNinja.mp4" ? "saveVideo" : "saveImage");
+                var pluginName = ((fname.indexOf('.mp4') != -1) ? "saveVideo" : "saveImage");
 
 
                 cordova.plugins.photoLibrary[pluginName](entry.toURL(), album,
@@ -882,12 +884,39 @@ angular.module('zmApp.controllers')
         //desktop
 
         $ionicLoading.hide();
+        $ionicLoading.show({
+          template: $translate.instant('kPleaseWait') + "...",
+          noBackdrop: true
+        });
 
-        $rootScope.zmPopup = SecuredPopups.show('alert', {
-          title: $translate.instant('kNote'),
-          template: $translate.instant('kDownloadVideoImage') + "<br/><br/><center><a href='" + url + "' class='button button-assertive icon ion-android-download' download>" + " " + $translate.instant('kDownload') + "</a></center>",
-          okText: $translate.instant('kDismiss'),
-          okType: 'button-stable'
+        fname = "zmninja-eid-"+eid+".jpg";
+        fetch(url).then(function (resp) {
+          return resp.blob();
+        }).then(function (blob) {
+          $ionicLoading.hide();
+          var url = window.URL.createObjectURL(blob);
+          $rootScope.zmPopup = SecuredPopups.show('alert', {
+            title: $translate.instant('kNote'),
+            template: $translate.instant('kDownloadVideoImage') + "<br/><br/><center><a href='" + url + "' class='button button-assertive icon ion-android-download' download='"+fname+"'>" + " " + $translate.instant('kDownload') + "</a></center>",
+            okText: $translate.instant('kDismiss'),
+            okType: 'button-stable'
+          });
+  
+          $rootScope.zmPopup.then (function (res) {
+            //console.log ('DONE RELEASE');
+            NVR.debug ('download successful');
+            window.URL.revokeObjectURL(url);
+            $ionicLoading.hide();
+
+  
+          });
+        }).catch(function () {
+          $ionicLoading.hide();
+          $ionicLoading.show({
+            template: $translate.instant('kErrorSave'),
+            noBackdrop: true,
+            duration: 2000
+          });
         });
 
 
@@ -1138,7 +1167,7 @@ angular.module('zmApp.controllers')
     };
 
     $scope.showImage = function (p, f, fid, e, imode, id, parray, ndx) {
-      var img;
+      var eid = e;
 
 //      console.log ("P="+p+" F="+f+" E="+e+" imode="+imode+"  id="+id+" parray="+JSON.stringify(parray)+" ndx="+ndx);
 
@@ -1198,7 +1227,7 @@ angular.module('zmApp.controllers')
             type: 'button-assertive button-small ion-camera',
             onTap: function (e) {
               e.preventDefault();
-              saveNow($scope.imgsrc);
+              saveNow($scope.imgsrc,eid);
 
             }
           },
@@ -3247,6 +3276,7 @@ angular.module('zmApp.controllers')
       if (now - loadMoreTime > 1500) {
           NVR.debug("$scope.loadMore > loadMore() ... delta: " + (now - loadMoreTime));
           loadMore();
+          loadMoreTime = Date.now();
           $scope.$broadcast('scroll.infiniteScrollComplete');
       }
       else {
