@@ -3807,6 +3807,7 @@ angular.module('zmApp.controllers')
           $http.get(myurl /*,{timeout:15000}*/ )
             .then(function (data) {
                 data = data.data;
+//                console.log (data);
                 if (loadingStr != 'none') $ionicLoading.hide();
                 //myevents = data.events;
 

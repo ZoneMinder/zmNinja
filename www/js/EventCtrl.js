@@ -692,9 +692,15 @@ angular.module('zmApp.controllers')
           if (myevents.length < maxEventsToLoad) {
             //console.log ("EVENTS LOADED="+JSON.stringify($scope.events));
             NVR.debug("EventCtrl:loading one more page just in case we don't have enough to display");
-            loadMore();
+            loadMore()
+            .then (function () {
+              return d.resolve(true);
+            });
+
+          } else {
+            return d.resolve(true);
+
           }
-          return d.resolve(true);
         });
         return (d.promise);
     }
@@ -3008,19 +3014,37 @@ angular.module('zmApp.controllers')
     // loads next page of events
     //--------------------------------------------------------
 
+    $scope.loadMore = function () {
+      
+      var now = Date.now();
+      if (now - loadMoreTime > 1500) {
+          NVR.debug("$scope.loadMore > loadMore() ... delta: " + (now - loadMoreTime));
+          loadMore();
+          loadMoreTime = Date.now();
+          $scope.$broadcast('scroll.infiniteScrollComplete');
+      }
+      else {
+        NVR.debug("$scope.loadMore ... delta: " + (now - loadMoreTime));
+        $timeout(function () {
+            $scope.$broadcast('scroll.infiniteScrollComplete');
+        }, 250);
+      }
+    };
+    
     function loadMore() {
       // the events API does not return an error for anything
       // except greater page limits than reported
 
       //console.log("***** LOADING MORE INFINITE SCROLL ****");
 
+      var d = $q.defer();
       if ((currEventsPage >= maxEventsPage) && (pageLoaded)) {
         moreEvents = false;
         NVR.debug("No more - We have a total of " + maxEventsPage + " and are at page=" + currEventsPage);
 
        // console.log("*** At Page " + currEventsPage + " of " + maxEventsPage + ", not proceeding");
         $ionicLoading.hide();
-        return;
+        return d.resolve(true);
       }
 
       currEventsPage++;
@@ -3030,7 +3054,7 @@ angular.module('zmApp.controllers')
         $scope.$broadcast('scroll.infiniteScrollComplete');
 
         // console.log("**** LOADMORE ARTIFICALLY DISABLED");
-        return;
+        return d.resolve(true);
       }
 
       var loadingStr = "";
@@ -3122,6 +3146,7 @@ angular.module('zmApp.controllers')
             //console.log("Got new page of events");
             moreEvents = true;
             $scope.$broadcast('scroll.infiniteScrollComplete');
+            return d.resolve(true);
           },
 
           function (error) {
@@ -3129,109 +3154,13 @@ angular.module('zmApp.controllers')
             moreEvents = false;
             $ionicLoading.hide();
             $scope.$broadcast('scroll.infiniteScrollComplete');
+            return d.resolve(true);
 
           });
+          return d.promise;
     }
 
-    function loadMoreNew() {
-      // the events API does not return an error for anything
-      // except greater page limits than reported
-      
-      //console.log("***** LOADING MORE INFINITE SCROLL ****");
-      loadMoreTime = Date.now();
-
-      if (currentPagePosition > 0 && currentPagePosition >= currentPageLength) {
-        currEventsPage++;
-        currentPagePosition = 0;
-        currentPageLength = 0;
-      }
-      NVR.debug("EventCtrl:loadMore() currEventsPage: " + currEventsPage + ", currentPagePosition: " + currentPagePosition + ", currentPageLength: " + currentPageLength);
-
-      if (currEventsPage > maxEventsPage) {
-        moreEvents = false;
-        $scope.nextEvents = true;
-        NVR.debug("No more - We have a total of " + maxEventsPage + " and are at page=" + currEventsPage);
-
-       // console.log("*** At Page " + currEventsPage + " of " + maxEventsPage + ", not proceeding");
-        $ionicLoading.hide();
-        return;
-      }
-
-      if (!enableLoadMore) {
-        $ionicLoading.hide();
-        moreEvents = false; // Don't ion-scroll till enableLoadMore is true;
-        $scope.nextEvents = true;
-        $scope.$broadcast('scroll.infiniteScrollComplete');
-
-        // console.log("**** LOADMORE ARTIFICALLY DISABLED");
-        return;
-      }
-
-      var loadingStr = "";
-      if ($scope.search.text != "") {
     
-        var toastStr = $translate.instant('kPleaseWait') +'...'+ currEventsPage;
-       // console.log ("SHOW " + toastStr );
-        $ionicLoading.show({
-          maxwidth: 100,
-          noBackdrop:true,
-          scope: $scope,
-          template: toastStr,
-          //template: '<button class="button button-clear icon-left ion-close-circled button-text-wrap" ng-click="cancelSearch()" >' + toastStr + '</button>'
-        });
-
-        loadingStr = "none";
-      }
-
-      nolangFrom = "";
-      nolangTo = "";
-      if ($rootScope.fromString)
-        nolangFrom = moment($rootScope.fromString).locale('en').format("YYYY-MM-DD HH:mm:ss");
-      if ($rootScope.toString)
-        nolangTo = moment($rootScope.toString).locale('en').format("YYYY-MM-DD HH:mm:ss");
-
-      if (currentPagePosition && currentPageData) {
-        loadEvents(currentPageData);
-        //console.log("Got new page of events");
-        moreEvents = true;
-      }
-      else {
-      NVR.getEvents($scope.id, currEventsPage, loadingStr, nolangFrom, nolangTo, false,$rootScope.monitorsFilter)
-        .then( function (data) {
-            // console.log(JSON.stringify(data.pagination));
-            if (data.pagination && data.pagination.pageCount)
-                maxEventsPage = data.pagination.pageCount;
-
-            loadEvents(data);
-            currentPageData = data;
-            //console.log("Got new page of events");
-            moreEvents = true;
-            },
-
-          function (error) {
-            // console.log("*** No More Events to Load, Stop Infinite Scroll ****");
-            moreEvents = false;
-            $ionicLoading.hide();
-          });
-      }
-    }
-
-    $scope.loadMore = function () {
-      
-      var now = Date.now();
-      if (now - loadMoreTime > 1500) {
-          NVR.debug("$scope.loadMore > loadMore() ... delta: " + (now - loadMoreTime));
-          loadMore();
-          loadMoreTime = Date.now();
-          $scope.$broadcast('scroll.infiniteScrollComplete');
-      }
-      else {
-        NVR.debug("$scope.loadMore ... delta: " + (now - loadMoreTime));
-        $timeout(function () {
-            $scope.$broadcast('scroll.infiniteScrollComplete');
-        }, 250);
-      }
-    };
     
     function loadEvents(data) {
         var loginData = NVR.getLogin();

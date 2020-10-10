@@ -45,7 +45,8 @@ angular.module('zmApp.controllers')
         user: loginData.username,
         password: loginData.password,
         monlist: loginData.eventServerMonitors,
-        intlist: loginData.eventServerInterval
+        intlist: loginData.eventServerInterval,
+        appversion: NVR.getAppVersion()
       
       });
 
@@ -633,7 +634,7 @@ angular.module('zmApp.controllers')
 
               NVR.debug("push: EventSever: received push notification with payload:"+JSON.stringify(message));
 
-              if ($rootScope.platformOS == 'ios') {
+              if ($rootScope.platformOS != 'desktop') {
                 NVR.debug ("push: clearing badge");
                 window.FirebasePlugin.setBadgeNumber(0);
               }
