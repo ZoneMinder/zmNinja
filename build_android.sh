@@ -24,10 +24,10 @@ build_release() {
                 exit
         fi
 
-	if [[ -z "${ANDROID_SDK_ROOT}" ]]; then
-	    echo "ANDROID_SDK_ROOT must be set for release build"
-	    exit 1
-	fi
+        if [[ -z "${ANDROID_SDK_ROOT}" ]]; then
+            echo "ANDROID_SDK_ROOT must be set for release build"
+            exit 1
+        fi
 
 
        BUILD_MODE="native"
@@ -65,10 +65,10 @@ build_release() {
             cd release_files/
             jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore ../platforms/android/zmNinja.keystore android-release-unsigned.apk zmNinja
 	    ret=$?
-	    if [ $ret -ne 0 ]; then
+            if [ $ret -ne 0 ]; then
                 echo "Unable to sign jar, please fix the error above"
-		exit 1
-	    fi
+                exit 1
+            fi
 
             $ANDROID_SDK_ROOT/build-tools/${SDK_VERSION}/zipalign -v 4 android-release-unsigned.apk zmNinja.apk
             rm -f android-release-unsigned.apk 
