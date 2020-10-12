@@ -45,9 +45,8 @@ angular.module('zmApp.controllers')
         user: loginData.username,
         password: loginData.password,
         monlist: loginData.eventServerMonitors,
-        intlist: loginData.eventServerInterval,
-        appversion: NVR.getAppVersion()
-      
+        intlist: loginData.eventServerInterval
+    
       });
 
 
@@ -410,6 +409,7 @@ angular.module('zmApp.controllers')
     //--------------------------------------------------------------------------
     function sendMessage(type, obj, isForce) {
 
+      obj.appversion = NVR.getAppVersion();
       var msg = {
         'event': type,
         'data': obj,
