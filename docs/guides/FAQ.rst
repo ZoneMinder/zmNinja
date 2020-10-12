@@ -752,6 +752,9 @@ It may be one of the following:
 * If you are running ES in dlandon's docker image and are seeing connection to the ES being 
   reset, you may need to restart the ES manually. I don't use that docker image - to further
   debug, please raise issues in the docker repo.
+
+* Make sure the image being sent is less than 1MB. This is a new restriction with FCMv1
+
   
 My device is not receiving push for a specific monitor
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
