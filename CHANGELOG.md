@@ -1,5 +1,54 @@
 # Changelog
 
+## [v1.6.000](https://github.com/pliablepixels/zmNinja/tree/v1.6.000) (2020-10-12)
+
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.4.009...v1.6.000)
+
+**Implemented enhancements:**
+
+- Support multiple event thumb sizes [\#995](https://github.com/pliablepixels/zmNinja/issues/995)
+- Support Notches in devices [\#967](https://github.com/pliablepixels/zmNinja/issues/967)
+- Migrate from Push Plugin to firebasex [\#962](https://github.com/pliablepixels/zmNinja/issues/962)
+- Event list improvements [\#963](https://github.com/pliablepixels/zmNinja/pull/963) ([lucasnz](https://github.com/lucasnz))
+
+**Fixed bugs:**
+
+- Green dots in Android Montage if it is the first screen [\#983](https://github.com/pliablepixels/zmNinja/issues/983)
+- iOS zmNinja sends token for platform Android [\#960](https://github.com/pliablepixels/zmNinja/issues/960)
+- No images on iOS with zmNinja 1.4.009 [\#958](https://github.com/pliablepixels/zmNinja/issues/958)
+
+**Closed issues:**
+
+- Like to have a better filename for Snapshots [\#989](https://github.com/pliablepixels/zmNinja/issues/989)
+- zmninja Montage not owrking/blank screen, monitors work and stream, montage blank, monitors enabled [\#982](https://github.com/pliablepixels/zmNinja/issues/982)
+- zmNinja Pro not showing streaming images while zm website is ok [\#969](https://github.com/pliablepixels/zmNinja/issues/969)
+- Trial or test version [\#961](https://github.com/pliablepixels/zmNinja/issues/961)
+- Loading Events Delay [\#957](https://github.com/pliablepixels/zmNinja/issues/957)
+- 1.4.7, 1.4.9 Desktop installer failing on Windows [\#956](https://github.com/pliablepixels/zmNinja/issues/956)
+- Zoneminder push notification problem on iOS with ZMNINJA [\#949](https://github.com/pliablepixels/zmNinja/issues/949)
+- Incorrect os in tokens.txt for ios version [\#943](https://github.com/pliablepixels/zmNinja/issues/943)
+
+**Merged pull requests:**
+
+- Make build\_android.sh script more user friendly [\#994](https://github.com/pliablepixels/zmNinja/pull/994) ([a-pavlov](https://github.com/a-pavlov))
+- set event height for all rows [\#993](https://github.com/pliablepixels/zmNinja/pull/993) ([lucasnz](https://github.com/lucasnz))
+- switch to browser fetch to download media for desktops, use timestamp… [\#992](https://github.com/pliablepixels/zmNinja/pull/992) ([florie1706](https://github.com/florie1706))
+- switch to browser fetch to download media for desktops, use timestamp… [\#991](https://github.com/pliablepixels/zmNinja/pull/991) ([maymaymay](https://github.com/maymaymay))
+- After rotate, scroll the view back to the event we were looking at [\#990](https://github.com/pliablepixels/zmNinja/pull/990) ([lucasnz](https://github.com/lucasnz))
+- add xsmall thumbs [\#988](https://github.com/pliablepixels/zmNinja/pull/988) ([florie1706](https://github.com/florie1706))
+- add xsmall thumbs [\#987](https://github.com/pliablepixels/zmNinja/pull/987) ([maymaymay](https://github.com/maymaymay))
+- Ui fixes [\#984](https://github.com/pliablepixels/zmNinja/pull/984) ([lucasnz](https://github.com/lucasnz))
+- large thumbs were being cropped a touch [\#980](https://github.com/pliablepixels/zmNinja/pull/980) ([lucasnz](https://github.com/lucasnz))
+- clock div is too wide and cropping recording friendly time [\#979](https://github.com/pliablepixels/zmNinja/pull/979) ([lucasnz](https://github.com/lucasnz))
+- fix help contact [\#978](https://github.com/pliablepixels/zmNinja/pull/978) ([maymaymay](https://github.com/maymaymay))
+- \#973 take care humanize time going to 2nd row [\#977](https://github.com/pliablepixels/zmNinja/pull/977) ([florie1706](https://github.com/florie1706))
+- \#973 take care humanize time going to 2nd row [\#976](https://github.com/pliablepixels/zmNinja/pull/976) ([maymaymay](https://github.com/maymaymay))
+- Resizing updates [\#975](https://github.com/pliablepixels/zmNinja/pull/975) ([lucasnz](https://github.com/lucasnz))
+- \#963 show filter text properly, also indicate selective monitors [\#968](https://github.com/pliablepixels/zmNinja/pull/968) ([maymaymay](https://github.com/maymaymay))
+-  \#963 show filter text properly, also indicate selective monitors [\#966](https://github.com/pliablepixels/zmNinja/pull/966) ([florie1706](https://github.com/florie1706))
+- \#963 allow size selection of thumbs [\#965](https://github.com/pliablepixels/zmNinja/pull/965) ([maymaymay](https://github.com/maymaymay))
+- Dev [\#964](https://github.com/pliablepixels/zmNinja/pull/964) ([pliablepixels](https://github.com/pliablepixels))
+
 ## [v1.4.009](https://github.com/pliablepixels/zmNinja/tree/v1.4.009) (2020-07-02)
 
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.4.007...v1.4.009)
@@ -249,7 +298,6 @@
 - fallbacks are broken [\#833](https://github.com/pliablepixels/zmNinja/issues/833)
 - Navigation from monitor view to event view broke in mobile devices [\#832](https://github.com/pliablepixels/zmNinja/issues/832)
 - Add a relogin timer for tokens [\#829](https://github.com/pliablepixels/zmNinja/issues/829)
-- Don't close event playback if video controls were pressed quickly [\#827](https://github.com/pliablepixels/zmNinja/issues/827)
 
 **Closed issues:**
 
@@ -265,6 +313,7 @@
 
 **Fixed bugs:**
 
+- Don't close event playback if video controls were pressed quickly [\#827](https://github.com/pliablepixels/zmNinja/issues/827)
 - Linux installer - doesn't install into favorites [\#826](https://github.com/pliablepixels/zmNinja/issues/826)
 - Layout No Longer Saves [\#823](https://github.com/pliablepixels/zmNinja/issues/823)
 - It is not possible to view a full-size frame from a thumbnail in the analysis view [\#822](https://github.com/pliablepixels/zmNinja/issues/822)
@@ -768,7 +817,7 @@
 
 ## [v1.2.41](https://github.com/pliablepixels/zmNinja/tree/v1.2.41) (2017-04-11)
 
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.40...v1.2.41)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.40...v1.2.41)
 
 **Implemented enhancements:**
 
@@ -795,13 +844,13 @@
 - montage profile save - show existing list too [\#511](https://github.com/pliablepixels/zmNinja/pull/511) ([maymaymay](https://github.com/maymaymay))
 -  \#509 - default profile for all monitors and "workspace" [\#510](https://github.com/pliablepixels/zmNinja/pull/510) ([maymaymay](https://github.com/maymaymay))
 
-## [v1.2.40](https://github.com/pliablepixels/zmNinja/tree/v1.2.40) (2017-03-19)
-
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v/1.2.40...v1.2.40)
-
 ## [v/1.2.40](https://github.com/pliablepixels/zmNinja/tree/v/1.2.40) (2017-03-19)
 
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.39...v/1.2.40)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.40...v/1.2.40)
+
+## [v1.2.40](https://github.com/pliablepixels/zmNinja/tree/v1.2.40) (2017-03-19)
+
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.2.39...v1.2.40)
 
 **Fixed bugs:**
 
@@ -1601,7 +1650,7 @@
 
 ## [v0.87.3](https://github.com/pliablepixels/zmNinja/tree/v0.87.3) (2015-12-15)
 
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87...v0.87.3)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.2...v0.87.3)
 
 **Implemented enhancements:**
 
@@ -1621,13 +1670,13 @@
 
 - Timeline on v0.87.2 shows only motion events [\#105](https://github.com/pliablepixels/zmNinja/issues/105)
 
-## [v0.87](https://github.com/pliablepixels/zmNinja/tree/v0.87) (2015-11-20)
-
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.2...v0.87)
-
 ## [v0.87.2](https://github.com/pliablepixels/zmNinja/tree/v0.87.2) (2015-11-20)
 
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.1...v0.87.2)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87...v0.87.2)
+
+## [v0.87](https://github.com/pliablepixels/zmNinja/tree/v0.87) (2015-11-20)
+
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.1...v0.87)
 
 **Fixed bugs:**
 
