@@ -108,21 +108,8 @@ angular.module('zmApp.controllers')
     });
     
     function scrollTo(eventNum, eventPos) {
-        var eventHeightCounter = 0;
-        var i = 0;
-        var lastEventHeight = 0;
-        //loop until we pass the event...
-        for (i = 0; i < $scope.events.length; i++) {
-        lastEventHeight = getRowHeight($scope.events[i]);
-        if ( i >= eventNum ) {
-            //$scope.navTitle = ($scope.events[i].Event.humanizeTime); // we don't need to update the navTitle as we're staying in the same place
-            break;
-        }
-        //console.log(getRowHeight($scope.events[i]));
-        eventHeightCounter = eventHeightCounter + lastEventHeight;
-        }
-        var scrl = eventHeightCounter + (lastEventHeight * eventPos);
-        //console.log("eventHeightCounter: " + eventHeightCounter + " lastEventHeight: " + lastEventHeight + ", scrl To " + scrl + ", len: " + $scope.events.length);
+        var scrl = (eventRowHeight * eventNum) + (eventRowHeight * eventPos);
+        //console.log("eventNum: " + eventNum + " eventPos: " + eventPos + ", scrl To " + scrl);
         NVR.debug("scrollTo: " + scrl);
         $ionicScrollDelegate.$getByHandle("mainScroll").scrollTo(0, scrl, false);
     }
