@@ -124,6 +124,7 @@ angular.module('zmApp.controllers')
         var tempMonHeight = 0;
         monitorHeight = 0;
         for (var i=0; i < $scope.monitors.length; i++) {
+          NVR.debug("setRowHeight, i: " + i + " Monitor.isChecked: " + $scope.monitors[i].Monitor.isChecked);
           if ($scope.monitors[i] != undefined && $scope.monitors[i].Monitor.isChecked) {
             var mw = $scope.monitors[i].Monitor.Width;
             var mh = $scope.monitors[i].Monitor.Height;
@@ -310,7 +311,6 @@ angular.module('zmApp.controllers')
     
     function recomputeRowHeights() {
       switchThumbClass();
-      setRowHeight();
       $scope.eventsBeingLoaded = true;
       $timeout (function() {
         NVR.debug ("recomputing all row heights");
@@ -3528,6 +3528,33 @@ angular.module('zmApp.controllers')
       refresh.then(function (data) {
         $scope.monitors = data;
         message = data;
+
+        if ($rootScope.monitorsFilter != undefined && $rootScope.monitorsFilter != '') {
+          NVR.debug("dorefresh monitorsFilter: " + $rootScope.monitorsFilter);
+          //$rootScope.monitorsFilter: /MonitorId =:5
+          //$rootScope.monitorsFilter: /MonitorId =:2/MonitorId =:3
+          //$rootScope.monitorsFilter: /MonitorId !=:5
+          var monitorIds = [];
+          ($rootScope.monitorsFilter.split("/")).forEach(function(monitorId, index) {
+            //console.log('Index: ' + index + ' Value: ' + monitorId);
+            //skip the first one as it's always blank
+            if (index)
+              monitorIds.push(monitorId.split(":")[1]);
+          });
+          var checked = true;
+          //if include listed monitors
+          if ($rootScope.monitorsFilter.includes("!=")) {
+            checked = false;
+          }
+          for (var i=0; i < $scope.monitors.length; i++) {
+            if ($scope.monitors[i] != undefined) {
+                if (monitorIds.includes($scope.monitors[i].Monitor.Id))
+                    $scope.monitors[i].Monitor.isChecked = checked;
+                else
+                    $scope.monitors[i].Monitor.isChecked = !checked;
+            }
+          }
+        }
 
         /* var ld = NVR.getLogin();
          if (ld.persistMontageOrder) {
