@@ -2,7 +2,10 @@
 
 ## [v1.6.000](https://github.com/pliablepixels/zmNinja/tree/v1.6.000) (2020-10-12)
 
+**IMPORTANT**: zmNinja 1.6.000 needs ES 6.0 or above
+
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.4.009...v1.6.000)
+
 
 **Implemented enhancements:**
 
