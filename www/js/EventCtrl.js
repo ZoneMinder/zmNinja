@@ -605,7 +605,8 @@ angular.module('zmApp.controllers')
         $state.go("app.login", {
           "wizard": false
         });
-        return d.resolve(true);
+        d.resolve(true);
+        return d.promise;
       }
 
       $scope.events = [];
@@ -752,12 +753,13 @@ angular.module('zmApp.controllers')
             NVR.debug("EventCtrl:loading one more page just in case we don't have enough to display");
             loadMore()
             .then (function () {
-              return d.resolve(true);
+              d.resolve(true);
+              return d.promise;
             });
 
           } else {
-            return d.resolve(true);
-
+              d.resolve(true);
+              return d.promise;
           }
         });
         return (d.promise);
@@ -3090,16 +3092,19 @@ angular.module('zmApp.controllers')
       // the events API does not return an error for anything
       // except greater page limits than reported
 
-      //console.log("***** LOADING MORE INFINITE SCROLL ****");
 
       var d = $q.defer();
+
+
+
       if ((currEventsPage >= maxEventsPage) && (pageLoaded)) {
         moreEvents = false;
         NVR.debug("No more - We have a total of " + maxEventsPage + " and are at page=" + currEventsPage);
 
        // console.log("*** At Page " + currEventsPage + " of " + maxEventsPage + ", not proceeding");
         $ionicLoading.hide();
-        return d.resolve(true);
+        d.resolve(true);
+        return d.promise;
       }
 
       currEventsPage++;
@@ -3109,7 +3114,8 @@ angular.module('zmApp.controllers')
         $scope.$broadcast('scroll.infiniteScrollComplete');
 
         // console.log("**** LOADMORE ARTIFICALLY DISABLED");
-        return d.resolve(true);
+        d.resolve(true);
+        return d.promise;
       }
 
       var loadingStr = "";
@@ -3200,7 +3206,8 @@ angular.module('zmApp.controllers')
             //console.log("Got new page of events");
             moreEvents = true;
             $scope.$broadcast('scroll.infiniteScrollComplete');
-            return d.resolve(true);
+            d.resolve(true);
+            return d.promise;
           },
 
           function (error) {
@@ -3208,8 +3215,8 @@ angular.module('zmApp.controllers')
             moreEvents = false;
             $ionicLoading.hide();
             $scope.$broadcast('scroll.infiniteScrollComplete');
-            return d.resolve(true);
-
+            d.resolve(true);
+            return (d.promise);
           });
           return d.promise;
     }

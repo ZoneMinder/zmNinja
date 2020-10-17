@@ -782,12 +782,14 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                       .then(function (success) {
                           $ionicLoading.hide();
                           // return true here because we want to progress
-                          return d.resolve(true);
+                          d.resolve(true);
+                          return d.promise;
                         },
                         function (error) {
                           $ionicLoading.hide();
                           // return true here because we want to progress
-                          return d.resolve(true);
+                          d.resolve(true);
+                          return d.promise;
                         });
                   },
                   function (error) {
@@ -795,7 +797,8 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                     NVR.log("zmWizard: api failed");
 
                     // return true here because we want to progress
-                    return d.resolve(true);
+                    d.resolve(true);
+                    return d.promise;
                   });
 
             },
@@ -806,8 +809,8 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
               NVR.log("zmWizard: login failed");
               $scope.wizard.portalValidText = $translate.instant('kPortalLoginUnsuccessful');
               $scope.wizard.portalColor = "#e74c3c";
-              return d.resolve(true);
-
+              d.resolve(true);
+              return d.promise;
             });
 
       }); //finally
