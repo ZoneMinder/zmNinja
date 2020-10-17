@@ -589,7 +589,9 @@ angular.module('zmApp.controllers')
       $scope.monitors = message;
       currEventsPage = 1;
       maxEventsPage = 1;
+      pageLoaded = false;
       $scope.navTitle = "";
+      moreEvents = true;
 
       if ($scope.monitors.length == 0) {
         var pTitle = $translate.instant('kNoMonitors');
