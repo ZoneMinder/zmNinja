@@ -622,7 +622,7 @@ angular.module('zmApp.controllers')
 
         apiurl  += '.json?sort=StartTime&direction=desc&limit=1'+$rootScope.authSession;
 
-        NVR.debug ("Getting event count ");
+        //NVR.debug ("Getting event count ");
         $http.get(apiurl)
         .then (function (data) {
            // console.log ("EVENTS GOT: "+JSON.stringify(data));

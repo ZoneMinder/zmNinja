@@ -164,8 +164,8 @@ angular.module('zmApp', [
       });
 
       return out;
-    };
 
+    };
   })
 
   // filter for montage iteration
@@ -842,9 +842,13 @@ angular.module('zmApp', [
     //------------------------------------------------------------------
 
     $rootScope.$on("token-expiry", function () {
-      NVR.log ('-----> Access token is about to expire, re-doing login');
-      _doLogin("");
-
+      if ($rootScope.loginInProgress) {
+        NVR.log ('-----> got token expiry broadcast, but login in progress, not acting');
+      } else {
+        NVR.log ('-----> Access token is about to expire, re-doing login');
+        _doLogin("");  
+      }
+     
     });
 
     $rootScope.$on("auth-error", function () {
@@ -1001,10 +1005,14 @@ angular.module('zmApp', [
 
 
     function _doLogin(str) {
+     
+    
       var d = $q.defer();
+      $rootScope.loginInProgress = true;
 
       if ($rootScope.userCancelledAuth) {
         NVR.debug ('_doLogin - not proceeding as user cancelled auth');
+        $rootScope.loginInProgress = false;
         d.reject(false);
         return d.promise;
       }
@@ -1040,6 +1048,7 @@ angular.module('zmApp', [
             alertPopup.close();
           }, 5000);
 
+          $rootScope.loginInProgress = false;
           d.reject("Error-disable recaptcha");
           return (d.promise);
         }
@@ -1057,12 +1066,14 @@ angular.module('zmApp', [
 
             //NVR.debug("Storing login time as " + moment().toString());
             localforage.setItem("lastLogin", moment().toString());
+            $rootScope.loginInProgress = false;
             d.resolve(success);
             return d.promise;
           },
           function (error)
           {
               $ionicLoading.hide();
+              $rootScope.loginInProgress = false;
               d.reject(error);
               return d.promise;
           });
@@ -1122,7 +1133,6 @@ angular.module('zmApp', [
 
       //console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>INSIDE RUN");
 
-      NVR.log("******* app .run device ready");
       $fileLogger.setStorageFilename(zm.logFile);
       $fileLogger.setTimestampFormat('MMM d, y ' + NVR.getTimeFormatMilliSec());
 
@@ -1138,6 +1148,7 @@ angular.module('zmApp', [
       });
 
 
+      NVR.log("******* app .run device ready");
 
       $rootScope.dpadId = 0;
       $rootScope.textScaleFactor = 1.0;
