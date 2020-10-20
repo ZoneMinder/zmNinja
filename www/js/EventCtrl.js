@@ -150,7 +150,6 @@ angular.module('zmApp.controllers')
           }
         }
         eventRowHeight = rowHeight;
-        console.log ('*************************'+eventRowHeight);
     }
 
     //we come here is TZ is updated after the view loads
