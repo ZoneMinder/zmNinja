@@ -137,7 +137,7 @@ angular.module('zmApp.controllers')
         var tempMonHeight = 0;
         monitorHeight = 0;
         for (var i=0; i < $scope.monitors.length; i++) {
-          if ($scope.monitors[i] != undefined && $scope.monitors[i].Monitor.isChecked) {
+          if ($scope.monitors[i] != undefined) {
             var mw = $scope.monitors[i].Monitor.Width;
             var mh = $scope.monitors[i].Monitor.Height;
             var mo = $scope.monitors[i].Monitor.Orientation;
@@ -163,6 +163,7 @@ angular.module('zmApp.controllers')
           }
         }
         eventRowHeight = rowHeight;
+        console.log ('*************************'+eventRowHeight);
     }
 
     //we come here is TZ is updated after the view loads
