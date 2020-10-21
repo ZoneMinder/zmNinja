@@ -3,8 +3,8 @@
     <ion-content ng-cloak on-double-tap="closeModal();" scroll="false" class="notch-ready">
 
       <div id="imagecontainer">
-        <ion-scroll on-scroll="checkZoom()" delegate-handle="imgscroll" has-bouncing=false min-zoom=1
-          zooming="true" direction="xy" style="width: 100%;" overflow-scroll="false">
+        <ion-scroll on-scroll="checkZoom()" delegate-handle="imgscroll" has-bouncing=false min-zoom="1"
+          zooming="true" max-zoom="50" direction="xy" style="width: 100%;" overflow-scroll="false">
           <!-- android needs this 100vh - otherwise max- does not work -->
           <!--  -->
 
