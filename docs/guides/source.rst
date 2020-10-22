@@ -3,7 +3,7 @@ Building from Source
 
 **NOTE** If you want to run it on your desktop, you can directly
 download desktop binaries
-`here <https://github.com/pliablepixels/releases>`__
+`here <https://github.com/pliablepixels/zmNinja/releases>`__
 and if you want it for Android/iOS you can get from the play/appstore.
 This is only for those who *want* to run from source.
 
