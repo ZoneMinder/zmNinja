@@ -72,10 +72,10 @@ angular.module('zmApp.controllers')
     var eHandle;
     var scrubOngoing = false;
 
-    $scope.thumbSizeOptions = {
-      'xsmall': $translate.instant('kEventViewThumbsXSmall'),
-      'small': $translate.instant('kEventViewThumbsSmall'),
-      'large':$translate.instant('kEventViewThumbsLarge'),
+    $scope.nextThumbSizeOptions = {
+      'xsmall': $translate.instant('kEventViewThumbsSmall'),
+      'small': $translate.instant('kEventViewThumbsLarge'),
+      'large':$translate.instant('kEventViewThumbsXSmall'),
     };
 
     var currEventNum = 0;
