@@ -623,20 +623,36 @@ angular.module('zmApp.controllers')
       if ($rootScope.toString)
         nolangTo = moment($rootScope.toString).locale('en').format("YYYY-MM-DD HH:mm:ss");
 
-      if ($scope.id)
+      if ($scope.id) {
         $rootScope.monitorsFilter = "/MonitorId =:" + $scope.id;
-      if ($rootScope.monitorsFilter == undefined || $rootScope.monitorsFilter == '' || $scope.id) {
-        for (var i=0; i < $scope.monitors.length; i++) {
-          if ($scope.monitors[i] != undefined) {
-              if ($rootScope.monitorsFilter == undefined || $rootScope.monitorsFilter == '' || $scope.monitors[i].Monitor.Id == $scope.id)
-                  $scope.monitors[i].Monitor.isChecked = true;
-              else
-                  $scope.monitors[i].Monitor.isChecked = false;
+        $scope.id = 0;
+      }
+
+        if ($rootScope.monitorsFilter != undefined && $rootScope.monitorsFilter != '') {
+          NVR.debug("dorefresh monitorsFilter: " + $rootScope.monitorsFilter);
+          var monitorIds = [];
+          ($rootScope.monitorsFilter.split("/")).forEach(function(monitorId, index) {
+            //console.log('Index: ' + index + ' Value: ' + monitorId);
+            //skip the first one as it's always blank
+            if (index)
+              monitorIds.push(monitorId.split(":")[1]);
+          });
+          var checked = true;
+          //if include listed monitors
+          if ($rootScope.monitorsFilter.includes("!=")) {
+            checked = false;
+          }
+          for (var i=0; i < $scope.monitors.length; i++) {
+            if ($scope.monitors[i] != undefined) {
+                if (monitorIds.includes($scope.monitors[i].Monitor.Id))
+                    $scope.monitors[i].Monitor.isChecked = checked;
+                else
+                    $scope.monitors[i].Monitor.isChecked = !checked;
+            }
           }
         }
-      }
-      if ($scope.id)
-        $scope.id = 0;
+
+ 
 
       setRowHeight();
 
