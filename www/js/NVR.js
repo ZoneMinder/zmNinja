@@ -21,7 +21,7 @@ angular.module('zmApp.controllers')
         DO NOT TOUCH zmAppVersion
         It is changed by sync_version.sh
       */
-      var zmAppVersion = "1.6.000";
+      var zmAppVersion = "1.6.002";
      
       var isBackground = false;
       var justResumed = false;
@@ -431,7 +431,7 @@ angular.module('zmApp.controllers')
 
       function cache_or_http(url,key,doCrypt, expiry) {
 
-      
+        
         if (!loginData.useAPICaching) {
           debug ('CACHE: Not being used, as it is disabled');
           return $http.get(url);
@@ -443,19 +443,20 @@ angular.module('zmApp.controllers')
         if (!expiry) expiry = 3600;
         if (!doCrypt) doCrypt = false;
 
-        localforage.getItem(key)
+        return localforage.getItem(key)
         .then (function (cache_data) {
             if (cache_data) {
               debug ('CACHE: found for key: '+key+' with expiry of:'+cache_data.expiry+'s');
-
               data = cache_data.data;
               t = moment(cache_data.time);
-              diff = moment().diff(t,'seconds');
-              
-              if (diff >=cache_data.expiry) {
+              diff = moment().diff(t,'seconds');        
+              if (diff >=cache_data.expiry )  {
                 debug ('CACHE: cached value for key:'+key+' has expired as '+diff+' >='+cache_data.expiry);
-                localforage.removeItem (key)
-                .then (function() {return cache_or_http(url, key, doCrypt, expiry);})
+                return localforage.removeItem (key)
+                .then (function() {
+                  return cache_or_http(url, key, doCrypt, expiry);
+               
+                })
                 .catch (function(err) {
                   debug ('CACHE: error deleting key, err:'+JSON.stringify(err)+' but still proceeding with another call to cache_or_http');
                   return cache_or_http(url, key, doCrypt, expiry);
@@ -469,12 +470,11 @@ angular.module('zmApp.controllers')
               if (doCrypt) {
                 debug ('CACHE: decryption requested');
                 data = decrypt(data);
-              }
-              else
+              } else {
                 data = JSON.parse(data);
-              
-              d.resolve(data);
-              return (d.promise);
+              }
+              return (data);  
+            
             } else {
               debug ('CACHE: NOT found for:'+key+ ' reverting to HTTP');
               return $http.get(url)
@@ -494,27 +494,27 @@ angular.module('zmApp.controllers')
                   cache_entry.data = JSON.stringify(data);
                 }
                 cache_entry.time = moment().toString();
-                //debug ('Setting key:'+key+' data value to:'+cache_entry.data);
-                localforage.setItem(key, cache_entry);
-                d.resolve(data);
-                return d.promise;
+                //debug ('CACHE: Setting key:'+key+' data value to:'+cache_entry.data);
+                return localforage.setItem(key, cache_entry)
+                .then (function() { return (data);});
+                
               })
               .catch ( function (err) {
                 log ('CACHE: error with http get '+JSON.stringify(err));
-                d.reject(err);
-                return d.promise;
+                return (err);
+               
               });
             }
             
         })
         .catch ( function (err) {
           //debug ('cache_or_http error:'+JSON.stringify(err));
-          d.reject(err);
-          return d.promise;
+         return (err);
           //return $http.get(url);
         }) ;
         //debug ('returning promise');
-        return d.promise;
+        //return d.promise;
+    
       }
 
       function getZMGroups() {
@@ -2701,7 +2701,6 @@ angular.module('zmApp.controllers')
                 if (success.data.version) {
                   //console.log("API VERSION RETURNED: " + JSON.stringify(success));
                   $rootScope.apiValid = true;
-
                   if (versionCompare(success.data.version, '1.32.0') != -1) {
                     debug("snapshot  supported in image.php");
                     snapshotFrame = 'snapshot';

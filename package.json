@@ -1,7 +1,7 @@
 {
   "name": "zmninjapro",
   "description": "Home security mobile app for ZoneMinder",
-  "version": "1.6.000",
+  "version": "1.6.002",
   "displayName": "zmNinja",
   "author": "Pliable Pixels",
   "license": "custom see LICENSE.md",
@@ -70,7 +70,9 @@
         "ANDROID_GSON_VERSION": "2.8.6"
       },
       "cordova-plugin-advanced-http": {},
-      "cordova-plugin-ionic-webview": {},
+      "cordova-plugin-ionic-webview": {
+        "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
+      },
       "cordova-plugin-media-pp-fork": {}
     }
   },
