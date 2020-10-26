@@ -94,7 +94,7 @@ angular.module('zmApp.controllers')
         recomputeRowHeights();
         $ionicScrollDelegate.resize();
 
-        var orientation = (screen.orientation || {}).type || screen.mozOrientation || screen.msOrientation;
+        var orientation = (screen.orientation || {}).type || screen.mozOrientation || screen.msOrientation || window.orientation;
         NVR.debug("orientation: " + orientation);
         if (currOrientation != orientation) {
             //$scope.$apply();
