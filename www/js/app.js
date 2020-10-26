@@ -1915,9 +1915,10 @@ angular.module('zmApp', [
           NVR.init();
           zmCheckUpdates.start();
          // NVR.log("Setting up POST LOGIN timer");
-          
           setupPauseAndResume();
 
+        
+    
         }
 
       }

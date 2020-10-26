@@ -313,7 +313,7 @@ angular.module('zmApp.controllers')
 
       function clear_unsupported() {
         loginData.unsupported = {};
-        setLogin(loginData);
+        return setLogin(loginData);
       }
 
       function set_unsupported(p) {
@@ -413,17 +413,18 @@ angular.module('zmApp.controllers')
       }
 
       function delete_all_caches() {
-        debug ('Clearing all unsupported flags');
-        clear_unsupported();
-
+        
+        debug ('CACHE: Clearing all unsupported flags');
         debug ('CACHE: Flushing all network API caches...');
-        return localforage.removeItem('cached_monitors')
+
+        return clear_unsupported()
+        .then ( function() {return localforage.removeItem('cached_monitors');})
         .then ( function () {return localforage.removeItem('cached_api_version');})
         .then ( function () {return localforage.removeItem('cached_multi_servers');})
         .then ( function () {return localforage.removeItem('cached_multi_port');})
         .then ( function () {return localforage.removeItem('cached_timezone');})
         .then ( function () {return localforage.removeItem('cached_zmgroups');})
-        .catch ( function (err) {debug ('Error removing all caches: '+JSON.stringify(err));});
+        .catch ( function (err) {debug ('Error removing all caches: '+JSON.stringify(err)); return ('error');});
 
         
         
@@ -441,7 +442,6 @@ angular.module('zmApp.controllers')
         var d = $q.defer();
         
         if (!expiry) expiry = 3600;
-        if (!doCrypt) doCrypt = false;
 
         return localforage.getItem(key)
         .then (function (cache_data) {
@@ -470,15 +470,18 @@ angular.module('zmApp.controllers')
               if (doCrypt) {
                 debug ('CACHE: decryption requested');
                 data = decrypt(data);
+                return (data);  
+                
               } else {
                 data = JSON.parse(data);
+                return (data);
               }
-              return (data);  
             
             } else {
               debug ('CACHE: NOT found for:'+key+ ' reverting to HTTP');
               return $http.get(url)
               .then ( function (data) {
+                debug ('HTTP function in cache returned:'+(typeof data));
                 cache_entry = {
                   'data': null,
                   'time': null,
@@ -1200,6 +1203,7 @@ angular.module('zmApp.controllers')
 
           .catch(function (err) {
             log("SetLogin localforage store error " + JSON.stringify(err));
+            return ('error');
           });
 
 
@@ -1861,8 +1865,8 @@ angular.module('zmApp.controllers')
       }
 
       function encrypt(data) {
-
-        var jsdata = JSON.stringify(data);
+     
+        var jsdata = JSON.stringify(data);    
         var compress;
 
         if (loginData.obfuscationScheme == 'lzs') {
@@ -2258,6 +2262,7 @@ angular.module('zmApp.controllers')
                 if (typeof sgl == 'string') {
                   log("user profile encrypted, decoding...");
                   decodedSgl = decrypt(sgl);
+
             
 
                 } else {
@@ -3026,7 +3031,19 @@ angular.module('zmApp.controllers')
                 cache_or_http(myurl,'cached_monitors', true,3600*24)
                 //$http.get(myurl /*,{timeout:15000}*/ )
                   .then(function (data) {
-                      //  console.log("HTTP success got " + JSON.stringify(data.monitors));
+                      debug("CACHE: cached monitor data type is:" + typeof data);
+                      if (typeof data != 'object') {
+                        debug ('CACHE: This is an error situation as I did not get an object');
+                        if (typeof data == 'string') {
+                          debug ('trying to force a JSON parse');
+                          try {
+                            data = JSON.parse(data);
+                          }
+                          catch (e) {
+                            debug ('Error force parsing data '+ JSON.stringify(e));
+                          }
+                        }
+                      }
                       data = data.data;
                       if (data.monitors) monitors = data.monitors;
 

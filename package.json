@@ -70,9 +70,7 @@
         "ANDROID_GSON_VERSION": "2.8.6"
       },
       "cordova-plugin-advanced-http": {},
-      "cordova-plugin-ionic-webview": {
-        "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
-      },
+      "cordova-plugin-ionic-webview": {},
       "cordova-plugin-media-pp-fork": {}
     }
   },
