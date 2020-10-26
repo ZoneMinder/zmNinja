@@ -94,12 +94,13 @@ angular.module('zmApp.controllers')
         recomputeRowHeights();
         $ionicScrollDelegate.resize();
 
-        NVR.debug("screen.orientation.type: " + screen.orientation.type);
-        if (currOrientation != screen.orientation.type) {
+        var orientation = (screen.orientation || {}).type || screen.mozOrientation || screen.msOrientation;
+        NVR.debug("orientation: " + orientation);
+        if (currOrientation != orientation) {
             //$scope.$apply();
             NVR.debug("sizechanged, scroll to item: " + currEventNum + ", postion: " + currEventPos);
             scrollTo(currEventNum, currEventPos);
-            currOrientation = screen.orientation.type;
+            currOrientation = orientation;
         } else {
             $timeout (function() {
               navTitle();
