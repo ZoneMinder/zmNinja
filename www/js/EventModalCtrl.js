@@ -1526,6 +1526,11 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         if (loginData.enableAlarmCount && loginData.minAlarmCount)
           nextEvent = nextEvent + "/"+"AlarmFrames >=:" + loginData.minAlarmCount;
       }
+
+      if ($rootScope.monitorsFilter != undefined && $rootScope.monitorsFilter != '') {
+        nextEvent = nextEvent  + $rootScope.monitorsFilter;
+      }
+
       nextEvent = nextEvent + ".json?sort=StartTime&direction=asc&limit=1"+$rootScope.authSession;
       
 
@@ -1537,10 +1542,15 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         if (loginData.enableAlarmCount && loginData.minAlarmCount)
           prevEvent = prevEvent + "/"+"AlarmFrames >=:" + loginData.minAlarmCount;
       }
+
+      if ($rootScope.monitorsFilter != undefined && $rootScope.monitorsFilter != '') {
+        prevEvent = prevEvent  + $rootScope.monitorsFilter;
+      }
+
       prevEvent = prevEvent + ".json?sort=StartTime&direction=desc&limit=1"+$rootScope.authSession;
 
 
-
+    //console.log ("FILTER IS "+$rootScope.monitorsFilter);
     NVR.debug("Neighbor next URL=" + nextEvent);
     NVR.debug("Neighbor pre URL=" + prevEvent);
 
