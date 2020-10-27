@@ -71,7 +71,8 @@
       },
       "cordova-plugin-advanced-http": {},
       "cordova-plugin-ionic-webview": {},
-      "cordova-plugin-media-pp-fork": {}
+      "cordova-plugin-media-pp-fork": {},
+      "cordova-plugin-inappbrowser": {}
     }
   },
   "dependencies": {
@@ -96,6 +97,7 @@
     "cordova-plugin-file-transfer": "^1.7.1",
     "cordova-plugin-globalization": "^1.11.0",
     "cordova-plugin-ignore-lint-translation": "0.0.1",
+    "cordova-plugin-inappbrowser": "^4.0.0",
     "cordova-plugin-insomnia": "^4.3.0",
     "cordova-plugin-ionic-keyboard": "^2.2.0",
     "cordova-plugin-ionic-webview": "git+https://github.com/pliablepixels/cordova-plugin-ionic-webview.git",
