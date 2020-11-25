@@ -2201,7 +2201,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
           event.Event.video = {};
           var videoURL;
 
-            videoURL = event.Event.recordingURL + "/index.php?view=view_video&eid=" + event.Event.Id;
+            videoURL = event.Event.recordingURL + "/index.php?view=view_video&mode=mpeg&format=h264&eid=" + event.Event.Id;
 
           if ($rootScope.authSession != 'undefined') videoURL += $rootScope.authSession;
           if ($rootScope.basicAuthToken) videoURL = videoURL + "&basicauth=" + $rootScope.basicAuthToken;

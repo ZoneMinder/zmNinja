@@ -732,7 +732,7 @@ angular.module('zmApp.controllers')
           
 
           
-              myevents[i].Event.videoPath = myevents[i].Event.recordingURL + "/index.php?view=view_video&eid=" + myevents[i].Event.Id;
+              myevents[i].Event.videoPath = myevents[i].Event.recordingURL + "/index.php?mode=mpeg&format=h264&view=view_video&eid=" + myevents[i].Event.Id;
 
             // if (idfound)
             if (idfound) {
@@ -2631,7 +2631,7 @@ angular.module('zmApp.controllers')
           var videoURL;
 
         
-          videoURL = event.Event.recordingURL + "/index.php?view=view_video&eid=" + event.Event.Id;
+          videoURL = event.Event.recordingURL + "/index.php?view=view_video&mode=mpeg&format=h264&eid=" + event.Event.Id;
           videoURL += $rootScope.authSession;
           videoURL += NVR.insertSpecialTokens();
 
@@ -3204,7 +3204,7 @@ angular.module('zmApp.controllers')
 
 
             
-                myevents[i].Event.videoPath = myevents[i].Event.recordingURL + "/index.php?view=view_video&eid=" + myevents[i].Event.Id;
+                myevents[i].Event.videoPath = myevents[i].Event.recordingURL + "/index.php?view=view_video&mode=mpeg&format=h264&eid=" + myevents[i].Event.Id;
 
               if (idfound) $scope.events.push(myevents[i]);
             }
@@ -3298,7 +3298,7 @@ angular.module('zmApp.controllers')
 
             //  console.log ("COMPARING "+NVR.getLogin().url+ " TO " +myevents[currentPagePosition].Event.recordingURL);
 
-            myevents[currentPagePosition].Event.videoPath = myevents[currentPagePosition].Event.recordingURL + "/index.php?view=view_video&eid=" + myevents[currentPagePosition].Event.Id;
+            myevents[currentPagePosition].Event.videoPath = myevents[currentPagePosition].Event.recordingURL + "/index.php?view=view_video&mode=mpeg&format=h264&eid=" + myevents[currentPagePosition].Event.Id;
 
             // if (idfound)
             if (idfound) {

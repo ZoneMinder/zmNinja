@@ -303,7 +303,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                 var bw = NVR.getBandwidth() == "lowbw" ? zm.eventMontageQualityLowBW : ld.montageHistoryQuality;
 
                 if (eType=='video') {
-                  var videoURL= $scope.MontageMonitors[j].Monitor.baseURL  + "/index.php?view=view_video&eid=" + eid;
+                  var videoURL= $scope.MontageMonitors[j].Monitor.baseURL  + "/index.php?view=view_video&mode=mpeg&format=h264&eid=" + eid;
 
                   videoURL += $rootScope.authSession;
                   if ($rootScope.basicAuthToken) videoURL = videoURL + "&basicauth=" + $rootScope.basicAuthToken;
@@ -428,7 +428,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                 var eid =  data.events[0].Event.Id;
 
                 if (eType=='video') {
-                  var videoURL= $scope.MontageMonitors[i].Monitor.baseURL  + "/index.php?view=view_video&eid=" + eid;
+                  var videoURL= $scope.MontageMonitors[i].Monitor.baseURL  + "/index.php?view=view_video&mode=mpeg&format=h264&eid=" + eid;
 
                   videoURL += $rootScope.authSession;
                   if ($rootScope.basicAuthToken) videoURL = videoURL + "&basicauth=" + $rootScope.basicAuthToken;
@@ -884,7 +884,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
       if (success.eid != "null" && success.eid != m.Monitor.eid && success.eid !="-1") {
        
-        var videoURL= m.Monitor.baseURL  + "/index.php?view=view_video&eid=" + success.eid;
+        var videoURL= m.Monitor.baseURL  + "/index.php?view=view_video&mode=mpeg&format=h264&eid=" + success.eid;
 
                   videoURL += $rootScope.authSession;
                   if ($rootScope.basicAuthToken) videoURL = videoURL + "&basicauth=" + $rootScope.basicAuthToken;
