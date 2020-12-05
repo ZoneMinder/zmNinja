@@ -1,5 +1,5 @@
 #!/bin/bash
-SDK_VERSION='29.0.3'
+SDK_VERSION='30.0.2'
 
 
 build_debug() {
@@ -56,7 +56,7 @@ build_release() {
 
             # Make sure native builds are only deployed in devices >= Android 5
             # minSdk and targetSdk version are in config.xml
-            cordova build android --release --  --versionCode=${ver}
+            cordova build android --release --  --versionCode=${ver} 
 
             # copy build to release folder and sign
             cp platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk release_files/android-release-unsigned.apk

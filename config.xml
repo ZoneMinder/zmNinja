@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-packageName="com.pliablepixels.zmninja_pro" id="com.pliablepixels.zmninja_pro" ios-CFBundleIdentifier="com.pliablepixels.zmninja-pro" version="1.6.003" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-packageName="com.pliablepixels.zmninja_pro" id="com.pliablepixels.zmninja_pro" ios-CFBundleIdentifier="com.pliablepixels.zmninja-pro" version="1.6.004" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>zmNinja</name>
     <description>
 	High performance ZoneMinder client
@@ -36,7 +36,8 @@
     <preference name="FadeSplashScreen" value="false" />
     <preference name="BackgroundColor" value="#444444" />
     <preference name="android-targetSdkVersion" value="29" />
-    <preference name="android-minSdkVersion" value="21" />
+    <preference name="android-compileSdkVersion" value="29" /> 
+    <preference name="android-minSdkVersion" value="22" />
     <preference name="SplashScreenBackgroundColor" value="#ababab" />
     <feature name="StatusBar">
         <param name="ios-package" onload="true" value="CDVStatusBar" />
@@ -122,8 +123,9 @@
         <config-file parent="/*" target="AndroidManifest.xml">
             <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
         </config-file>
-        <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application">
+        <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application" xmlns:android="http://schemas.android.com/apk/res/android">
             <application android:usesCleartextTraffic="true" />
+            <application android:requestLegacyExternalStorage="true" />
         </edit-config>
         <resource-file src="build-extras.gradle" target="build-extras.gradle" />
         <resource-file src="etc/android-notification-icons/ic_stat_notification.png" target="app/src/main/res/drawable/ic_stat_notification.png" />
@@ -170,7 +172,7 @@
     <plugin name="cordova-library-helper-pp-fork" spec="^1.0.1" />
     <plugin name="cordova-plugin-multi-window" spec="0.0.3" />
     <plugin name="cordova-plugin-ignore-lint-translation" spec="0.0.1" />
-    <plugin name="cordova-plugin-cloud-settings" spec="^1.0.4">
+    <plugin name= "cordova-plugin-cloud-settings" spec="^1.0.4">
         <variable name="ANDROID_BACKUP_SERVICE_KEY" value="AEdPqrEAAAAIqF-OaHdwIzZhx2L1WOfAGTagBxm5a1R4wBW_Uw" />
     </plugin>
     <plugin name="cordova-custom-config" spec="5.0.2" />
