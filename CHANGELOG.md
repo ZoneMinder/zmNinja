@@ -1,11 +1,39 @@
 # Changelog
 
+## [v1.6.004](https://github.com/pliablepixels/zmNinja/tree/v1.6.004) (2020-12-11)
+
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.6.000...v1.6.004)
+
+**Implemented enhancements:**
+
+- Arm64 support [\#1017](https://github.com/pliablepixels/zmNinja/issues/1017)
+
+**Fixed bugs:**
+
+- Cannot download videos - zmNinja Android 10 - OnePlus 6 [\#1020](https://github.com/pliablepixels/zmNinja/issues/1020)
+- Swipe left on video no longer honours filter [\#1015](https://github.com/pliablepixels/zmNinja/issues/1015)
+- Seamless play not respecting filters [\#1008](https://github.com/pliablepixels/zmNinja/issues/1008)
+
+**Closed issues:**
+
+- electron crash [\#1019](https://github.com/pliablepixels/zmNinja/issues/1019)
+- "event still recording" in all events footage   [\#1014](https://github.com/pliablepixels/zmNinja/issues/1014)
+- events sorted oldest to newest [\#1013](https://github.com/pliablepixels/zmNinja/issues/1013)
+- AM/PM and no image with notification [\#1010](https://github.com/pliablepixels/zmNinja/issues/1010)
+- IOS 9.3.5 and ZMNINJA 1.3.025 error api  [\#1009](https://github.com/pliablepixels/zmNinja/issues/1009)
+- Increase Zoom Level [\#1005](https://github.com/pliablepixels/zmNinja/issues/1005)
+- I havent changed anything at all but now im getting BADAUTH on event server and it fails to send me a push message [\#1001](https://github.com/pliablepixels/zmNinja/issues/1001)
+- No Longer Receive ES Notifications After Latest App Update \(Android\) [\#1000](https://github.com/pliablepixels/zmNinja/issues/1000)
+- Event server not supported after zmninja upgrade [\#998](https://github.com/pliablepixels/zmNinja/issues/998)
+- A corrupt/missing frame for an event kills the Event List in the Windows Client [\#972](https://github.com/pliablepixels/zmNinja/issues/972)
+
+**Merged pull requests:**
+
+- Update source.rst [\#1007](https://github.com/pliablepixels/zmNinja/pull/1007) ([nestorwheelock](https://github.com/nestorwheelock))
+
 ## [v1.6.000](https://github.com/pliablepixels/zmNinja/tree/v1.6.000) (2020-10-12)
 
-**IMPORTANT**: zmNinja 1.6.000 needs ES 6.0 or above
-
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.4.009...v1.6.000)
-
 
 **Implemented enhancements:**
 
