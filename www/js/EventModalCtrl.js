@@ -577,6 +577,18 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
   // Saves a snapshot of the monitor image to phone storage
   //-----------------------------------------------------------------------
 
+  $scope.pauseAndPresentModal = function (onlyAlarms,eid) {
+    if (handle) {
+      handle.pause();
+      $scope.currentProgress.progress = handle.currentTime/1000;
+      //console.log ('CURREN PROGRESS='+$scope.currentProgress.progress);
+
+
+    }
+    $scope.saveEventImageWithPerms(false, currentEvent.Event.Id);
+
+  }
+
   $scope.saveEventImageWithPerms = function (onlyAlarms,eid) {
 
     if ($rootScope.platformOS != 'android') {
@@ -636,7 +648,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         if (resp && resp.data && resp.data.status)
           $scope.currentProgress.progress = resp.data.status.progress;
         else
-          $scope.currentProgress.progress = 100;
+          if (!handle) $scope.currentProgress.progress = 100;
 
         // console.log ("STEP 0 progress is " + $scope.currentProgress.progress);
         $scope.slides = [];
@@ -656,12 +668,21 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
               // now lets get approx frame #
 
-              var totalTime = event.Event.Length;
+              var totalTime 
+              if (handle) {
+                totalTime = handle.totalTime/1000
+              } else {
+                totalTime = event.Event.length;
+              }
+
               var totalFrames = event.Event.Frames;
+
 
               var myFrame = Math.round(totalFrames / totalTime * $scope.currentProgress.progress);
 
-              //  console.log ("STEP 0: playback " + $scope.playbackURL + " total time " + totalTime + " frames " + totalFrames);
+              //console.log ('CURREN PROGRESS='+$scope.currentProgress.progress);
+              //console.log ('MYFRAME = '+myFrame);
+              //console.log ("STEP 0: playback " + $scope.playbackURL + " total time " + totalTime + " frames " + totalFrames);
 
               if (myFrame > totalFrames) myFrame = totalFrames;
 
@@ -762,7 +783,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     var loginData = NVR.getLogin();
 
     // for alarms only
-    if (onlyAlarms || ($scope.defaultVideo !== undefined && $scope.defaultVideo != ''))
+    if (onlyAlarms)
       $scope.mycarousel.index = 1;
 
       url = $scope.playbackURL + '/index.php?view=image&rand=' + $rootScope.rand +
