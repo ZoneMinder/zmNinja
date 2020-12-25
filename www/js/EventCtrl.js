@@ -3298,7 +3298,7 @@ angular.module('zmApp.controllers')
 
             //  console.log ("COMPARING "+NVR.getLogin().url+ " TO " +myevents[currentPagePosition].Event.recordingURL);
 
-            myevents[currentPagePosition].Event.videoPath = myevents[currentPagePosition].Event.recordingURL + "/index.php?view=view_video&mode=mpeg&format=h264&eid=" + myevents[currentPagePosition].Event.Id;
+          myevents[currentPagePosition].Event.videoPath = myevents[currentPagePosition].Event.recordingURL + "/index.php?view=view_video&mode=mpeg&format=h264&eid=" + myevents[currentPagePosition].Event.Id;
 
             // if (idfound)
             if (idfound) {

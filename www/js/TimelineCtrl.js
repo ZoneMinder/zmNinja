@@ -587,7 +587,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
   var lastTimeForEvent;
   var groups, graphData;
   var isProcessNewEventsWaiting = false;
-  var options;
+  var options={};
   var lastClicked = moment();
 
   $scope.mycarousel = {
@@ -1126,7 +1126,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
     //tze = tze.format("YYYY-MM-DD HH:mm:ss");
 
    // var th = Math.round( window.height() * 0.85 ) + 'px';
-    options = {
+     options = {
 
       showCurrentTime: true,
       editable: false,
@@ -1138,7 +1138,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
      //groupHeightMode:'fixed',
      //height:$rootScope.devHeight - 10,
-      moment: function (date) {
+     
+     moment: function (date) {
 
         //var t;
         if (NVR.getLogin().useLocalTimeZone)
@@ -1149,6 +1150,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
           return moment.tz(date, NVR.getTimeZoneNow());
       },
       //throttleRedraw: 100,
+
+      
       moveable: true,
      // height:100,
       zoomable: true,
@@ -1158,9 +1161,10 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
       end: tze,
       orientation: 'top',
       min: tzs,
-      //max: tze,
+      max: tze,
       zoomMin: 5 * 60 * 1000, // 1 min
       stack: false,
+
       format: {
         minorLabels: {
           minute: NVR.getTimeFormat(),
@@ -1174,6 +1178,8 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
     };
 
+
+  
     graphIndex = 1; // will be used for graph ID
 
     //console.log ("**NOLANG" + fromDateNoLang  + " " + toDateNoLang);
@@ -1325,11 +1331,15 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                 }
               }
 
-              //  console.log(">>>>> CREATING NEW TIMELINE with " + JSON.stringify(options));
-              timeline_instance = new vis.Timeline(container[0], null, options);
-              // console.log ("GRAPH DATA");
+      
+              //options = {};
+              console.log(">>>>> CREATING NEW TIMELINE ");
+              timeline_instance = new vis.Timeline(container[0]);
+              console.log ("OPTIONS DATA:"+ JSON.stringify(options));
+              timeline_instance.setOptions(options);
+              console.log ("GRAPH DATA:"+ JSON.stringify(graphData));
               timeline_instance.setItems(graphData);
-              //   console.log ("GROUPS");
+              console.log ("GROUPS");
               timeline_instance.setGroups(groups);
               timeline_instance.fit();
 

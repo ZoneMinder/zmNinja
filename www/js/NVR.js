@@ -151,7 +151,7 @@ angular.module('zmApp.controllers')
         'montageHiddenOrder': '',
         'montageArraySize': '0',
         'showMontageSubMenu': false,
-        'graphSize': 2000,
+        'graphSize': 500,
         'enableAlarmCount': true,
         'minAlarmCount': 1,
         'montageSize': '3',
