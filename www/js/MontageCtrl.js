@@ -2417,6 +2417,10 @@ angular.module('zmApp.controllers')
       // $scope.minimal = $stateParams.minimal;
       var ld = NVR.getLogin();
       $scope.minimal = ld.isFullScreen;
+      if ($scope.minimal) {
+        NVR.debug ('Moving to full screen');
+        ionic.Platform.fullScreen($scope.minimal, !$scope.minimal);
+      }
       //console.log ("**************** MINIMAL ENTER " + $scope.minimal);
       $scope.zmMarginTop = $scope.minimal ? 0 : 15;
 
