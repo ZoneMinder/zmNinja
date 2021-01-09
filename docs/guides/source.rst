@@ -27,19 +27,19 @@ Output of ``ionic info``
  
     Ionic:
 
-    Ionic CLI         : 6.9.3 (/Users/pp/.nvm/versions/node/v12.17.0/lib/node_modules/@ionic/cli)
-    Ionic Framework   : unknown
-    @ionic/v1-toolkit : 1.0.22
+   Ionic CLI         : 6.9.3 (/Users/pp/.nvm/versions/node/v12.17.0/lib/node_modules/@ionic/cli)
+   Ionic Framework   : unknown
+   @ionic/v1-toolkit : 1.0.22
 
     Cordova:
 
     Cordova CLI       : 9.0.0 (cordova-lib@9.0.1)
-    Cordova Platforms : android 8.1.0, ios 5.1.1
-    Cordova Plugins   : cordova-plugin-ionic-keyboard 2.2.0, (and 29 other plugins)
+    Cordova Platforms : android 9.0.0, ios 5.1.1
+    Cordova Plugins   : cordova-plugin-ionic-keyboard 2.2.0, (and 31 other plugins)
 
     Utility:
 
-    cordova-res : not installed
+    cordova-res : 0.15.1
     native-run  : not installed
 
     System:
@@ -48,9 +48,10 @@ Output of ``ionic info``
     ios-deploy        : 1.10.0
     ios-sim           : 8.0.2
     NodeJS            : v12.17.0 (/Users/pp/.nvm/versions/node/v12.17.0/bin/node)
-    npm               : 6.14.4
+    npm               : 2.15.12
     OS                : macOS Catalina
-    Xcode             : Xcode 11.6 Build version 11E708
+    Xcode             : Xcode 12.3 Build version 12C33
+
 
 Install Dependencies - needed for all platforms
 -----------------------------------------------
