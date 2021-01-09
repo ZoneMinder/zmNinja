@@ -587,7 +587,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     }
     $scope.saveEventImageWithPerms(false, currentEvent.Event.Id);
 
-  }
+  };
 
   $scope.saveEventImageWithPerms = function (onlyAlarms,eid) {
 
@@ -668,9 +668,10 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
               // now lets get approx frame #
 
-              var totalTime 
+              var totalTime ;
+
               if (handle) {
-                totalTime = handle.totalTime/1000
+                totalTime = handle.totalTime/1000;
               } else {
                 totalTime = event.Event.length;
               }
