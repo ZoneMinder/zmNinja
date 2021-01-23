@@ -44,6 +44,7 @@ angular.module('zmApp.controllers')
         }
         else {
           for (var i=0; i < $scope.monitors.length; i++) {
+            //console.log ($scope.monitors[i].Monitor.Id + " IS "+$scope.monitors[i].Monitor.listDisplay);
             if ($scope.monitors[i].Monitor.isChecked == undefined)
                $scope.monitors[i].Monitor.isChecked = true;
             if ($scope.monitors[i].Monitor.isChecked == true)
@@ -59,6 +60,11 @@ angular.module('zmApp.controllers')
       $scope.toggleMonitors = function() {
         $scope.monitorsExpanded = !$scope.monitorsExpanded;
 
+      };
+
+      $scope.onlyUnhidden = function (item) {
+        //console.log (' STATUS IS '+item.Monitor.listDisplay);
+        return item.Monitor.listDisplay != 'noshow';
       };
       //--------------------------------------------------------------------------
       // Clears filters 

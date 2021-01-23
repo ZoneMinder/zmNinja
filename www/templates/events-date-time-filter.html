@@ -20,9 +20,9 @@
     <ion-item class="custom-list" ng-click="toggleMonitors()">
         <i class="icon" ng-class="monitorsExpanded ? 'ion-minus' : 'ion-plus'"></i> &nbsp;Filter Monitors
       </ion-item>
-      <ion-item class="item-accordion" ng-show="monitorsExpanded" ng-repeat="monitor in monitors">
+      <ion-item class="item-accordion" ng-show="monitorsExpanded" ng-repeat="monitor in monitors | filter:onlyUnhidden">
+        
         <span class="item-checkbox">
-
           {{monitor.Monitor.Name}}
           <label class="checkbox">
             <input type="checkbox" ng-model="monitor.Monitor.isChecked">
