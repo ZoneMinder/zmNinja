@@ -18,7 +18,6 @@ angular.module('zmApp.controllers')
     var isTimerOn = false;
     var nativeWebSocketId = -1;
     var iClosed = false;
-
     var isSocketReady = false;
     var pendingMessages = [];
     var connState = {
@@ -26,10 +25,9 @@ angular.module('zmApp.controllers')
         SUCCESS: 1,
         REJECT: 2
     };
+    var connText = ['Pending Auth', 'Connected', 'Rejected'];
 
     var authState = connState.PENDING;
-
-
 
 
     //--------------------------------------------------------------------------
@@ -397,6 +395,12 @@ angular.module('zmApp.controllers')
       }
 
 
+    }
+
+    function getState() {
+      if (!NVR.getLogin().isUseEventServer) return "disabled";
+      return connText[authState];
+      
     }
 
     //--------------------------------------------------------------------------
@@ -841,6 +845,7 @@ angular.module('zmApp.controllers')
       refresh: refresh,
       init: init,
       sendMessage: sendMessage,
+      getState:getState,
       pushInit: pushInit,
       disconnect: disconnect
 

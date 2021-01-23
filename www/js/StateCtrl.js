@@ -4,8 +4,8 @@
 
 // controller for State View
 
-angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup', '$scope', 'zm', 'NVR', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope', '$timeout', '$ionicHistory', '$translate', '$stateParams', function (
-  $ionicPopup, $scope, zm, NVR, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout, $ionicHistory, $translate, $stateParams) {
+angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup', '$scope', 'zm', 'NVR', '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope', '$timeout', '$ionicHistory', '$translate', '$stateParams', 'EventServer', function (
+  $ionicPopup, $scope, zm, NVR, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout, $ionicHistory, $translate, $stateParams, EventServer) {
 
   //----------------------------------------------------------------------
   // Controller main
@@ -25,6 +25,7 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
   var loginData = NVR.getLogin();
 
   var apiRun = loginData.apiurl + "/host/daemonCheck.json?"+$rootScope.authSession;
+  var apiESRestart = loginData.apiurl + '/host/daemonControl/zmeventnotification.pl/restart.json?'+$rootScope.authSession;
   var apiLoad = loginData.apiurl + "/host/getLoad.json?"+$rootScope.authSession;
   var apiStorage = loginData.apiurl + "/storage.json?"+$rootScope.authSession;
   var apiServer = loginData.apiurl + "/servers.json?"+$rootScope.authSession;
@@ -39,6 +40,9 @@ angular.module('zmApp.controllers').controller('zmApp.StateCtrl', ['$ionicPopup'
   getStorageStatus();
   getServerStatus();
 
+$scope.getEventServerState = function() {
+  return EventServer.getState();
+};
 
 // credit https://stackoverflow.com/a/14919494/1361529
   $scope.humanFileSize = function(bytes, si) {
@@ -74,6 +78,28 @@ $scope.matchServer = function (id) {
 
 $scope.toggleStorage = function() {
   $scope.showStorage = !$scope.showStorage;
+};
+
+$scope.restartEventServer = function() {
+
+  var promptstring = $translate.instant('kConfirmESRestart');
+  $rootScope.zmPopup = $ionicPopup.show({
+    title: $translate.instant('kPleaseConfirm'),
+    template: promptstring,
+    buttons: [{
+        text: $translate.instant('kButtonCancel'),
+        type: 'button-positive'
+      },
+      {
+        text: $translate.instant('kButtonOk'),
+        type: 'button-assertive',
+        onTap: function (e) {
+          NVR.debug ('Invoking '+apiESRestart);
+          $http.get(apiESRestart);
+        }
+      }
+    ]
+  });
 };
 
 $scope.toggleServer = function() {
@@ -280,10 +306,6 @@ $scope.toggleServer = function() {
   // returns ZM running status
   //----------------------------------------------------------------------
   function getRunStatus() {
-
-
-
-
     NVR.debug("StateCtrl/getRunStatus: " + apiRun);
     $http.get(apiRun)
       .then(

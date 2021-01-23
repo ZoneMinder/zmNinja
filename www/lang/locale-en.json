@@ -388,6 +388,7 @@
     "kSpeed"                     :"speed",
     "kStart"                     :"Start",
     "kStateAreYouSure"           :"Are you sure you want to ",
+    "kConfirmESRestart"          :"Restart Event Server?",
     "kStateCpuLoad"              :"CPU Load",
     "kStateDiskUsed"             :"Disk Used",
     "kStateFreeMem"              :"Free Memory",

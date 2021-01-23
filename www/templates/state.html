@@ -54,6 +54,20 @@
           </div>
         </div>
       </ion-item>
+    
+      <ion-item>
+        <div class="row">
+          <div class="col col-10">
+            <button ng-click="restartEventServer()" class="button button-small icon ion-loop"></button>
+          </div>
+          <div class="col">
+            Event server: 
+          </div>
+          <div class="col"  ng-style="{'text-align':'right'}">
+           {{getEventServerState()}}
+          </div>
+        </div>
+      </ion-item>
     </ion-list>
 
    
