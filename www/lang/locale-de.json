@@ -388,6 +388,7 @@
     "kSpeed"                     :"Geschwindigkeit",
     "kStart"                     :"Start",
     "kStateAreYouSure"           :"Bist Du sicher, dass Du folgendes tun möchtest ",
+    "kConfirmESRestart"          :"Event-Server neustarten?",
     "kStateCpuLoad"              :"CPU Auslastung",
     "kStateDiskUsed"             :"Festplatte benutzt",
     "kStateFreeMem"              :"Arbeitsspeicher frei",
