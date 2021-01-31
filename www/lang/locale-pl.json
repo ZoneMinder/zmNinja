@@ -45,6 +45,7 @@
     "kClear"                     :"Wyczyść",
     "kCollapse"                  :"zwiń",
     "kConfiguration"             :"Konfiguracja",
+    "kConfirmESRestart"          :"Restart Serwera Zdarzeń?",
     "kControl"                   :"kontrola",
     "kCredentialsBody"           :"Wprowadź swoje dane logowania ZoneMinder",
     "kCredentialsTitle"          :"Wymagane dane logowania",
