@@ -644,8 +644,9 @@ tab) and your webserver error logs.
 Also, Starting ZM 1.32 and beyond, please enable ``AUTH_HASH_LOGINS`` as
 well as set ``AUTH_RELAY`` to "hashed"
 
-I can't see events in zmNinja
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+I can't see list of  events in zmNinja
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 - Make sure your APIs are working. An easy way to check is to try 
 ``https://yourserver/zm/api/events.json`` in your browser after logging into ZM
 
@@ -657,10 +658,14 @@ I can't see events in zmNinja
 Event stream viewing does not work
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
--  Look at apache error logs - it often gives you hints
+-  Look at apache error logs - it often gives you hints. One situation that may come up is you see
+   ``Uncaught Error: Call to undefined function imagecreatefromjpeg()`` in your apache logs. This means 
+   you may be missing some libraries in your ZM install (see `this thread <https://forums.zoneminder.com/viewtopic.php?t=25532>`__)
+   If this is the error you are getting, chances are you need to install ``php-gd`` in your ZM install.
 
-Video takes too long to play
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Event videos takes too long to play
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 - Around April 2020, I've received the occasional email about videos suddenly Taking
   longer to play. There are a few potential reasons for this:
 
@@ -682,8 +687,9 @@ Video takes too long to play
       this fragmented feature. Note that if you turn it off, you may not get push notification
       animations in zmninja (if you have it enabled)
 
-Video Not Playable
-~~~~~~~~~~~~~~~~~~
+Event videos  not playable
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 -  Your video may be using a codec that is not supported on mobile browsers.
    H265 is a good example. To work around this, use MJPEG for the monitor.
    Go to ``Menu->Monitors``, click on ``Configuration`` and enable "Force MJPEG"
