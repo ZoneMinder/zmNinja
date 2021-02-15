@@ -1631,6 +1631,21 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
   };
 
+  $scope.confirmBeforeDelete = function (id) {
+
+    $rootScope.zmPopup = $ionicPopup.confirm({
+      title: $translate.instant('kPleaseConfirm'),
+      template: $translate.instant('kEventDeleteConfirm')+id,
+      okText: $translate.instant('kButtonOk'),
+      cancelText: $translate.instant('kButtonCancel'),
+    });
+    $rootScope.zmPopup.then(function (res) {
+      if (res) {
+       return $scope.deleteAndMoveNext(id);
+      }
+    });
+
+  };
 
 
   $scope.deleteAndMoveNext = function (id) {
