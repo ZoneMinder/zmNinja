@@ -36,7 +36,7 @@
     <preference name="FadeSplashScreen" value="false" />
     <preference name="BackgroundColor" value="#444444" />
     <preference name="android-targetSdkVersion" value="29" />
-    <preference name="android-compileSdkVersion" value="29" /> 
+    <preference name="android-compileSdkVersion" value="29" />
     <preference name="android-minSdkVersion" value="22" />
     <preference name="SplashScreenBackgroundColor" value="#ababab" />
     <feature name="StatusBar">
@@ -172,7 +172,7 @@
     <plugin name="cordova-library-helper-pp-fork" spec="^1.0.1" />
     <plugin name="cordova-plugin-multi-window" spec="0.0.3" />
     <plugin name="cordova-plugin-ignore-lint-translation" spec="0.0.1" />
-    <plugin name= "cordova-plugin-cloud-settings" spec="^1.0.4">
+    <plugin name="cordova-plugin-cloud-settings" spec="^1.0.4">
         <variable name="ANDROID_BACKUP_SERVICE_KEY" value="AEdPqrEAAAAIqF-OaHdwIzZhx2L1WOfAGTagBxm5a1R4wBW_Uw" />
     </plugin>
     <plugin name="cordova-custom-config" spec="5.0.2" />
