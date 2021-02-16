@@ -25,7 +25,7 @@ do
         arg="$1"
         case $arg in
               -h|--help)
-                      echo "./make_desktop.sh [--port|-p mac|linux32|linux64|linuxarm|win32|win64|arm|<any substring that matches one or more port names>]"
+                      echo "./make_desktop.sh [--port|-p macx86|-p macarm64|linux32|linux64|linuxarm|win32|win64|arm|<any substring that matches one or more port names>]"
                       echo "                  so -p linux will build linux32/64/arm as they all match linux"
                       echo "                  [--nocolor|nc] to disable color output"
                       echo
@@ -62,7 +62,7 @@ APPVER=`cat config.xml | grep "widget " | sed 's/.* version=\"\([^\"]*\)\" xmlns
 APPVER+="D"
 echo "Application version:$APPVER"
 
-declare -a app_ports=("desktop/zmNinja-mac.app/Contents/Resources" "desktop/zmNinja-linux32bit/resources" "desktop/zmNinja-linux64bit/resources" "desktop/zmNinja-win64bit/resources" "desktop/zmNinja-win32bit/resources"  "desktop/zmNinja-linuxarmv7l/resources" "desktop/zmNinja-linuxarm64/resources")
+declare -a app_ports=("desktop/zmNinja-mac-x86.app/Contents/Resources" "desktop/zmNinja-mac-arm64.app/Contents/Resources" "desktop/zmNinja-linux32bit/resources" "desktop/zmNinja-linux64bit/resources" "desktop/zmNinja-win64bit/resources" "desktop/zmNinja-win32bit/resources"  "desktop/zmNinja-linuxarmv7l/resources" "desktop/zmNinja-linuxarm64/resources")
 
 for i in "${app_ports[@]}"
 do
@@ -75,8 +75,10 @@ do
         if [ -d "$i" ]; then
         	DIRNAME=$i
 
-        	if [ "${i}" == "desktop/zmNinja-mac.app/Contents/Resources" ]; then
-        		BASENAME="desktop/zmNinja-mac.app/Contents"
+        	if [ "${i}" == "desktop/zmNinja-mac-x86.app/Contents/Resources" ]; then
+        		BASENAME="desktop/zmNinja-mac-x86.app/Contents"
+                elif [ "${i}" == "desktop/zmNinja-mac-arm64.app/Contents/Resources" ]; then
+        		BASENAME="desktop/zmNinja-mac-arm64.app/Contents"
         	else
         		BASENAME=`expr "$i" : '\(.*\)/resources'`
         	fi

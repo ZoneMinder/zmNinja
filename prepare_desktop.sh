@@ -2,7 +2,7 @@
 
 #REL="v4.0.0"
 # If compiling on rPI make use 3.0.16
-REL="v8.3.0"
+REL="v11.2.3"
 WGET='wget'
 WGET_ARGS='-q --show-progress'
 UNZIP='unzip'
@@ -30,8 +30,8 @@ mkdir -p desktop 2>/dev/null
 cd desktop
 
 
-declare -a release_names=("darwin-x64" "win32-x64" "win32-ia32" "linux-arm" "linux-x64" "linux-ia32" "linux-arm64")
-declare -a release_renames=("zmNinja-mac.app" "zmNinja-win64bit" "zmNinja-win32bit" "zmNinja-linuxarmv7l" "zmNinja-linux64bit" "zmNinja-linux32bit" "zmNinja-linuxarm64")
+declare -a release_names=("darwin-x64" "darwin-arm64" "win32-x64" "win32-ia32" "linux-arm" "linux-x64" "linux-ia32" "linux-arm64")
+declare -a release_renames=("zmNinja-mac-x86.app" "zmNinja-mac-arm64.app" "zmNinja-win64bit" "zmNinja-win32bit" "zmNinja-linuxarmv7l" "zmNinja-linux64bit" "zmNinja-linux32bit" "zmNinja-linuxarm64")
 
 for i in "${!release_names[@]}"
 do
@@ -46,7 +46,7 @@ do
     
 
     echo "Decompressing image..."
-    if [ "${release_names[$i]}" != "darwin-x64" ]; then
+    if [ "${release_names[$i]}" != "darwin-x64" ] && [ "${release_names[$i]}" != "darwin-arm64" ]; then
         exe mkdir electron-${REL}-${release_names[$i]} >/dev/null 2>&1
         exe rm -fr electron-${REL}-${release_names[$i]}/* >/dev/null 2>&1
         exe ${UNZIP}  electron-${REL}-${release_names[$i]}.zip  ${UNZIP_ARGS} electron-${REL}-${release_names[$i]} 2>/dev/null 
