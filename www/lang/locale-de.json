@@ -99,6 +99,7 @@
     "kErrorRetrievingState"      :"Fehler beim Empfangen des Status",
     "kErrorSave"                 :"Fehler beim Speichern",
     "kEvent"                     :"Ereignis",
+    "kEventDeleteConfirm"        :"Bist Du sicher folgendes Event zu löschen:",
     "kEventHistHrs"              :"Stunden",
     "kEventMontage"              :"Aufgezeichnete Ereignisse",
     "kEventMontageImageScale"    :"Bildgröße bei aufgezeichneten Ereignissen",
