@@ -1,7 +1,7 @@
 {
   "name": "zmninjapro",
   "description": "Home security mobile app for ZoneMinder",
-  "version": "1.6.006",
+  "version":"1.6.006",
   "displayName": "zmNinja",
   "author": "Pliable Pixels",
   "license": "custom see LICENSE.md",
@@ -143,7 +143,7 @@
     "cordova-plugin-firebasex": "^10.2.0",
     "dotenv": "^8.2.0",
     "electron": "^11.2.3",
-    "electron-builder": "^22.9.1",
+    "electron-builder": "^22.10.5",
     "electron-cli": "^0.2.8",
     "electron-notarize": "^1.0.0",
     "gulp": "^3.9.1",
@@ -203,6 +203,7 @@
     },
     "mac": {
       "category": "productivity",
+      "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
       "target": {
         "target": "dmg",
         "arch": [
@@ -219,7 +220,7 @@
     },
     "win": {
       "icon": "icon.ico",
-      "target": [
+      "target": [ 
         {
           "target": "nsis",
           "arch": [
