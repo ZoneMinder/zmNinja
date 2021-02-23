@@ -1376,30 +1376,29 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
               // different handlers for mobile and desktop
               // due to how they seeem to react to touch differently
 
-              if ($rootScope.platformOS == 'desktop') {
-                NVR.debug ("setting up desktop handlers");
-                timeline_instance.on('click', function (prop) {
-                  $timeout (function () {
-                    var now = moment();
-                    var diff = now.diff(lastClicked);
-                    NVR.debug ('Touch Start called with ms since last clicked:'+diff);
-                    lastClicked = now;
-                    //NVR.debug ('lastClick set to:'+lastClicked);
-                    if (diff <= 500) {
-                        NVR.debug ("Double tap detected <= 500ms");
-                        //timelineAnalyzeFrames(prop);
-                        timelineShowEvent(prop);
-                    }
-                    // differntiate between dbl click and click
-                    else {
-                            NVR.debug ("single tap assumed (double tap timeout)");
-                            timelineShowHover(prop);
-      
-                    }
+              NVR.debug ("setting up desktop handlers");
+              timeline_instance.on('click', function (prop) {
+                $timeout (function () {
+                  var now = moment();
+                  var diff = now.diff(lastClicked);
+                  NVR.debug ('Touch Start called with ms since last clicked:'+diff);
+                  lastClicked = now;
+                  //NVR.debug ('lastClick set to:'+lastClicked);
+                  if (diff <= 500) {
+                      NVR.debug ("Double tap detected <= 500ms");
+                      //timelineAnalyzeFrames(prop);
+                      timelineShowEvent(prop);
+                  }
+                  // differntiate between dbl click and click
+                  else {
+                          NVR.debug ("single tap assumed (double tap timeout)");
+                          timelineShowHover(prop);
+    
+                  }
 
-                   });
-                   
                   });
+                  
+                });
 
                 /*
                 timeline_instance.on('doubleClick', function (prop) {
@@ -1407,7 +1406,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                     timelineShowEvent(prop);   
                     //timelineAnalyzeFrames(prop);
                 });*/
-              }
+              
            
        
 
