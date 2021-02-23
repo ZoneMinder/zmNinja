@@ -1379,26 +1379,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
               if ($rootScope.platformOS == 'desktop') {
                 NVR.debug ("setting up desktop handlers");
                 timeline_instance.on('click', function (prop) {
-                    NVR.debug ("click handler called");
-                    timelineShowHover(prop);
-                   
-                  });
-
-                timeline_instance.on('doubleClick', function (prop) {
-                    NVR.debug ("double click handler called");
-                    timelineShowEvent(prop);   
-                    //timelineAnalyzeFrames(prop);
-                });
-              }
-              // mobile handlers
-              else {
-                 // click doesn't seem to work on mobile (iOS at least. wuh?)
-                 // this is called for both tap and double tap
-                 NVR.debug ("setting up mobile handlers");
-
-                
-                 timeline_instance.on('touchstart', function (prop) {
-                   $timeout (function () {
+                  $timeout (function () {
                     var now = moment();
                     var diff = now.diff(lastClicked);
                     NVR.debug ('Touch Start called with ms since last clicked:'+diff);
@@ -1410,7 +1391,7 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
                         timelineShowEvent(prop);
                     }
                     // differntiate between dbl click and click
-                    else {                      
+                    else {
                             NVR.debug ("single tap assumed (double tap timeout)");
                             timelineShowHover(prop);
       
@@ -1418,11 +1399,16 @@ angular.module('zmApp.controllers').controller('zmApp.TimelineCtrl', ['$ionicPla
 
                    });
                    
-                    
+                  });
 
-              });
-            }
-            
+                /*
+                timeline_instance.on('doubleClick', function (prop) {
+                    NVR.debug ("double click handler called");
+                    timelineShowEvent(prop);   
+                    //timelineAnalyzeFrames(prop);
+                });*/
+              }
+           
        
 
               // hover is only desktop
