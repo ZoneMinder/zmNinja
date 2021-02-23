@@ -43,6 +43,7 @@
         <param name="ios-package" onload="true" value="CDVStatusBar" />
     </feature>
     <platform name="ios">
+        <preference name="Orientation" value="all" />
         <preference name="StatusBarOverlaysWebView" value="false" />
         <preference name="WKWebViewOnly" value="true" />
         <feature name="CDVWKWebViewEngine">
