@@ -1442,34 +1442,21 @@ angular.module('zmApp.controllers')
     $scope.openModal = function (mid, controllable, controlid, connKey, monitor) {
 
       
-      $timeout(function () { // after render
+        $timeout(function () { // after render
+          if (simulStreaming) {
+            NVR.debug("Killing all streams in montage to save memory/nw...");
+            currentStreamState = streamState.STOPPED;
+            NVR.stopNetwork("",true)
+              .then(function (succ) {
+                for (var i = 0; i < $scope.MontageMonitors.length; i++) {
+                  if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show') NVR.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL);
+                }
 
-
-        if (simulStreaming) {
-
-          var ld = NVR.getLogin();
-          if (ld.pauseStreams) {
-            currentStreamState = streamState.PAUSED;
-            $scope.isModalStreamPaused = true; // we stop montage and start modal stream in snapshot first
-            NVR.debug("Pausing all streams in montage to save memory/nw...");
-            for (var i = 0; i < $scope.MontageMonitors.length; i++) {
-              if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show') NVR.pauseLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL, $scope.MontageMonitors[i].Monitor.Name);
-            }
-
-          } else {
-            NVR.debug ("Not pausing streams as pauseStreams is off");
-          }
-
+          });
         }
-
+        $scope.controlURL = monitor.Monitor.controlURL;
+        openModal(mid, controllable, controlid, connKey, monitor);
       });
-
-
-      $scope.controlURL = monitor.Monitor.controlURL;
-      openModal(mid, controllable, controlid, connKey, monitor);
-
-
-
     };
 
     function openModal(mid, controllable, controlid, connKey, monitor) {
@@ -1613,18 +1600,11 @@ angular.module('zmApp.controllers')
       // We now need to regen connkeys
       // once regenerated 
       if (simulStreaming) {
-
-        if (ld.pauseStreams) {
-          NVR.debug("Resuming all stream connkeys in montage ...");
-
-          for (var i = 0; i < $scope.MontageMonitors.length; i++) {
-            if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show') NVR.resumeLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL, $scope.MontageMonitors[i].Monitor.Name);
-          }
-          currentStreamState = streamState.ACTIVE;
-        } else {
-          NVR.debug ("Not resuming streams as pauseStreams is off");
+        currentStreamState = streamState.ACTIVE; 
+        NVR.debug ('Regenerating connkeys so old kills wont affect');
+        for (var n = 0; i < $scope.MontageMonitors.length; i++) {
+          $scope.MontageMonitors[n].Monitor.connKey = NVR.regenConnKeys($scope.MontageMonitors[i]);
         }
-        
       
       }
 
