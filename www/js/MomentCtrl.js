@@ -106,6 +106,7 @@ var masonry = null;
       if (d) {
         data.events[i].Event.width = d.width;
         data.events[i].Event.height = d.height;
+        //console.log (data.events[i].Event.width+'*'+data.events[i].Event.height +" FOR MID="+data.events[i].Event.MonitorId);
 
 
         var ratio;
@@ -125,7 +126,7 @@ var masonry = null;
           data.events[i].Event.thumbWidth = Math.round(mw / ratio);
 
         }
-        if (mo != 0) {
+        if (mo == '90' || mo == '270') {
           var tmp = data.events[i].Event.thumbHeight;
           data.events[i].Event.thumbHeight = data.events[i].Event.thumbWidth;
           data.events[i].Event.thumbWidth = tmp;
@@ -148,6 +149,7 @@ var masonry = null;
 
       data.events[i].Event.pinned = false;
       moments.push(data.events[i]);
+      //console.log ('******* PUSHING:'+JSON.stringify(data.events[i]));
 
       
 
