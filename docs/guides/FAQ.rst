@@ -680,6 +680,10 @@ Event videos takes too long to play
 
   - Potential solutions:
 
+    - If you are using H264 Pass through, to to ZM Console->Click on "Source" column of console,
+      go to Storage tab of the monitor and in Optional encoder parameters, add ``movflags=frag_custom+dash+delay_moov``
+      If you are not using H264 Pass through, this won't make a difference. See `this <https://github.com/ZoneMinder/zoneminder/issues/2984#issuecomment-731561052>`__ for more details.
+      
     - In zmNinja, go to ``Menu->Monitors``, click on ``Configuration`` for that monitor
       and enable "Force MJPEG". This will force MPJEG playback for events
 
