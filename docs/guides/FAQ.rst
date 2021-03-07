@@ -374,14 +374,23 @@ Summary of Everything works, but I can't see live feed
 times I've had users tell me 'they have checked this list' only to find
 out later they skimmed details.
 
+-  Always try with the `free desktop
+   version <https://github.com/pliablepixels/zmNinja/releases>`__ first.
+   Enable debug view by hitting Ctrl/Cmd+Shift+D and you can see debug
+   logs in the console view. I can't emphasize enough how useful this
+   is.
+
+- First test, load up Zoneminder console **from the device you are running zmNinja on**.
+  Check to see if zoneminder console streaming works. If not, fix that first.
+
 -  Please enable ``AUTH_HASH_LOGINS`` as well as set ``AUTH_RELAY`` to
-   "hashed"
+   "hashed" in ZoneMinder
 
 - If you are NOT using authentication in ZM, please turn OFF authentication in zmNinja too.
   If you don't, zmNinja will keep waiting for an authentication token. If this is the cause,
   you will see a "waiting for authSession to have a value" log in your zmNinja logs.
 
--  Your ``cgi-bin`` setting in zmNinja is incorrect. Please run the
+-  **Super Important**: Your ``cgi-bin`` setting in zmNinja may be incorrect. Please run the
    wizard. There are times when the wizard can fail. In those cases,
    open up ZM web console, go to view the monitor and do an "Inspect
    Source" in the browser. That will show you the cgi-bin link that you
@@ -409,34 +418,30 @@ In the above case my zmNinja cgi-bin setting is
    *not* working. You need to search the forums and figure out how to
    get rid of that text.
 
--  Your ZoneMinder live view from the web console doesn't work either.
-   If this is the case, fix ZoneMinder first. Before you say "web
-   console works fine", make sure you are running it from a different
-   computer from where ZM is running.
 -  The phone/computer running zmNinja does not have access to your ZM
-   server. For example, many people test the web console on their LAN
+   server when using WAN. For example, many people test the web console on their LAN
    but test zmninja on a WAN connection
--  Always try with the `free desktop
-   version <https://github.com/pliablepixels/zmNinja/releases>`__ first.
-   Enable debug view by hitting Ctrl/Cmd+Shift+D and you can see debug
-   logs in the console view. I can't emphasize enough how useful this
-   is.
+
 -  You are using Basic Authentication. See
    `here <#i-can-t-see-streams-i-use-basic-auth>`__
+
 -  You have 'multi-server' configuration enabled and you have done it
    wrong. Go to ZM Web Console->Options->Servers - if you see any
    entries there and you don't know what multi-server is, or you don't
-   use it, please disable multi-server
+   use it, please disable multi-server. Also see `here <#i-can-t-see-streams-multi-server-is-enabled>`__
+
 -  When trying to view live images, look at your *webserver* error logs
    - example Apache's ``error.log`` - see any image/jpg errors? That
    means you are missing libraries
--  You have set up a multi-server install of ZM without knowing you did
-   See `here <#i-can-t-see-streams-multi-server-is-enabled>`__
+
+
 -  Look at zmNinja, ZoneMinder and web server error logs at the time of
    error - one of them should give more clues. Please send me *all* the
    logs if you ask for help
+
 -  On certain devices, Zoneminder's CSRF checks cause issues. Turn off CSRF in Zoneminder
    by going to ``Options->System`` and turn off ``ENABLE_CSRF_MAGIC``
+   
 -  Read the set of notes below
 
 General note
