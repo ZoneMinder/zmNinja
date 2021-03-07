@@ -112,6 +112,7 @@
     "kEventServerVersionBody1"   :"You are running version",
     "kEventServerVersionBody2"   :"Please upgrade to",
     "kEventServerVersionTitle"   :"Event Server version not supported",
+    "kEventServerAllUnchecked"   :"Settings not saved. At least one monitor should be enabled for reporting. If you want to disable all monitors, turn off ES instead.",
     "kEventSingleImageScale"     :"Event single image scale",
     "kEventStillRecording"       :"event is still recording - showing live feed",
     "kEventViewThumbsSize"       :"thumbnail size",

@@ -169,12 +169,14 @@
      NVR.debug("Saving Event Server data");
      var monstring = "";
      var intervalstring = "";
+     var atleastOneChecked = false;
      var plat = $ionicPlatform.is('ios') ? 'ios' : 'android';
      for (var i = 0; i < $scope.monitors.length; i++) {
        if (isNaN($scope.monitors[i].Monitor.reportingInterval)) {
          $scope.monitors[i].Monitor.reportingInterval = 0;
        }
        if ($scope.monitors[i].Monitor.isChecked) {
+         atleastOneChecked = true;
          monstring = monstring + $scope.monitors[i].Monitor.Id + ",";
          var tint = parseInt($scope.monitors[i].Monitor.reportingInterval);
          if (isNaN(tint)) tint = 0;
@@ -182,6 +184,16 @@
        }
 
      }
+
+     if (!atleastOneChecked && $scope.loginData.isUseEventServer) {
+        $rootScope.zmPopup = $ionicPopup.alert({
+          title:$translate.instant('kNote'),
+          template: $translate.instant('kEventServerAllUnchecked'),
+          okText: $translate.instant('kButtonOk'),
+        });
+        return;
+      }
+      
 
      if (monstring.charAt(monstring.length - 1) == ',')
        monstring = monstring.substr(0, monstring.length - 1);

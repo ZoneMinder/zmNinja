@@ -32,7 +32,7 @@
       <div ng-repeat="monitor in monitors">
         <ion-item class="custom-list" ng-click="toggleGroup(monitor)" ng-class="{active: isGroupShown(monitor)}">
           <i class="icon" ng-class="isGroupShown(monitor) ? 'ion-minus' : 'ion-plus'"></i> &nbsp;
-          {{monitor.Monitor.Name}}
+          <i class="icon" style="float:left" ng-class="monitor.Monitor.isChecked? 'ion-checkmark-round':'ion-close-round'"></i>{{monitor.Monitor.Name}}
         </ion-item>
         <ion-item class="item-accordion" ng-show="isGroupShown(monitor)">
           <span class="item-checkbox">
