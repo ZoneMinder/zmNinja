@@ -1177,7 +1177,6 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
            var positions = pckry.EHgetShiftPositions('eh-data-item-id');
            //console.log ("POSITIONS MAP " + JSON.stringify(positions));
            var ld = NVR.getLogin();
-           ld.EHpackeryPositions = JSON.stringify(positions);
            NVR.setLogin(ld);
            $ionicLoading.hide();
            $scope.sliderChanging = false;

@@ -71,7 +71,6 @@
       },
       "cordova-plugin-advanced-http": {},
       "cordova-plugin-inappbrowser": {},
-      "cordova-plugin-ionic-webview": {},
       "cordova-plugin-media-pp-fork": {}
     }
   },
@@ -100,7 +99,6 @@
     "cordova-plugin-inappbrowser": "^4.0.0",
     "cordova-plugin-insomnia": "^4.3.0",
     "cordova-plugin-ionic-keyboard": "^2.2.0",
-    "cordova-plugin-ionic-webview": "git+https://github.com/pliablepixels/cordova-plugin-ionic-webview.git",
     "cordova-plugin-media-pp-fork": "^1.0.2-dev",
     "cordova-plugin-multi-window": "0.0.3",
     "cordova-plugin-network-information": "^2.0.2",

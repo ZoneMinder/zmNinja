@@ -166,8 +166,6 @@ angular.module('zmApp.controllers')
         'packeryPositions': '',
         'currentMontageProfile': '',
         'packeryPositionsArray': {},
-        'EHpackeryPositions': '',
-        'packerySizes': '',
         'timelineModalGraphType': 'all',
         'resumeDelay': 0,
         'language': 'en',
@@ -518,6 +516,22 @@ angular.module('zmApp.controllers')
         //debug ('returning promise');
         //return d.promise;
     
+      }
+
+      function getZMState() {
+        var d = $q.defer();
+        var apiurl = loginData.apiurl+'/states.json?'+$rootScope.authSession;
+        $http.get(apiurl)
+        .then (function (data) {
+          data = data.data;
+          console.log (data);
+          d.resolve(data);
+          return d.promise;
+        }, function (err) {
+          d.resolve(err);
+          return d.promise;
+        });
+        return d.promise;
       }
 
       function getZMGroups() {
@@ -1399,18 +1413,7 @@ angular.module('zmApp.controllers')
 
         }
 
-        if (typeof loginData.EHpackeryPositions == 'undefined') {
-          //debug("EHpackeryPositions does not exist. Setting to empty");
-          loginData.EHpackeryPositions = "";
-
-        }
-
-        if (typeof loginData.packerySizes == 'undefined') {
-          //debug("packerySizes does not exist. Setting to empty");
-          loginData.packerySizes = "";
-
-        }
-
+   
         if (typeof loginData.use24hr == 'undefined') {
           //debug("use24hr does not exist. Setting to false");
           loginData.use24hr = false;
@@ -2784,6 +2787,9 @@ angular.module('zmApp.controllers')
           return getAuthKey(mid, ck);
         },
 
+        getZMState: function() {
+          return getZMState();
+        },
         //-----------------------------------------------------------------------------
         // This function tells is if this ZM version has ZMS multiport support
         //-----------------------------------------------------------------------------
@@ -2801,6 +2807,8 @@ angular.module('zmApp.controllers')
           return getZmsMultiPortSupport();
 
         },
+
+
 
         getZMGroups: function () {
           return getZMGroups();
@@ -3021,6 +3029,7 @@ angular.module('zmApp.controllers')
             var myurl = apiurl + "/monitors";
             myurl += "/index/"+"Type !=:WebSite.json" + "?"+$rootScope.authSession;
             
+           
             getZmsMultiPortSupport()
               .then(function (zmsPort) {
 
@@ -3338,9 +3347,10 @@ angular.module('zmApp.controllers')
                       monitorsLoaded = 0;
                       return d.promise;
                     });
+                $rootScope.$broadcast('monitors-hard-reload');
               });
             
-            $rootScope.$broadcast('monitors-hard-reload');
+            
             return d.promise;
 
           } else // monitors are loaded
