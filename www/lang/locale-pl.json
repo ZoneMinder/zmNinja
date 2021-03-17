@@ -107,6 +107,7 @@
     "kEventNotificationUrl"      :"adres powiadamiania o Zdarzenaich",
     "kEventRecording"            :"Nagrywanie Zdarzenia",
     "kEventServer"               :"Serwer Zdarzeń",
+    "kEventServerAllUnchecked"   :"Ustawienia nie zostały zapisane. Przynajmniej jeden Monitor powinien raportować. Zamiast wyłączać wszystkie Monitory, wyłącz Serwer Zdarzeń.",
     "kEventServerConfig1"        :"Upewnij się, że ustawienia ZM są skonfigurowane i zapisane zanim zaczniesz konfigurować Serwer Zdarzeń",
     "kEventServerConnErr"        :"błąd połączenia serwera Zdarzeń",
     "kEventServerNotLoggedIn"    :"Nie jesteś zalogowany. Upewnij się, że jesteś poprawnie zalogowany (zapisz dane logowania i upewnij się, że logowanie się powiodło)",
