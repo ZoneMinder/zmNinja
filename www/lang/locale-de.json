@@ -112,6 +112,7 @@
     "kEventServerVersionBody1"   :"Du benutzt Version",
     "kEventServerVersionBody2"   :"Bitte upgraden auf",
     "kEventServerVersionTitle"   :"Ereignisserver-Version nicht unterstützt",
+    "kEventServerAllUnchecked"   :"Einstellungen wurden nicht gespeichert. Es muss mindestens eine Kamera aktiv sein. Um alle Kameras zu deaktivieren, schalte den ES ab.",
     "kEventSingleImageScale"     :"Ereignis Einzelbild Maßstab",
     "kEventStillRecording"       :"Aufnahme aktiv",
     "kEventViewThumbsSize"       :"Vorschaugröße",
