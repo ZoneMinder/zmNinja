@@ -961,8 +961,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         if ($scope.monitors[i].Monitor.Id == mid &&
           // if you came from monitors, then ignore noshow
           ($scope.monitors[i].Monitor.listDisplay != 'noshow' || curstate == "monitors") &&
-          $scope.monitors[i].Monitor.Function != 'None' &&
-          $scope.monitors[i].Monitor.Enabled != '0') {
+          $scope.monitors[i].Monitor.Function != 'None') {
           found = 1;
           //console.log(mid + "is part of the monitor list");
           NVR.debug("ModalCtrl: swipe detected, moving to " + mid);

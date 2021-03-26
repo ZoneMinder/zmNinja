@@ -271,7 +271,7 @@ angular.module('zmApp.controllers')
 
       var cnt = 0;
       $scope.MontageMonitors.forEach(function (elem) {
-        if ((elem.Monitor.Enabled != '0') && (elem.Monitor.Function != 'None'))
+        if (elem.Monitor.Function != 'None')
           cnt++;
       });
 
@@ -703,7 +703,6 @@ angular.module('zmApp.controllers')
 
       for (var i = 0; i < $scope.MontageMonitors.length; i++) {
         if (($scope.MontageMonitors[i].Monitor.Function == 'None') ||
-          ($scope.MontageMonitors[i].Monitor.Enabled == '0') ||
           ($scope.MontageMonitors[i].Monitor.listDisplay == 'noshow')) {
           continue;
         }
@@ -817,6 +816,7 @@ angular.module('zmApp.controllers')
       NVR.setLogin(ld);
       $scope.modal.remove();
       $scope.MontageMonitors = $scope.copyMontage;
+      //console.log ($scope.copyMontage);
       // call finish reorder after modal is gone
       $timeout ( function () {
         finishReorder();
@@ -2261,7 +2261,6 @@ angular.module('zmApp.controllers')
       var query;
       for (var i = 0; i < $scope.MontageMonitors.length; i++) {
         if (($scope.MontageMonitors[i].Monitor.Function == 'None') ||
-          ($scope.MontageMonitors[i].Monitor.Enabled == '0') ||
           ($scope.MontageMonitors[i].Monitor.listDisplay == 'noshow')) {
           continue;
         }

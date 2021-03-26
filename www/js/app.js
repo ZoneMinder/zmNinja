@@ -178,9 +178,10 @@ angular.module('zmApp', [
 
       angular.forEach(input, function (item) {
 
-        if ((item.Monitor.Function != 'None') &&
-          (item.Monitor.Enabled != '0')
-        ) {
+        //console.log (item.Monitor.Id+"=>"+item.Monitor.Name+"=>"+item.Monitor.Enabled);
+        // Can't use enabled anymore - its 0 if analysis is off
+        if (item.Monitor.Function != 'None')
+       {
           out.push(item);
         }
 
@@ -201,7 +202,7 @@ angular.module('zmApp', [
 
       angular.forEach(input, function (item) {
 
-        if ((item.Monitor.Function != 'None') && (item.Monitor.Enabled != '0') && (item.Monitor.eventUrl != 'img/noimage.png') && (item.Monitor.listDisplay != 'noshow')) {
+        if ((item.Monitor.Function != 'None')  && (item.Monitor.eventUrl != 'img/noimage.png') && (item.Monitor.listDisplay != 'noshow')) {
           out.push(item);
         }
 

@@ -228,7 +228,7 @@ angular.module('zmApp.controllers')
         'monitorSpecific': {},
         'eventViewThumbs': 'snapshot',
         'eventViewThumbsSize': 'small',
-        
+        'currentZMState': 'unknown' 
 
       };
 
@@ -341,6 +341,8 @@ angular.module('zmApp.controllers')
         
 
       }
+
+      
 
       function getBandwidth() {
         // if mode is not on always return high
@@ -524,10 +526,28 @@ angular.module('zmApp.controllers')
         $http.get(apiurl)
         .then (function (data) {
           data = data.data;
-          console.log (data);
+          /*
+          {"states":[{"State":{"Id":"4","Name":"default","Definition":"2:Mocord:1,3:Mocord:1,4:Mocord:1,5:Monitor:0,6:Monitor:0,7:Modect:1,8:Modect:1","IsActive":"1"}},{"State":{"Id":"5","Name":"test","Definition":"2:None:1,3:None:1,4:None:1,5:Monitor:1,6:Monitor:1,7:Modect:1,8:Modect:1","IsActive":"0"}}]}
+          */
+          var currentState = 'unknown';
+          for (var i=0; i < data['states'].length; i++ ) {
+            var active = data['states'][i].State.IsActive;
+            if (active == '1' ) {
+              currentState = data['states'][i].State.Name;
+              break;
+            }
+          }
+          if (loginData.currentZMState != currentState) {
+            debug ('ZM State changed from:'+loginData.currentZMState+' to:'+currentState);
+            loginData.currentZMState = currentState;
+            loginData.packeryPositionsArray = {};
+            loginData.packeryPositions='';
+            setLogin(loginData);
+          }
           d.resolve(data);
           return d.promise;
         }, function (err) {
+          debug ('Error parsing State API:'+JSON.stringify(err));
           d.resolve(err);
           return d.promise;
         });
@@ -1799,6 +1819,10 @@ angular.module('zmApp.controllers')
           loginData.monitorSpecific = {};
         }
         
+        if (typeof loginData.currentZMState == 'undefined')  {
+          loginData.currentZMState = 'unknown';
+        }
+        
         
 
 
@@ -3029,8 +3053,8 @@ angular.module('zmApp.controllers')
             var myurl = apiurl + "/monitors";
             myurl += "/index/"+"Type !=:WebSite.json" + "?"+$rootScope.authSession;
             
-           
-            getZmsMultiPortSupport()
+            getZMState().then(function(data) {
+              getZmsMultiPortSupport()
               .then(function (zmsPort) {
 
                 var controlURL = "";
@@ -3349,7 +3373,8 @@ angular.module('zmApp.controllers')
                     });
                 $rootScope.$broadcast('monitors-hard-reload');
               });
-            
+            });
+      
             
             return d.promise;
 
@@ -4061,6 +4086,9 @@ angular.module('zmApp.controllers')
 
         },
 
+        getCurrentZMState: function() {
+          return loginData.currentZMState;
+        },
 
         getRecordingURL: function (id) {
           var idnum = parseInt(id);

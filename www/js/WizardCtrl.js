@@ -89,8 +89,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
           if (success.data.monitors.length > 0) {
             var foundMid = -1;
             for (var i = 0; i < success.data.monitors.length; i++) {
-              if (success.data.monitors[i].Monitor.Function != 'None' &&
-                success.data.monitors[i].Monitor.Enabled == '1') {
+              if (success.data.monitors[i].Monitor.Function != 'None') {
                 foundMid = success.data.monitors[i].Monitor.Id;
                 break;
               }
