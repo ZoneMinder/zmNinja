@@ -543,6 +543,8 @@ angular.module('zmApp.controllers')
             loginData.packeryPositionsArray = {};
             loginData.packeryPositions='';
             setLogin(loginData);
+          } else {
+            debug ('ZM State has not changed, still at '+loginData.currentZMState);
           }
           d.resolve(data);
           return d.promise;

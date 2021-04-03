@@ -52,13 +52,9 @@ This is why:
   change and suddenly the app may have issues. 
 
 * There is absolutely no way for me to know or track what happens to the apks
-  after I send them out. You may choose to host the apk on a file sharing
-  site or send it to a colleague or family member who may make it available for
-  everyone else to download. I know most of you have no such intentions, but I know
-  for sure, a few do (I've had my apk show up on mediashare sites in the past).
-  For everyone who has asked me to make an exception only once, I'd do that only
-  if I knew you. If I did not, I should be making the same exception to 
-  everyone who has asked me.
+  after I send them out. I know most of you have no intentions of re-distributing them,
+  but I know for sure, a few do (I've had my apk show up on mediashare sites in the past).
+  I really don't want to deal with this.
 
 * Technically, I suppose I could implement a different licensing server mechanism
   but that is exactly what the play store already provides. The reason I chose to 
