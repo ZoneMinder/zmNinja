@@ -538,15 +538,23 @@ angular.module('zmApp.controllers')
             }
           }
           if (loginData.currentZMState != currentState) {
-            debug ('ZM State changed from:'+loginData.currentZMState+' to:'+currentState);
-            loginData.currentZMState = currentState;
-            loginData.packeryPositionsArray = {};
-            loginData.packeryPositions='';
-            setLogin(loginData);
+            debug ('ZM State changed from:'+loginData.currentZMState+' to:'+currentState+' resetting cache...');
+            delete_all_caches()
+            .then(function(data) {
+              loginData.currentZMState = currentState;
+              loginData.packeryPositionsArray = {};
+              loginData.packeryPositions='';
+              setLogin(loginData);     
+              d.resolve(data);
+              return d.promise;
+            })
+
+         
           } else {
             debug ('ZM State has not changed, still at '+loginData.currentZMState);
+            d.resolve(data);
+            return d.promise;
           }
-          d.resolve(data);
           return d.promise;
         }, function (err) {
           debug ('Error parsing State API:'+JSON.stringify(err));
@@ -3036,7 +3044,6 @@ angular.module('zmApp.controllers')
         getMonitors: function (forceReload) {
           //console.log("** Inside ZMData getMonitors with forceReload=" + forceReload);
 
-          
           $ionicLoading.show({
             template: $translate.instant('kLoadingMonitors'),
             animation: 'fade-in',
@@ -3384,9 +3391,18 @@ angular.module('zmApp.controllers')
           {
             //console.log("Returning pre-loaded list of " + monitors.length + " monitors");
             log("Returning pre-loaded list of " + monitors.length + " monitors");
-            d.resolve(monitors);
+            getZMState()
+            .then (function(data) {
+              $ionicLoading.hide();
+              d.resolve(monitors);
+              return d.promise;
+            }, function (err) {
+              debug ('Error in getZMState() '+JSON.stringify(err))
+              $ionicLoading.hide();
+              d.resolve(monitors);
+              return d.promise;
+            })
             //console.log ("Returning"+JSON.stringify(monitors));
-            $ionicLoading.hide();
             return d.promise;
           }
 
