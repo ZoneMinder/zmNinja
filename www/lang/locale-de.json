@@ -92,7 +92,7 @@
     "kEnableThumbsSub"           :"(ZM 1.31 oder API-Update wird benötigt)",
     "kEnterPin"                  :"PIN eingeben",
     "kError"                     :"Fehler",
-    "kErrorChangingMonitors"     :"Fehler beim Wechsel der Kameras. Bitte Logs überprüfen",
+    "kErrorChangingMonitors"     :"Fehler beim speichern der Kameraeinstellungen. Bitte Logs überprüfen",
     "kErrorFrameBanner"          :"konnte keine Einzelbild-Details empfangen",
     "kErrorPleaseTryAgain"       :"bitte nochmals probieren",
     "kErrorRetrievingFrames"     :"Fehler beim Empfangen der Einzelbilder",
