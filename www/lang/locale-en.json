@@ -258,6 +258,7 @@
     "kMontageImageScale"         :"Montage image scale",
     "kMontageLiveViewFPS"        :"Montage live view FPS",
     "kMontageNoSavedProfiles"    :"No saved montage profiles",
+    "kMontageProfileNoMonitors"  :"None of the monitors that are part of this profile are enabled in ZM",
     "kMontageResizeSteps"        :"Montage resize factor",
     "kMontageResizeCols"         :"How many columns?",
     "kMontageSave"               :"Save Montage Profile",

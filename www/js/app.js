@@ -180,7 +180,7 @@ angular.module('zmApp', [
 
         //console.log (item.Monitor.Id+"=>"+item.Monitor.Name+"=>"+item.Monitor.Enabled);
         // Can't use enabled anymore - its 0 if analysis is off
-        if (item.Monitor.Function != 'None')
+        if (item.Monitor.Function != 'None' || item.Monitor.listDisplay == 'blank')
        {
           out.push(item);
         }
@@ -1079,6 +1079,7 @@ angular.module('zmApp', [
               return d.promise;
           });
 
+          
       return d.promise;
 
   
@@ -2311,6 +2312,7 @@ angular.module('zmApp', [
       'hu_*': 'hu',
       'se_*': 'se',
       'zh_CN': 'zh_CN',
+      'zh_TW': 'zh_TW',
       '*': 'en' // must be last
     });
 

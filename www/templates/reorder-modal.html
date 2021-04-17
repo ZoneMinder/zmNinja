@@ -11,7 +11,7 @@
   <ion-content class="notch-ready">
     <div class="list">
       <span ng-repeat="item in copyMontage">
-        <a ng-class="{ 'item  item-avatar item-icon-right' :  item.Monitor.listDisplay == 'show', 'item  item-avatar item-icon-right eye-background-red' : item.Monitor.listDisplay!='show' }"
+        <a ng-show="item.Monitor.Function != 'None'" ng-class="{ 'item  item-avatar item-icon-right' :  item.Monitor.listDisplay == 'show', 'item  item-avatar item-icon-right eye-background-red' : item.Monitor.listDisplay!='show' }"
           ng-click="toggleHide($index)" href="">
 
           <img ng-src="{{reorderFrame(item)}}" fallback-src />

@@ -832,11 +832,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
       $timeout(function () {
         $timeout(function () {
           pckry.shiftLayout();
-          /*var positions = pckry.getShiftPositions('data-item-id');
-          //console.log ("POSITIONS MAP " + JSON.stringify(positions));
-          var ld = NVR.getLogin();
-          ld.packeryPositions = JSON.stringify(positions);
-          NVR.setLogin(ld);*/
+    
         }, 300);
       }, 100);
     }
@@ -1173,14 +1169,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
     }
     //pckry.reloadItems();
     pckry.once('layoutComplete', function () {
-      /* $timeout(function () {
-           var positions = pckry.EHgetShiftPositions('eh-data-item-id');
-           //console.log ("POSITIONS MAP " + JSON.stringify(positions));
-           var ld = NVR.getLogin();
-           NVR.setLogin(ld);
-           $ionicLoading.hide();
-           $scope.sliderChanging = false;
-       }, zm.packeryTimer);*/
+   // do nothing
     });
     if (!somethingReset) {
       //console.log (">>>SOMETHING NOT RESET");
@@ -1291,26 +1280,6 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
 
         pckry.on('dragItemPositioned', itemDragged);
 
-        /*if (!isEmpty(positions)) {
-            NVR.log("Arranging as per packery grid");
-
-            for (var i = 0; i < $scope.MontageMonitors.length; i++) {
-                for (var j = 0; j < positions.length; j++) {
-                    if ($scope.MontageMonitors[i].Monitor.Id == positions[j].attr) {
-                        $scope.MontageMonitors[i].Monitor.gridScale = positions[j].size;
-                        $scope.MontageMonitors[i].Monitor.listDisplay = positions[j].display;
-                        NVR.debug("Setting monitor ID: " + $scope.MontageMonitors[i].Monitor.Id + " to size: " + positions[j].size + " and display:" + positions[j].display);
-                    }
-                    //console.log ("Index:"+positions[j].attr+ " with size: " + positions[j].size);
-                }
-            }
-
-
-            NVR.debug("All images loaded, doing image layout");
-            $timeout(function () {
-                pckry.initShiftLayout(positions, 'data-item-id');
-            }, 0);
-        }*/
 
         $timeout(function () {
           NVR.log("Force calling resize");

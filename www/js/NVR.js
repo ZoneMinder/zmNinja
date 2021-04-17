@@ -60,6 +60,10 @@ angular.module('zmApp.controllers')
           value: 'zh_CN'
         },
         {
+          text: '正體中文',
+          value: 'zh_TW',
+        },
+        {
           text: 'Deutsch',
           value: 'de'
         },
@@ -530,30 +534,44 @@ angular.module('zmApp.controllers')
           {"states":[{"State":{"Id":"4","Name":"default","Definition":"2:Mocord:1,3:Mocord:1,4:Mocord:1,5:Monitor:0,6:Monitor:0,7:Modect:1,8:Modect:1","IsActive":"1"}},{"State":{"Id":"5","Name":"test","Definition":"2:None:1,3:None:1,4:None:1,5:Monitor:1,6:Monitor:1,7:Modect:1,8:Modect:1","IsActive":"0"}}]}
           */
           var currentState = 'unknown';
+
           for (var i=0; i < data['states'].length; i++ ) {
+         
             var active = data['states'][i].State.IsActive;
             if (active == '1' ) {
               currentState = data['states'][i].State.Name;
-              break;
+             break; 
             }
           }
           if (loginData.currentZMState != currentState) {
-            debug ('ZM State changed from:'+loginData.currentZMState+' to:'+currentState+' resetting cache...');
+            debug ('ZM State Change: ZM State changed from:'+loginData.currentZMState+' to:'+currentState+' resetting cache...');
             delete_all_caches()
             .then(function(data) {
               loginData.currentZMState = currentState;
-              loginData.packeryPositionsArray = {};
-              loginData.packeryPositions='';
-              setLogin(loginData);     
-              d.resolve(data);
-              return d.promise;
-            })
+              loginData.currentMontageProfile = '';
+              //loginData.packeryPositionsArray = {};
+              loginData.packeryPositions= undefined;
 
+              
+
+              setLogin(loginData)
+              .then (function(v) {
+                d.resolve(data);
+                //$rootScope.$broadcast('zm-state-change');
+                proceedWithFreshLogin(true);
+                return d.promise;
+              })     
+        
+            })
          
           } else {
             debug ('ZM State has not changed, still at '+loginData.currentZMState);
-            d.resolve(data);
-            return d.promise;
+            setLogin(loginData)
+            .then (function (v) {
+              d.resolve(data);
+              return d.promise;
+            });
+           
           }
           return d.promise;
         }, function (err) {
@@ -1220,40 +1238,26 @@ angular.module('zmApp.controllers')
       }
 
       function setLogin(newLogin) {
-        //var d = $q.defer();
 
         // if we are here, we should remove cache
-
-
         loginData = angular.copy(newLogin);
        //console.log ('****** SET LOGIN:'+JSON.stringify(loginData));
         $rootScope.LoginData = loginData;
-
         serverGroupList[loginData.serverName] = angular.copy(loginData);
-
         var ct = encrypt(serverGroupList);
-      
-        //debug ("Crypto is: " + ct);
-
+  
         return localforage.setItem("serverGroupList", ct)
           .then(function () {
-
             return localforage.setItem("defaultServerName", loginData.serverName);
           })
           .then(function () {
-            //debug("saving defaultServerName worked");
+
             return localforage.removeItem("settings-temp-data");
           })
-
           .catch(function (err) {
             log("SetLogin localforage store error " + JSON.stringify(err));
             return ('error');
           });
-
-
-
-
-
       }
 
       //credit: https://gist.github.com/alexey-bass/1115557
@@ -3044,6 +3048,7 @@ angular.module('zmApp.controllers')
         getMonitors: function (forceReload) {
           //console.log("** Inside ZMData getMonitors with forceReload=" + forceReload);
 
+
           $ionicLoading.show({
             template: $translate.instant('kLoadingMonitors'),
             animation: 'fade-in',
@@ -3088,6 +3093,7 @@ angular.module('zmApp.controllers')
                       }
                       data = data.data;
                       if (data.monitors) monitors = data.monitors;
+
 
                       // Now let's make sure we remove repeating monitors
                       // may happen in groups case
@@ -3152,7 +3158,7 @@ angular.module('zmApp.controllers')
                               // in 1.30.4 these fields did not exist
 
                               monitors[i].Monitor.recordingType = recordingType ? recordingType : $translate.instant('kImages');
-                              monitors[i].Monitor.listDisplay = 'show';
+                              //monitors[i].Monitor.listDisplay = 'show';
                               monitors[i].Monitor.isAlarmed = false;
                               monitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
                               monitors[i].Monitor.rndKey = (Math.floor((Math.random() * 999999) + 1)).toString();
