@@ -285,7 +285,7 @@ angular.module('zmApp.controllers')
         if (positions[p].display == 'show' || positions[p].display=='blank') {
           pos_cnt++;
         }
-      };
+      }
 
       NVR.log("Monitors that are active" + cnt + " while grid has " + pos_cnt);
 
@@ -1843,7 +1843,7 @@ angular.module('zmApp.controllers')
       $scope.currentProfileName = mName;
       console.log ("NEW POS="+ld.packeryPositions);
       var positionsStr = ld.packeryPositions;
-      var positions = undefined;
+      var positions;
 
       if (positionsStr == '' || positionsStr == undefined) {
         NVR.debug ('No positions stored');
@@ -2100,7 +2100,7 @@ angular.module('zmApp.controllers')
                   NVR.debug ("All monitors is special, unhiding all");
                 for (var p = 0; p < getMonPos.length; p++) {
                   //console.log ("CHECK");
-                  if (!getMonPos[p].display != 'show') {
+                  if (getMonPos[p].display != 'show' && getMonPos[p].display != 'blank' ) {
                     getMonPos[p].display = 'show';
                     unHidden = true;
                   }
@@ -2355,7 +2355,7 @@ angular.module('zmApp.controllers')
         return undefined;
     }
     return positions;
-    };
+    }
 
     function loadStreamQueryStatus () {
 

@@ -535,11 +535,11 @@ angular.module('zmApp.controllers')
           */
           var currentState = 'unknown';
 
-          for (var i=0; i < data['states'].length; i++ ) {
+          for (var i=0; i < data.states .length; i++ ) {
          
-            var active = data['states'][i].State.IsActive;
+            var active = data.states[i].State.IsActive;
             if (active == '1' ) {
-              currentState = data['states'][i].State.Name;
+              currentState = data.states[i].State.Name;
              break; 
             }
           }
@@ -560,9 +560,9 @@ angular.module('zmApp.controllers')
                 //$rootScope.$broadcast('zm-state-change');
                 proceedWithFreshLogin(true);
                 return d.promise;
-              })     
+              });     
         
-            })
+            });
          
           } else {
             debug ('ZM State has not changed, still at '+loginData.currentZMState);
@@ -3403,11 +3403,11 @@ angular.module('zmApp.controllers')
               d.resolve(monitors);
               return d.promise;
             }, function (err) {
-              debug ('Error in getZMState() '+JSON.stringify(err))
+              debug ('Error in getZMState() '+JSON.stringify(err));
               $ionicLoading.hide();
               d.resolve(monitors);
               return d.promise;
-            })
+            });
             //console.log ("Returning"+JSON.stringify(monitors));
             return d.promise;
           }
