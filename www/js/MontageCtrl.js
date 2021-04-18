@@ -2326,12 +2326,20 @@ angular.module('zmApp.controllers')
 
     for (var m=0; m < mon.length; m++){
       for (var p=0; p < positions.length; p++) {
-        if ( (mon[m].Monitor.Id == positions[p].attr) && (mon[m].Monitor.Function == 'None') && (positions[p].display!='noshow')) {
-          NVR.debug (ld.currentMontageProfile + 'Making positions MID='+positions[p].attr+' to "'+dtype+'" as this is disabled in the current ZM run state');
-          positions[p].display=dtype;
-          mon[m].Monitor.listDisplay = dtype;
+        if (mon[m].Monitor.Id == positions[p].attr) {
+          if ( mon[m].Monitor.Function == 'None' && positions[p].display!='noshow') {
+            NVR.debug (ld.currentMontageProfile + 'Making positions MID='+positions[p].attr+' to "'+dtype+'" as this is disabled in the current ZM run state');
+            positions[p].display=dtype;
+            mon[m].Monitor.listDisplay = dtype;
+          }
+          if ( mon[m].Monitor.Function != 'None' && positions[p].display=='blank') {
+            NVR.debug (ld.currentMontageProfile + 'Making positions MID='+positions[p].attr+' to show  as this is enabled in the current ZM run state');
+            positions[p].display='show';
+            mon[m].Monitor.listDisplay = 'show';
+          }
 
         }
+        
       }
     }
 
