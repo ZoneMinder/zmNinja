@@ -259,6 +259,7 @@
     "kMontageImageScale"         :"Skalowanie obrazu Podglądu",
     "kMontageLiveViewFPS"        :"Montaż na żywo - FPS",
     "kMontageNoSavedProfiles"    :"Nie zapisany profil Montażu",
+    "kMontageProfileNoMonitors"  :"Żaden z monitorów będących częścią tego profilu nie jest włączony w ZM",
     "kMontageResizeCols"         :"Ile kolumn?",
     "kMontageResizeSteps"        :"Współczynnik zmiany wielkości Montażu",
     "kMontageSave"               :"Zapisz profil Montażu",
