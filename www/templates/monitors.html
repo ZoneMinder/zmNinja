@@ -6,7 +6,7 @@
       ng-click="handleAlarms();" ng-if="$root.isAlarm"></button>
   </ion-nav-buttons>
   <ion-content delegate-handle="none" overflow-scroll="false" mouse-wheel-scroll class="notch-ready">
-    <ion-refresher pulling-text="Pull to reload Monitors..." spinner="bubbles" on-refresh="doRefresh()">
+    <ion-refresher pulling-text="{{'kPullToReload' | translate}}..." spinner="bubbles" on-refresh="doRefresh()">
     </ion-refresher>
     <div style="float:right;margin-top:3px;margin-right:8px;">
       <a id="monitors-move-2" class="button button-small icon icon-left icon ion-ios-world-outline" href="" ng-click="changeConfig('All');">{{'kGlobalConfiguration'
