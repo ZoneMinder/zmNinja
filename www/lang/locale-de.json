@@ -258,6 +258,7 @@
     "kMontageImageScale"         :"Livebild Bildgröße",
     "kMontageLiveViewFPS"        :"Livebild Bildrate",
     "kMontageNoSavedProfiles"    :"Keine Livebild-Profile gespeichert",
+    "kMontageProfileNoMonitors"  :"In diesem Profil existieren keine aktiven Kameras in ZM",
     "kMontageResizeSteps"        :"Livebild Zoom",
     "kMontageResizeCols"         :"Spaltenanzahl",
     "kMontageSave"               :"Übersicht speichern",
