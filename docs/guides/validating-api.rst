@@ -32,7 +32,7 @@ helps)
 -  Step 2: Log into ZM
 -  Step 3: Open another tab in the same browser (**IMPORTANT**: Has to
    be from the same browser you logged into ZM)
--  Step 4: Type in ``http://server/zm/api/host/getVersion.json`` --> you
+-  Step 4: Type in ``http://server/zm/api/monitors.json`` --> you
    should see a response like:
 
    .. code:: json
@@ -61,6 +61,8 @@ response like:
                 /*more monitor objects if you have more than one*/
             }]
     }
+
+If you don't see such a response, your APIs are **not** working
 
 -  Step 6: (If you find your APIs show ok, but zmNinja has issues)
 
