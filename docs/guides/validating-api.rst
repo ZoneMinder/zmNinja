@@ -45,7 +45,7 @@ helps)
    version/apiversion may be different. If you don't see such a
    response, your APIs are **not** working
 
--  Step 5:Make sure you can see monitors and events:
+-  Step 5: Make sure you can see monitors and events:
 
 Type in ``http://server/zm/api/monitors.json`` --> you should see a
 response like:
