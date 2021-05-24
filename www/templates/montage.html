@@ -134,15 +134,11 @@
           data-item-size="{{monitor.Monitor.gridScale}}" data-item-listdisplay="{{monitor.Monitor.listDisplay}} ">-->
 
           <div class="grid-item" data-item-id="{{monitor.Monitor.Id}}" ng-style="{'width': monitor.Monitor.gridScale + '%'}"
-          data-item-size="{{monitor.Monitor.gridScale}}" data-item-listdisplay="{{monitor.Monitor.listDisplay}} ">
-
-
+          data-item-size="{{monitor.Monitor.gridScale}}" data-item-listdisplay="{{monitor.Monitor.listDisplay}} " ng-show="monitor.Monitor.listDisplay!='noshow'">
           <div class="row row-no-padding">
             <div ng-class="monitor.Monitor.showSidebar?'col col-70 col-no-padding':'col col-no-padding'">
               <figure role="group" class="{{dragBorder}}" ng-show="monitor.Monitor.listDisplay!='noshow'">
-              
-
-                <div class="montage-image">
+                 <div class="montage-image">
                   <div ng-if="LoginData.enableMontageOverlays && !$root.LoginData.isKiosk" class="montage-buttons">
                     <a ng-if="monitor.Monitor.lastEvent" class="button button-small button-assertive icon ion-ios-bell"
                       ng-click="eventButtonClicked(monitor, true)"></a>&nbsp;&nbsp;<a ng-if="monitor.Monitor.lastEvent"

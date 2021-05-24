@@ -267,10 +267,12 @@ angular.module('zmApp.controllers')
 
         //console.log ("POSITION STR IS " + positionsStr);
       positions = parsePositions(positionsStr);
-      matchMonitorsToPositions(positions);
+      layouttype = matchMonitorsToPositions(positions);
+      //console.log ('P US NOW '+positions);
+
         
        // NVR.log("found a packery layout:"+positionsStr);
-        layouttype = false;
+        //layouttype = false;
       }
 
       var cnt = 0;
@@ -287,7 +289,7 @@ angular.module('zmApp.controllers')
         }
       }
 
-      NVR.log("Monitors that are active" + cnt + " while grid has " + pos_cnt);
+    //  NVR.log("Monitors that are active " + cnt + " while grid has " + pos_cnt);
 
       if (cnt > NVR.getLogin().maxMontage) {
         cnt = NVR.getLogin().maxMontage;
@@ -310,7 +312,7 @@ angular.module('zmApp.controllers')
       //console.log ("**** mygrid is " + JSON.stringify(elem));
 
       if (pckry) pckry.destroy();
-
+      NVR.debug ('Calling initPackery() with layout as:'+layouttype);
       pckry = new Packery('.grid', {
         itemSelector: '.grid-item',
         percentPosition: true,
@@ -1847,21 +1849,22 @@ angular.module('zmApp.controllers')
 
       if (positionsStr == '' || positionsStr == undefined) {
         NVR.debug ('No positions stored');
+        positions = undefined;
+        positionsStr = undefined;
       } else {
         positions = parsePositions(positionsStr);
         matchMonitorsToPositions(positions);
       }
 
-      if (!ld.packeryPositions) {
-          ld.packeryPositions = [];
+      NVR.setLogin(ld).then(function(data) {
+        if (!ld.packeryPositions) {
           NVR.debug ("This profile doesn't seem to have been saved. Resetting it to defaults...");
-         $scope.resetSizes(true);
+         //$scope.resetSizes(true);
        
       }
+      });
 
-
-      NVR.setLogin(ld);
-
+      
 
       $timeout(function () { // after render
 
@@ -2311,42 +2314,65 @@ angular.module('zmApp.controllers')
       };
 
     function matchMonitorsToPositions(positions, mon) {
-      
-    if (!positions) {return; }
-    if (!mon) { mon = $scope.MontageMonitors;}
+   
     var ld = NVR.getLogin();
-    var dtype;
+    var layouttype = false;
+    
+    console.log ("matchMonitor positions:"+JSON.stringify(positions));
+    if (!mon) { mon = $scope.MontageMonitors;}
+    var disabled_display;
     // hide disabled monitors when no profile is used
     if (!ld.currentMontageProfile || ld.currentMontageProfile == $translate.instant('kMontageDefaultProfile')) {
-      dtype = 'noshow';
+      disabled_display = 'noshow';
     } else {
-      dtype = 'blank';
+      disabled_display = 'blank';
     }
-    NVR.debug ('We are in profile:'+ld.currentMontageProfile+" so disabled monitors is "+dtype);
-
+    NVR.debug ('We are in profile:'+ld.currentMontageProfile+" so disabled monitors is "+disabled_display);
+    NVR.debug ('Passed profile is: '+JSON.stringify(positions));
+    if (!positions.length) layouttype = true;
+    var found = false;
+    var monitor_found = false;
     for (var m=0; m < mon.length; m++){
+      monitor_found = false;
       for (var p=0; p < positions.length; p++) {
         if (mon[m].Monitor.Id == positions[p].attr) {
+          found = true;
+          monitor_found = true;
           if ( mon[m].Monitor.Function == 'None' && positions[p].display!='noshow') {
-            NVR.debug (ld.currentMontageProfile + 'Making positions MID='+positions[p].attr+' to "'+dtype+'" as this is disabled in the current ZM run state');
-            positions[p].display=dtype;
-            mon[m].Monitor.listDisplay = dtype;
+            NVR.debug (ld.currentMontageProfile + '=>None Function: Making '+mon[m].Monitor.Name+' to "'+disabled_display+'" as this is disabled in the current ZM run state');
+            positions[p].display=disabled_display;
+            mon[m].Monitor.listDisplay = disabled_display; 
           }
-          if ( mon[m].Monitor.Function != 'None' && positions[p].display=='blank') {
-            NVR.debug (ld.currentMontageProfile + 'Making positions MID='+positions[p].attr+' to show  as this is enabled in the current ZM run state');
+          if ( mon[m].Monitor.Function != 'None' && positions[p].display!='noshow') {
+            NVR.debug (ld.currentMontageProfile + '=>Making '+mon[m].Monitor.Name+' to show  as this is enabled in the current ZM run state');
             positions[p].display='show';
             mon[m].Monitor.listDisplay = 'show';
           }
 
-        }
-        
-      }
-    }
+        } 
+      } // pos
+      if (!monitor_found) {
+        mon[m].Monitor.listDisplay = (ld.currentMontageProfile == $translate.instant('kMontageDefaultProfile')) ?'show':'noshow';
+        NVR.debug (ld.currentMontageProfile + '=> Making '+mon[m].Monitor.Name+' to '+mon[m].Monitor.listDisplay+' as this monitor was not found in profile');
 
+      }
+     /* if (!found) {
+        NVR.debug ('********************* monitor not in this profile: '+mon[m].Monitor.Name);
+       layouttype = true;
+      }*/
+    } //mon
+
+    NVR.debug ('after matchMontageProfile, will packery re-init? '+ layouttype);
+    NVR.setMonitors(mon);
+    $scope.monitors = mon;
+    return layouttype;
     }
 
     function parsePositions(ps) {
+      //var ld = NVR.getLogin();
       var positions;
+      NVR.debug ('parsePositions: got '+JSON.stringify(ps));
+      if (!ps) return [];
       try {
         positions = JSON.parse(ps);
     }
@@ -2843,9 +2869,9 @@ angular.module('zmApp.controllers')
     $scope.resetSizes = function (unhideAll, percent) {
       var somethingReset = false;
       if (!percent) percent="50";
-      console.log ('************** RESET SIZES:'+percent);
       for (var i = 0; i < $scope.MontageMonitors.length; i++) {
         if (unhideAll) {
+            NVR.debug ('Setting '+$scope.MontageMonitors[i].Monitor.Name+' to show');
             $scope.MontageMonitors[i].Monitor.listDisplay = 'show';
         }
         if ($scope.isDragabillyOn) {
@@ -2855,7 +2881,7 @@ angular.module('zmApp.controllers')
           }
         } else {
           $scope.MontageMonitors[i].Monitor.gridScale = percent;
-          console.log (percent);
+         // console.log (percent);
 
           // somethingReset = true;
         }
@@ -2866,7 +2892,6 @@ angular.module('zmApp.controllers')
           $scope.MontageMonitors[i].Monitor.gridScale = percent;
         }
       }
-
       
     
       $timeout(function () {
@@ -2897,7 +2922,7 @@ angular.module('zmApp.controllers')
         pckry.layout();
       //pckry.layout();
 
-    }, 20); 
+    }, 100); 
 
   };
 

@@ -180,7 +180,7 @@ angular.module('zmApp', [
 
         //console.log (item.Monitor.Id+"=>"+item.Monitor.Name+"=>"+item.Monitor.Enabled);
         // Can't use enabled anymore - its 0 if analysis is off
-        if (item.Monitor.Function != 'None' || item.Monitor.listDisplay == 'blank')
+        if (item.Monitor.Function != 'None' && item.Monitor.listDisplay != 'noshow')
        {
           out.push(item);
         }
