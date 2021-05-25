@@ -98,6 +98,7 @@
     "kErrorRetrievingFrames"     :"error retrieving frames",
     "kErrorRetrievingState"      :"error retrieving state",
     "kErrorSave"                 :"Error - could not save",
+    "kErrorMontageProfileZMGroup":"Montage profiles cannot be switched with a ZM group is active",
     "kEvent"                     :"event",
     "kEventDeleteConfirm"        :"Are you sure you want to delete Event:",
     "kEventHistHrs"              :"hours ago",

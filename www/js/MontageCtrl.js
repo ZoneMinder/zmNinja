@@ -1075,17 +1075,20 @@ angular.module('zmApp.controllers')
                     }
                    
                     $scope.MontageMonitors[iz].Monitor.listDisplay = isShow? 'show':'noshow';
+                    NVR.debug ('Group:'+$scope.currentZMGroupName+' setting '+$scope.MontageMonitors[iz].Monitor.Name +' to '+ $scope.MontageMonitors[iz].Monitor.listDisplay);
+
                      // console.log ('----> Setting '+ $scope.MontageMonitors[i].Monitor.Name+' to '+ $scope.MontageMonitors[i].Monitor.listDisplay);
                 
 
                 }
-
+                $scope.monitors = $scope.MontageMonitors;
+                NVR.setMonitors($scope.MontageMonitors);
                 ld.packeryPositions = undefined;
                 NVR.setLogin(ld)
                 .then (function() {
                   var ps = NVR.getLogin().packeryPositions;
-                  var p = parsePositions(ps);
-                  matchMonitorsToPositions(p);
+                  //var p = parsePositions(ps);
+                  //matchMonitorsToPositions(p);
                   initPackery().then (function () {
                     NVR.debug ("initPackery over, storing positions");
                     var positions = pckry.getShiftPositions('data-item-id');
@@ -1972,8 +1975,20 @@ angular.module('zmApp.controllers')
     }
     // switch to another montage profile
     $scope.switchMontageProfile = function () {
+
+    
+
       var posArray;
       var i;
+
+      if ($scope.currentZMGroupName) {
+        $rootScope.zmPopup = $ionicPopup.alert({
+          title: $translate.instant('kError'),
+          template: $translate.instant('kErrorMontageProfileZMGroup'),
+  
+        });
+        return;
+      }
 
       try {
         posArray = NVR.getLogin().packeryPositionsArray;
@@ -2351,8 +2366,9 @@ angular.module('zmApp.controllers')
 
         } 
       } // pos
-      if (!monitor_found) {
-        mon[m].Monitor.listDisplay = (ld.currentMontageProfile == $translate.instant('kMontageDefaultProfile')) ?'show':'noshow';
+      if (!monitor_found && !$scope.currentZMGroupName) {
+        NVR.debug (mon[m].Monitor.Name+' not found, profile='+ld.currentMontageProfile+' and group='+$scope.currentZMGroupName);
+        mon[m].Monitor.listDisplay = ((ld.currentMontageProfile == $translate.instant('kMontageDefaultProfile') || !ld.currentMontageProfile || !positions.length)) ?'show':'noshow';
         NVR.debug (ld.currentMontageProfile + '=> Making '+mon[m].Monitor.Name+' to '+mon[m].Monitor.listDisplay+' as this monitor was not found in profile');
 
       }
