@@ -1004,8 +1004,20 @@ angular.module('zmApp.controllers')
 
     $scope.selectZMGroup = function() {
 
+
       $scope.tempZMGroups = [];
       var ld = NVR.getLogin();
+
+
+      if (ld.currentMontageProfile != $translate.instant('kMontageDefaultProfile') && ld.currentMontageProfile) {
+        $rootScope.zmPopup = $ionicPopup.alert({
+          title: $translate.instant('kError'),
+          template: $translate.instant('kErrorZMGroupMontageProfile') + $translate.instant('kMontageDefaultProfile'),
+  
+        });
+        return;
+      }
+
 
       for (var i=0; i < $scope.zmGroups.length; i++) {
        var val = ld.currentZMGroupNames.includes($scope.zmGroups[i])? true:false;
@@ -1975,11 +1987,20 @@ angular.module('zmApp.controllers')
     }
     // switch to another montage profile
     $scope.switchMontageProfile = function () {
-
-    
-
       var posArray;
       var i;
+      var ld = NVR.getLogin();
+
+      if ($scope.currentZMGroupName && 
+          (ld.currentMontageProfile != $translate.instant('kMontageDefaultProfile') ||
+           ld.currentMontageProfile)) {
+            NVR.debug ('Resetting currentZMGroupName - this is hopefully a one time thing');
+            $scope.currentZMGroupName='';
+            ld.currentZMGroupName='';
+            ld.currentZMGroupNames = [];
+            NVR.setLogin(ld);
+           }  
+          
 
       if ($scope.currentZMGroupName) {
         $rootScope.zmPopup = $ionicPopup.alert({
