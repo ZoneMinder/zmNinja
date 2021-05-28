@@ -98,6 +98,8 @@
     "kErrorRetrievingFrames"     :"Fehler beim Empfangen der Einzelbilder",
     "kErrorRetrievingState"      :"Fehler beim Empfangen des Status",
     "kErrorSave"                 :"Fehler beim Speichern",
+    "kErrorMontageProfileZMGroup":"Kameraprofil kann bei aktiver ZM Gruppe nicht gewechselt werden",
+    "kErrorZMGroupMontageProfile":"ZM Gruppen können bei aktivem Kameraprofil nicht gewechselt werden. Bitte wechsle zu: ",
     "kEvent"                     :"Aufnahme",
     "kEventDeleteConfirm"        :"Bist Du sicher folgendes Event zu löschen:",
     "kEventHistHrs"              :"Stunden",
