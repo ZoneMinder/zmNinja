@@ -825,7 +825,7 @@ angular.module('zmApp.controllers')
     $scope.cancelReorder = function () {
       $scope.modal.remove();
       $timeout ( function () {
-        finishReorder();
+        finishReorder(true);
       },300);
   
     };
@@ -836,20 +836,13 @@ angular.module('zmApp.controllers')
       $scope.currentZMGroupName='';
       var ld = NVR.getLogin();
       ld.currentZMGroupName = '';
+      //ld.packeryPositions = undefined;
+     // NVR.debug("clearing positions");
+
+
       NVR.setLogin(ld);
       $scope.modal.remove();
       $scope.MontageMonitors = $scope.copyMontage;
-      //console.log ($scope.copyMontage);
-      // call finish reorder after modal is gone
-      $timeout ( function () {
-        finishReorder();
-      },300);
-      
-    };
-
-    function finishReorder() {
-  
-      currentStreamState = streamState.STOPPED;
 
       for (var i=0; i < $scope.MontageMonitors.length; i++) {
         var display= $scope.MontageMonitors[i].Monitor.listDisplay;
@@ -862,40 +855,46 @@ angular.module('zmApp.controllers')
         } // before reorder array
       } // montage monitors
 
+      //console.log ($scope.copyMontage);
+      // call finish reorder after modal is gone
+      ld.packeryPositions = undefined;
+      NVR.debug ('Updating positions:'+JSON.stringify(ld.packeryPositions));
+        //console.log ("Savtogging " + ld.packeryPositions);
+      //ld.currentMontageProfile = "__reorder__";
+      $scope.currentProfileName = $translate.instant('kMontage');
+      $timeout ( function () {
+        NVR.setLogin(ld)
+        .then (function() {
+          finishReorder(false);
+        });
+      },300);
+      
+    };
+
+    function finishReorder(match_reorder) {
+  
+      currentStreamState = streamState.STOPPED;
+
+    
       //console.log ("AFTER REORDER="+JSON.stringify(beforeReorderPositions));
 
       for (var n = 0; i < $scope.MontageMonitors.length; i++) {
         $scope.MontageMonitors[n].Monitor.connKey = NVR.regenConnKeys($scope.MontageMonitors[i]);
       }
 
-      var ld = NVR.getLogin();
-      ld.packeryPositions = JSON.stringify(beforeReorderPositions);
-        //console.log ("Savtogging " + ld.packeryPositions);
-      ld.currentMontageProfile = "";
-      $scope.currentProfileName = $translate.instant('kMontage');
-      NVR.setLogin(ld)
-      .then (function () {
+      if (match_reorder) {
         var ps = NVR.getLogin().packeryPositions;
         var p = parsePositions(ps);
+        console.log ('HEY!!!!');
         matchMonitorsToPositions(p);
-        initPackery();
-        //$ionicScrollDelegate.$getByHandle("montage-delegate").scrollTop();
-        //NVR.reloadMonitorDisplayStatus();
-        //$scope.areImagesLoading = false;
-        //currentStreamState = streamState.SNAPSHOT;
-        /*
-        if (simulStreaming) {
+      } else {
+        NVR.debug ('Not calling matchReorder');
+      }
 
-          $timeout(function () {
-            NVR.debug("Switching mode to active...");
-            currentStreamState = streamState.ACTIVE;
-          }, 100);
-        }
-      }, 20);*/
-    },
-    function (err) {
-        NVR.log ('ERROR:'+JSON.stringify(err));
-      });
+     
+      initPackery();
+     // ld.packeryPositions = JSON.stringify(beforeReorderPositions);
+    
     }
 
     
@@ -1113,12 +1112,12 @@ angular.module('zmApp.controllers')
                 });
                 
 
-/*
+
                 $timeout ( function () {
                   beforeReorderPositions = pckry.getShiftPositions('data-item-id');
                   finishReorder();
                 },300);
-*/
+
               } else {
                 NVR.debug ("No action taken as selection is same as current");
               }
@@ -2356,6 +2355,7 @@ angular.module('zmApp.controllers')
     
     console.log ("matchMonitor positions:"+JSON.stringify(positions));
     if (!mon) { mon = $scope.MontageMonitors;}
+    if (!mon) { return;}
     var disabled_display;
     // hide disabled monitors when no profile is used
     if (!ld.currentMontageProfile || ld.currentMontageProfile == $translate.instant('kMontageDefaultProfile')) {
@@ -2363,6 +2363,7 @@ angular.module('zmApp.controllers')
     } else {
       disabled_display = 'blank';
     }
+
     NVR.debug ('We are in profile:'+ld.currentMontageProfile+" so disabled monitors is "+disabled_display);
     NVR.debug ('Passed profile is: '+JSON.stringify(positions));
     if (!positions.length) layouttype = true;
