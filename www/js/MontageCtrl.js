@@ -448,7 +448,23 @@ angular.module('zmApp.controllers')
               // now do a jiggle 
               $timeout(function () {
                 NVR.debug("inside drag items:doing the jiggle and dance...");
+
+              pckry.once('layoutComplete', function() {
+                var positions = pckry.getShiftPositions('data-item-id');
+                //console.log ("POSITIONS MAP " + JSON.stringify(positions));
+                var ld = NVR.getLogin();
+                ld.packeryPositions = JSON.stringify(positions);
+                //  console.log ("Saving " + ld.packeryPositions);
+                // console.log ("FULL OBJECT "+ JSON.stringify(ld));
+                //ld.currentMontageProfile = "";
+                //$scope.currentProfileName = $translate.instant('kMontage');
+                NVR.setLogin(ld);
+                NVR.debug("saved new positions: " + ld.packeryPositions);
+
+              });
                pckry.shiftLayout();
+
+             
                 //$scope.squeezeMonitors();
               }, 500);
   
@@ -858,6 +874,7 @@ angular.module('zmApp.controllers')
       //console.log ($scope.copyMontage);
       // call finish reorder after modal is gone
       ld.packeryPositions = undefined;
+      ld.currentMontageProfile='';
       NVR.debug ('Updating positions:'+JSON.stringify(ld.packeryPositions));
         //console.log ("Savtogging " + ld.packeryPositions);
       //ld.currentMontageProfile = "__reorder__";
@@ -885,7 +902,6 @@ angular.module('zmApp.controllers')
       if (match_reorder) {
         var ps = NVR.getLogin().packeryPositions;
         var p = parsePositions(ps);
-        console.log ('HEY!!!!');
         matchMonitorsToPositions(p);
       } else {
         NVR.debug ('Not calling matchReorder');
