@@ -107,6 +107,7 @@
     "kEventMontageImageScale"    :"Event Montage image scale",
     "kEventNotificationUrl"      :"event notification url",
     "kEventRecording"            :"Event Recording",
+    "kEventRetrieveFrames"       :"Retrieve frame data when loading events",
     "kEventServer"               :"Event Server",
     "kEventServerConfig1"        :"Please make sure your ZM settings are configured and saved before you configure the event server",
     "kEventServerConnErr"        :"Event Server connection error",

@@ -232,7 +232,8 @@ angular.module('zmApp.controllers')
         'monitorSpecific': {},
         'eventViewThumbs': 'snapshot',
         'eventViewThumbsSize': 'small',
-        'currentZMState': 'unknown' 
+        'currentZMState': 'unknown' ,
+        'retrieveFramesForEvents': true,
 
       };
 
@@ -1835,6 +1836,10 @@ angular.module('zmApp.controllers')
         
         if (typeof loginData.currentZMState == 'undefined')  {
           loginData.currentZMState = 'unknown';
+        }
+
+        if (typeof loginData.retrieveFramesForEvents == 'undefined')  {
+          loginData.retrieveFramesForEvents = true;
         }
         
         
