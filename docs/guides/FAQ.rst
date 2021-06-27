@@ -760,10 +760,6 @@ It may be one of the following:
   able to connect to it. Check ES logs, also check zmNinja logs. The answer will be between
   them
 
-* If you are running ES in dlandon's docker image and are seeing connection to the ES being 
-  reset, you may need to restart the ES manually. I don't use that docker image - to further
-  debug, please raise issues in the docker repo.
-
 * Make sure the image being sent is less than 1MB. This is a new restriction with FCMv1
 
   
@@ -772,6 +768,33 @@ My device is not receiving push for a specific monitor
 It may be possible that you configured push in zmNinja, and then added a new monitor.
 In this case, your monitor may be excluded from the allowed list of monitors. Go to 
 menu->settings->event server and make sure your monitor is checked
+
+
+When I change ES settings in zmNinja, they don't seem to be reflected in the ES 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The most common reason is, when you first set up zmNinja with the ES, it was able 
+to make a connection and register the device token with the ES. However, subsequently,
+zmNinja is no longer able to connect to the ES. This may happen because you removed 
+some firewall rules, or, you moved from WiFi to mobile connection and your mobile connection
+is not configured correctly, or, you updated ZM/ES and forgot to check connectivity on ES port.
+There could be many reasons *why*, which I can't quite guess for you. 
+
+What happens then is, while you will continue to get push notifications, any changes you make on
+zmNinja side won't reach the ES, because zmNinja can't reach it. 
+
+Solution: figure out why zmNinja can't connect to the ES and fix that problem. (You can check zmNinja
+logs)
+
+
+I am checking/unchecking monitors in the ES settings screen, but the ES is not honoring these changes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+See above 
+
+
+Notification badge counts don't reset after I tap on them
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+See above (this is a case where zmNinja can't reach the ES to inform it that the user tapped 
+on the notifications, so ES doesn't know it has to reset count)
 
 
 Other misc. issues
