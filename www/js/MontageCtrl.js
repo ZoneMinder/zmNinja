@@ -859,32 +859,41 @@ angular.module('zmApp.controllers')
       NVR.setLogin(ld);
       $scope.modal.remove();
       $scope.MontageMonitors = $scope.copyMontage;
+      NVR.setMonitors($scope.MontageMonitors);
+      // let's wait for the changes to reflect in DOM
+      $timeout(function() {
 
-      for (var i=0; i < $scope.MontageMonitors.length; i++) {
-        var display= $scope.MontageMonitors[i].Monitor.listDisplay;
-        var id=$scope.MontageMonitors[i].Monitor.Id;
-        for (var j=0; j < beforeReorderPositions.length; j++) {
-          if (beforeReorderPositions[j].attr == id) {
-            beforeReorderPositions[j].display = display;
-            break;
-          }
-        } // before reorder array
-      } // montage monitors
+        var x = 0;
+        for (var i=0; i < $scope.MontageMonitors.length; i++) {
+          var display= $scope.MontageMonitors[i].Monitor.listDisplay;
+          var id=$scope.MontageMonitors[i].Monitor.Id;
+          for (var j=0; j < beforeReorderPositions.length; j++) {
+            beforeReorderPositions[j].x = x;
+            beforeReorderPositions[j].y = 0;
+            x = (x==0)?0.5:0;
+            if (beforeReorderPositions[j].attr == id) {
+              beforeReorderPositions[j].display = display;
+              break;
+            }
+          } // before reorder array
+        } // montage monitors
+        
+     
+        ld.packeryPositions = JSON.stringify(beforeReorderPositions);
+        ld.currentMontageProfile='';
+        NVR.debug ('Updating positions:'+JSON.stringify(ld.packeryPositions));
+        //ld.currentMontageProfile = "__reorder__";
+        $scope.currentProfileName = $translate.instant('kMontage');
+        $timeout ( function () {
+          NVR.setLogin(ld)
+          .then (function() {
+            finishReorder(false);
+          });
+        },100);
 
-      //console.log ($scope.copyMontage);
-      // call finish reorder after modal is gone
-      ld.packeryPositions = undefined;
-      ld.currentMontageProfile='';
-      NVR.debug ('Updating positions:'+JSON.stringify(ld.packeryPositions));
-        //console.log ("Savtogging " + ld.packeryPositions);
-      //ld.currentMontageProfile = "__reorder__";
-      $scope.currentProfileName = $translate.instant('kMontage');
-      $timeout ( function () {
-        NVR.setLogin(ld)
-        .then (function() {
-          finishReorder(false);
-        });
       },300);
+
+      
       
     };
 
