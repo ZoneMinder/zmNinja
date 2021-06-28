@@ -108,6 +108,7 @@
     "kEventNotificationUrl"      :"event notification url",
     "kEventRecording"            :"Event Recording",
     "kEventRetrieveFrames"       :"Retrieve frame data when loading events",
+    "kEventRetrieveFramesSub"     :"Removes motion bars and event frames - may help with performance",
     "kEventServer"               :"Event Server",
     "kEventServerConfig1"        :"Please make sure your ZM settings are configured and saved before you configure the event server",
     "kEventServerConnErr"        :"Event Server connection error",
