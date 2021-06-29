@@ -107,6 +107,8 @@
     "kEventMontageImageScale"    :"Bildgröße bei aufgezeichneten Aufnahmen",
     "kEventNotificationUrl"      :"Aufnahmennavigation URL",
     "kEventRecording"            :"Aufnahme",
+    "kEventRetrieveFrames"       :"Empfange Bilddaten beim Laden der Aufnahme",
+    "kEventRetrieveFramesSub"    :"Entfernt Bewegungsbalken und Bilddaten - kann bei Leistungsproblemen helfen",
     "kEventServer"               :"Aufnahmeserver",
     "kEventServerConfig1"        :"Bitte stelle sicher, dass Deine ZM Einstellungen konfiguriert und abgespeichert sind, bevor Du den Aufnahmeserver einrichtest",
     "kEventServerConnErr"        :"Keine Verbindung zum Aufnahmeserver",
