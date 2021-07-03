@@ -867,22 +867,32 @@ angular.module('zmApp.controllers')
         for (var i=0; i < $scope.MontageMonitors.length; i++) {
           var display= $scope.MontageMonitors[i].Monitor.listDisplay;
           var id=$scope.MontageMonitors[i].Monitor.Id;
+          var found = false;
           for (var j=0; j < beforeReorderPositions.length; j++) {
             beforeReorderPositions[j].x = x;
             beforeReorderPositions[j].y = 0;
+            beforeReorderPositions[j].size = '50';
+
             x = (x==0)?0.5:0;
             if (beforeReorderPositions[j].attr == id) {
               beforeReorderPositions[j].display = display;
+
+              found = true;
               break;
             }
           } // before reorder array
+          if (!found) {
+            beforeReorderPositions.push({'x':x, 'y':0, size:'50', 'display':display});
+            x = (x==0)?0.5:0;
+
+          }
         } // montage monitors
         
      
         ld.packeryPositions = JSON.stringify(beforeReorderPositions);
         ld.currentMontageProfile='';
         NVR.debug ('Updating positions:'+JSON.stringify(ld.packeryPositions));
-        //ld.currentMontageProfile = "__reorder__";
+        ld.currentMontageProfile = "__reorder__";
         $scope.currentProfileName = $translate.instant('kMontage');
         $timeout ( function () {
           NVR.setLogin(ld)
@@ -1881,7 +1891,7 @@ angular.module('zmApp.controllers')
       var ld = NVR.getLogin();
       ld.packeryPositions = ld.packeryPositionsArray[mName];
       ld.currentMontageProfile = mName;
-      $scope.currentProfileName = mName;
+      $scope.currentProfileName = mName || $translate.instant('kMontage');;
       console.log ("NEW POS="+ld.packeryPositions);
       var positionsStr = ld.packeryPositions;
       var positions;
@@ -2179,7 +2189,7 @@ angular.module('zmApp.controllers')
               NVR.debug("Saving " + $scope.data.montageName + " with:" + pos);
               ld.currentMontageProfile = $scope.data.montageName;
               NVR.setLogin(ld);
-              $scope.currentProfileName = $scope.data.montageName;
+              $scope.currentProfileName = $scope.data.montageName ||$translate.instant('kMontage');
 
               if (unHidden) {
                 $rootScope.zmPopup = SecuredPopups.show('alert', {
@@ -2377,6 +2387,11 @@ angular.module('zmApp.controllers')
    
     var ld = NVR.getLogin();
     var layouttype = false;
+
+    if (ld.currentMontageProfile == '__reorder__') {
+      NVR.debug ('You manually messed with the profile, so skipping all matches');
+      return;
+    }
     
     console.log ("matchMonitor positions:"+JSON.stringify(positions));
     if (!mon) { mon = $scope.MontageMonitors;}
