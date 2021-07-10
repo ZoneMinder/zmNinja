@@ -53,10 +53,6 @@ This is why:
   of you think you will never need an update, but you will. Your OS may change, ZM may
   change and suddenly the app may have issues. 
 
-* There is absolutely no way for me to know or track what happens to the apks
-  after I send them out. I know most of you have no intentions of re-distributing them,
-  but I know for sure, a few do (I've had my apk show up on mediashare sites in the past).
-  I really don't want to deal with this.
 
 * Technically, I suppose I could implement a different licensing server mechanism
   but that is exactly what the play store already provides. The reason I chose to 
