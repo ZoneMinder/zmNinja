@@ -840,6 +840,11 @@ angular.module('zmApp.controllers')
 
     $scope.cancelReorder = function () {
       $scope.modal.remove();
+      ld.packeryPositions = JSON.stringify(beforeReorderPositions);
+        ld.currentMontageProfile='';
+        NVR.debug ('Updating positions:'+JSON.stringify(ld.packeryPositions));
+        ld.currentMontageProfile = "__reorder__";
+        $scope.currentProfileName = $translate.instant('kMontage');
       $timeout ( function () {
         finishReorder(true);
       },300);
@@ -2413,6 +2418,7 @@ angular.module('zmApp.controllers')
       monitor_found = false;
       for (var p=0; p < positions.length; p++) {
         if (mon[m].Monitor.Id == positions[p].attr) {
+          NVR.debug ('Monitor '+positions[p].attr+ ' found in position array');
           found = true;
           monitor_found = true;
           if ( mon[m].Monitor.Function == 'None' && positions[p].display!='noshow') {
