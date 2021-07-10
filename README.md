@@ -2,6 +2,11 @@
 [![Donate with PayPal](https://img.shields.io/badge/Donate-Paypal-blue?logo=paypal)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=2BAG5UDK2B6MJ&currency_code=USD&source=url) [![Donate with Bitcoin](https://en.cryptobadges.io/badge/micro/32YBHDAnnDUWwjsscJQQ1Z92UWJgpsDF86)](https://en.cryptobadges.io/donate/32YBHDAnnDUWwjsscJQQ1Z92UWJgpsDF86) [![Donate with Ethereum](https://en.cryptobadges.io/badge/micro/0x86A5cB50158EFDbd1eCDa872290A7B58857B267a)](https://en.cryptobadges.io/donate/0x86A5cB50158EFDbd1eCDa872290A7B58857B267a) [![Donate with Bountysource](https://img.shields.io/badge/Donate-BountySource-brightgreen.svg)](https://www.bountysource.com/teams/zmninja/) 
 
 
+
+Project Discontinuation Notice, EOY 2021
+-----------------------------------------
+After 6+ years of developing zmNinja + ES + ML I've run out of time to maintain this project. Please read [this notice](https://forums.zoneminder.com/viewtopic.php?f=33&p=122447#p122445)
+
 ![](https://github.com/pliablepixels/zmNinja/blob/master/sample_images/zmn.png?raw=true "icon") 
 
 [zmNinja website](http://pliablepixels.github.io)
