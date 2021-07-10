@@ -38,6 +38,8 @@ to <#things-you-should-own-up-to>`__
 Asking for apks
 ----------------
 
+Updated Jun 2021: Please read `this end of life notice <https://forums.zoneminder.com/viewtopic.php?f=33&t=30996&p=122445#p122445>`__
+
 Every once in a while, I get a request from folks asking for the zmNinja APK.
 Usually, it is because their devices don't have Google Play Store. And 
 almost always, they offer to pay, just not via Google's Play store.
