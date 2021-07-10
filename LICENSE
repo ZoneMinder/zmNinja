@@ -1,27 +1,7 @@
-License for apps on Play store/App store
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The apps in Apple App store and Google Play store can be used for any purpose (personal, commercial etc). After all, you've paid for it.
-
-
-For Desktop Clients Binaries: 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The Desktop clients binaries free to download and use ONLY for users
-who are using the desktop client with the free and open source ZoneMinder
-software. If you are selling a service based on ZoneMinder and are either distributing the Desktop Client to your users or asking your users to use the desktop client by download it themselves, you are violating the non-commercial use. You will need to procure a license before you do so.
-
-
-Source Code License
-~~~~~~~~~~~~~~~~~~~
-The source code of zmNinja is dual licensed.
-
-a) The code is free for personal, non commercial use
-http://creativecommons.org/licenses/by-nc-sa/4.0/
-In summary: Share Alike, Adapt,Attribute, NonCommercial
-
-b) zmNinja source code is also open for commercial licensing and white-labeling.
-Please contact pliablepixels@gmail.com
-
-
+License 
+~~~~~~~~~~
+zmNinja is GPL 2.0 licensed as of Jul 10, 2021
+See https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html
 
 Third Party credits
 ===================
