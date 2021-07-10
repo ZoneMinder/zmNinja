@@ -2428,7 +2428,9 @@ angular.module('zmApp.controllers')
 
         } 
       } // pos
-      if (!monitor_found && !$scope.currentZMGroupName) {
+
+      
+      if (!monitor_found && !$scope.currentZMGroupName ) {
         NVR.debug (mon[m].Monitor.Name+' not found, profile='+ld.currentMontageProfile+' and group='+$scope.currentZMGroupName);
         mon[m].Monitor.listDisplay = ((ld.currentMontageProfile == $translate.instant('kMontageDefaultProfile') || !ld.currentMontageProfile || !positions.length)) ?'show':'noshow';
         NVR.debug (ld.currentMontageProfile + '=> Making '+mon[m].Monitor.Name+' to '+mon[m].Monitor.listDisplay+' as this monitor was not found in profile');
@@ -2449,7 +2451,7 @@ angular.module('zmApp.controllers')
     function parsePositions(ps) {
       //var ld = NVR.getLogin();
       var positions;
-      NVR.debug ('parsePositions: got '+JSON.stringify(ps));
+      //NVR.debug ('parsePositions: got '+JSON.stringify(ps));
       if (!ps) return [];
       try {
         positions = JSON.parse(ps);
