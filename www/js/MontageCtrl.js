@@ -841,12 +841,12 @@ angular.module('zmApp.controllers')
     $scope.cancelReorder = function () {
       $scope.modal.remove();
       ld.packeryPositions = JSON.stringify(beforeReorderPositions);
-        ld.currentMontageProfile='';
+        //ld.currentMontageProfile='';
         NVR.debug ('Updating positions:'+JSON.stringify(ld.packeryPositions));
-        ld.currentMontageProfile = "__reorder__";
-        $scope.currentProfileName = $translate.instant('kMontage');
+        //ld.currentMontageProfile = "__reorder__";
+        //$scope.currentProfileName = $translate.instant('kMontage');
       $timeout ( function () {
-        finishReorder(true);
+        finishReorder(false, true);
       },300);
   
     };
@@ -912,9 +912,9 @@ angular.module('zmApp.controllers')
       
     };
 
-    function finishReorder(match_reorder) {
+    function finishReorder(match_reorder, no_init_packery) {
   
-      currentStreamState = streamState.STOPPED;
+      currentStreamState = simulStreaming? streamState.ACTIVE: streamState.SNAPSHOT;
 
     
       //console.log ("AFTER REORDER="+JSON.stringify(beforeReorderPositions));
@@ -932,7 +932,7 @@ angular.module('zmApp.controllers')
       }
 
      
-      initPackery();
+      if (!no_init_packery) { initPackery();}
      // ld.packeryPositions = JSON.stringify(beforeReorderPositions);
     
     }
@@ -1896,7 +1896,7 @@ angular.module('zmApp.controllers')
       var ld = NVR.getLogin();
       ld.packeryPositions = ld.packeryPositionsArray[mName];
       ld.currentMontageProfile = mName;
-      $scope.currentProfileName = mName || $translate.instant('kMontage');;
+      $scope.currentProfileName = mName || $translate.instant('kMontage');
       console.log ("NEW POS="+ld.packeryPositions);
       var positionsStr = ld.packeryPositions;
       var positions;
