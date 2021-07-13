@@ -2418,7 +2418,7 @@ angular.module('zmApp.controllers')
       monitor_found = false;
       for (var p=0; p < positions.length; p++) {
         if (mon[m].Monitor.Id == positions[p].attr) {
-          NVR.debug ('Monitor '+positions[p].attr+ ' found in position array');
+          NVR.debug ('Monitor '+positions[p].attr+ ' found in position array with listDisplay='+positions[p].display);
           found = true;
           monitor_found = true;
           if ( mon[m].Monitor.Function == 'None' && positions[p].display!='noshow') {
@@ -2436,12 +2436,14 @@ angular.module('zmApp.controllers')
       } // pos
 
       
-      if (!monitor_found && !$scope.currentZMGroupName ) {
+      if (!monitor_found && !$scope.currentZMGroupName) {
         NVR.debug (mon[m].Monitor.Name+' not found, profile='+ld.currentMontageProfile+' and group='+$scope.currentZMGroupName);
-        mon[m].Monitor.listDisplay = ((ld.currentMontageProfile == $translate.instant('kMontageDefaultProfile') || !ld.currentMontageProfile || !positions.length)) ?'show':'noshow';
+        mon[m].Monitor.listDisplay = ((ld.currentMontageProfile == $translate.instant('kMontageDefaultProfile')  || !positions.length)) ?'show':'noshow';
         NVR.debug (ld.currentMontageProfile + '=> Making '+mon[m].Monitor.Name+' to '+mon[m].Monitor.listDisplay+' as this monitor was not found in profile');
 
       }
+      
+
      /* if (!found) {
         NVR.debug ('********************* monitor not in this profile: '+mon[m].Monitor.Name);
        layouttype = true;
