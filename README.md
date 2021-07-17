@@ -5,7 +5,7 @@
 
 Project Discontinuation Notice, EOY 2021
 -----------------------------------------
-After 6+ years of developing zmNinja + ES + ML I've run out of time to maintain this project. Please read [this notice](https://forums.zoneminder.com/viewtopic.php?f=33&p=122447#p122445)
+After 6+ years of developing zmNinja + ES + ML I've run out of time to maintain this project. Please read [this notice](https://forums.zoneminder.com/viewtopic.php?f=33&p=122447#p122445). This project has been transferred to ZoneMinder and ZM devs along with the community will continue to maintain it beyond 2021.
 
 ![](https://github.com/pliablepixels/zmNinja/blob/master/sample_images/zmn.png?raw=true "icon") 
 
