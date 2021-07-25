@@ -18,6 +18,8 @@ All screens have annotated descriptions now. They are maintained in a google doc
 Asking for refunds
 ------------------
 
+This is no longer valid if you are on zmNinja 1.6.009+ as the apps are free.
+
 For iOS: To get a refund, Apple wants you to contact them directly 
 using `this <https://support.apple.com/en-us/HT204084>`__ link. There used to be
 a time when I could process a refund myself, but it seems Apple doesn't provide
@@ -207,11 +209,12 @@ Case 2: The app doesn't work at all and it gets stuck on the splash screen
 There are some odd cases, where zmNinja does not start (or gets stuck in the splash screen) on specific devices.
 It is very hard for me to know why it fails on certain devices, but I can try. Here is what you need to do:
 
-You have to send me system logs of the device. To get system logs:
+You have to look at the device system logs. To get system logs:
 
 - You will have to install ``adb`` (Android Debug Bridge). `This XDA post <https://www.xda-developers.com/quickly-install-adb/>`__ describes the process of downloading and installing the tools.
-- Once ADB is installed, connect the phone to the browser (make sure you have allowed debugging on the phone menu - it should ask) and type in ``adb logcat >result.txt`` and try to start the app. A lot of logs will be generated. Please `email them to me <mailto:pliablepixels@gmail.com>`__. Note that to just filter out zmNinja logs, you can use ``adb logcat | grep "filelogger.min.js"``.
-
+- Once ADB is installed, connect the phone to the browser (make sure you have allowed debugging on the phone menu - it should ask) and type in ``adb logcat >result.txt`` and try to start the app. A lot of logs will be generated. 
+- Note that to just filter out zmNinja logs, you can use ``adb logcat | grep "filelogger.min.js"``
+- Study them and you'll see more details
 - For iOS, use the method described in Case 1 above.
 
 Profile information storage related
