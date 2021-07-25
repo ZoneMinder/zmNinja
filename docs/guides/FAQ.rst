@@ -144,7 +144,10 @@ source code compile issues.
 How to report errors
 --------------------
 
--  In general, please try and localize the logs. It helps me pinpoint the issue. 
+- I (pliablepixels) am no longer providing support for zmNinja. The code has been moved to Zoneminder
+  and it is upto the devs or the community to continue support 
+
+-  In general, please try and localize the logs. It helps  pinpoint the issue. 
    Let's assume you have an issue where montage always shows green dots instead of images.
    I'd recommend the following steps:
 
@@ -158,12 +161,8 @@ How to report errors
 
 -  I don't know why something is not working if you don't provide
    sufficient inputs. Start by creating a `GitHub
-   issue <https://github.com/pliablepixels/zmNinja/issues>`__ and please
-   fill in the template correctly. If you don't want to post debug logs
-   in the issue, `email <mailto:pliablepixels+zmNinja@gmail.com>`__ them
-   to me and mention in the issue you've emailed them (you can email by
-   going to logs screen and tapping on the envelope button (mobile) or
-   you can download logs (cloud icon, desktop version)
+   issue <https://github.com/zoneminder/zmNinja/issues>`__ and please
+   fill in the template correctly. 
 
 -  If zmNinja was working, but it stopped after you upgraded ZoneMinder
    be sure to mention which version was working and which was not. In
