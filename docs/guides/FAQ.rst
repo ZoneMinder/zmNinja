@@ -245,6 +245,13 @@ Do also note that 1.3.027 and beyond use a new WebView called WKWebView
 will have to re-enter your settings again (only once). This may not
 affect Android, but I don't know for sure.
 
+I am trying do a new install of zmNinja but the previous cloud settings keep coming back 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You need to turn off cloud backup before you delete the app.
+For iOS see `this article <https://salon.helpsite.com/articles/43396-ios-wont-delete-my-app-data-when-i-uninstallreinstall-the-same-data-is-always-there>`__
+
+
 Connection/Authentication issues
 --------------------------------
 
