@@ -3,7 +3,7 @@ Building from Source
 
 **NOTE** If you want to run it on your desktop, you can directly
 download desktop binaries
-`here <https://github.com/pliablepixels/zmNinja/releases>`__
+`here <https://github.com/zoneminder/zmninja/releases>`__
 and if you want it for Android/iOS you can get from the play/appstore.
 This is only for those who *want* to run from source.
 
@@ -88,7 +88,7 @@ Download zmNinja
 
 .. code:: bash
 
-    git clone --depth 1 https://github.com/pliablepixels/zmNinja.git
+    git clone --depth 1 https://github.com/zoneminder/zmninja.git
 
 
 Add some more build deps:

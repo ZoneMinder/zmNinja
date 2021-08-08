@@ -18,6 +18,8 @@ All screens have annotated descriptions now. They are maintained in a google doc
 Asking for refunds
 ------------------
 
+This is no longer valid if you are on zmNinja 1.6.009+ as the apps are free.
+
 For iOS: To get a refund, Apple wants you to contact them directly 
 using `this <https://support.apple.com/en-us/HT204084>`__ link. There used to be
 a time when I could process a refund myself, but it seems Apple doesn't provide
@@ -85,9 +87,9 @@ Try before buy
 
 Some users legitimately look around for an option to try before they buy
 and they are not savvy enough to `download the
-code <https://github.com/pliablepixels/zmNinja>`__ and compile (:doc:`source`) for 
+code <https://github.com/zoneminder/zmninja>`__ and compile (:doc:`source`) for 
 themselves. Fair enough. In that case, `download the Desktop
-version <https://github.com/pliablepixels/zmNinja/releases>`__ of
+version <https://github.com/zoneminder/zmninja/releases>`__ of
 zmNinja. It's free and is the same code as mobile. Make sure the desktop
 version works before you buy the mobile version.
 
@@ -142,7 +144,10 @@ source code compile issues.
 How to report errors
 --------------------
 
--  In general, please try and localize the logs. It helps me pinpoint the issue. 
+- I (pliablepixels) am no longer providing support for zmNinja. The code has been moved to Zoneminder
+  and it is upto the devs or the community to continue support 
+
+-  In general, please try and localize the logs. It helps  pinpoint the issue. 
    Let's assume you have an issue where montage always shows green dots instead of images.
    I'd recommend the following steps:
 
@@ -156,12 +161,8 @@ How to report errors
 
 -  I don't know why something is not working if you don't provide
    sufficient inputs. Start by creating a `GitHub
-   issue <https://github.com/pliablepixels/zmNinja/issues>`__ and please
-   fill in the template correctly. If you don't want to post debug logs
-   in the issue, `email <mailto:pliablepixels+zmNinja@gmail.com>`__ them
-   to me and mention in the issue you've emailed them (you can email by
-   going to logs screen and tapping on the envelope button (mobile) or
-   you can download logs (cloud icon, desktop version)
+   issue <https://github.com/zoneminder/zmNinja/issues>`__ and please
+   fill in the template correctly. 
 
 -  If zmNinja was working, but it stopped after you upgraded ZoneMinder
    be sure to mention which version was working and which was not. In
@@ -180,7 +181,7 @@ How to report errors
    hours of frustration (mostly on my side). Thanks
 
 -  I have released the desktop version free - download it
-   `here <https://github.com/pliablepixels/zmNinja/releases>`__. Its
+   `here <https://github.com/zoneminder/zmninja/releases>`__. Its
    always easier to debug on the desktop version - give it a try. If you
    hit Shift+Cmd/Ctrl+D it brings up a debug window - it helps debugging
 
@@ -207,11 +208,12 @@ Case 2: The app doesn't work at all and it gets stuck on the splash screen
 There are some odd cases, where zmNinja does not start (or gets stuck in the splash screen) on specific devices.
 It is very hard for me to know why it fails on certain devices, but I can try. Here is what you need to do:
 
-You have to send me system logs of the device. To get system logs:
+You have to look at the device system logs. To get system logs:
 
 - You will have to install ``adb`` (Android Debug Bridge). `This XDA post <https://www.xda-developers.com/quickly-install-adb/>`__ describes the process of downloading and installing the tools.
-- Once ADB is installed, connect the phone to the browser (make sure you have allowed debugging on the phone menu - it should ask) and type in ``adb logcat >result.txt`` and try to start the app. A lot of logs will be generated. Please `email them to me <mailto:pliablepixels@gmail.com>`__. Note that to just filter out zmNinja logs, you can use ``adb logcat | grep "filelogger.min.js"``.
-
+- Once ADB is installed, connect the phone to the browser (make sure you have allowed debugging on the phone menu - it should ask) and type in ``adb logcat >result.txt`` and try to start the app. A lot of logs will be generated. 
+- Note that to just filter out zmNinja logs, you can use ``adb logcat | grep "filelogger.min.js"``
+- Study them and you'll see more details
 - For iOS, use the method described in Case 1 above.
 
 Profile information storage related
@@ -242,6 +244,13 @@ Do also note that 1.3.027 and beyond use a new WebView called WKWebView
 (because iOS deprecated the old webview). If you disabled iCloud you
 will have to re-enter your settings again (only once). This may not
 affect Android, but I don't know for sure.
+
+I am trying do a new install of zmNinja but the previous cloud settings keep coming back 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You need to turn off cloud backup before you delete the app.
+For iOS see `this article <https://salon.helpsite.com/articles/43396-ios-wont-delete-my-app-data-when-i-uninstallreinstall-the-same-data-is-always-there>`__
+
 
 Connection/Authentication issues
 --------------------------------
@@ -369,7 +378,7 @@ times I've had users tell me 'they have checked this list' only to find
 out later they skimmed details.
 
 -  Always try with the `free desktop
-   version <https://github.com/pliablepixels/zmNinja/releases>`__ first.
+   version <https://github.com/zoneminder/zmninja/releases>`__ first.
    Enable debug view by hitting Ctrl/Cmd+Shift+D and you can see debug
    logs in the console view. I can't emphasize enough how useful this
    is.
@@ -551,7 +560,7 @@ A more complete and more secure option
 
 User `Adam Outler <https://github.com/adamoutler>`__ has contributed the
 following process: see
-`HERE <https://github.com/pliablepixels/zmNinja/wiki/Apache-Proxy-Authorization-with-HTTPS,-Basic-Auth,-and-ProxyPass>`__.
+`HERE <https://github.com/zoneminder/zmninja/wiki/Apache-Proxy-Authorization-with-HTTPS,-Basic-Auth,-and-ProxyPass>`__.
 Adam also has this to say about why proxies should be recommended for
 HTTPS enabled ZoneMinder instances:
 
@@ -938,7 +947,7 @@ all.
 
 When I switch languages, date/time inputs don't follow my locale in zmNinja Desktop
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The only screen I am aware of where there is a date/time input is ``Events->Filter Events``. This happens because the desktop version uses an embedded chromium version which seems to default to ``en-us``. To work around this, you can start the desktop app with a ``--lang='<locale code>'`` option. Example ``--lang='ru'``. Note that you will have to do this each time and is completely related to any language you may choose in zmNinja. Thel language in zmNinja is only used to translate text strings. Nothing else. For an extended discussion see `this issue <https://github.com/pliablepixels/zmNinja/issues/875>`__. 
+The only screen I am aware of where there is a date/time input is ``Events->Filter Events``. This happens because the desktop version uses an embedded chromium version which seems to default to ``en-us``. To work around this, you can start the desktop app with a ``--lang='<locale code>'`` option. Example ``--lang='ru'``. Note that you will have to do this each time and is completely related to any language you may choose in zmNinja. Thel language in zmNinja is only used to translate text strings. Nothing else. For an extended discussion see `this issue <https://github.com/zoneminder/zmninja/issues/875>`__. 
 
 Is zmNinja free?
 ----------------
@@ -986,7 +995,7 @@ I want to donate time/expertise/code
 ------------------------------------
 
 Great. Make sure you read the
-`license <https://github.com/pliablepixels/zmNinja/blob/master/LICENSE>`__
+`license <https://github.com/zoneminder/zmninja/blob/master/LICENSE>`__
 , read the `contributing
-guidelines <https://github.com/pliablepixels/zmNinja/blob/master/CONTRIBUTING.md>`__
+guidelines <https://github.com/zoneminder/zmninja/blob/master/CONTRIBUTING.md>`__
 and if it works for you, happy to see what you'd like to do.

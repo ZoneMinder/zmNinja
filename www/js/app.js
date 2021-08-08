@@ -41,7 +41,8 @@ angular.module('zmApp', [
     httpTimeout: 10000,
     largeHttpTimeout: 30000,
     logFile: 'zmNinjaLog.txt',
-    authoremail: 'pliablepixels+zmNinja@gmail.com',
+    //authoremail: 'pliablepixels+zmNinja@gmail.com',
+    authoremail: '',
     logFileMaxSize: 100000, // after this limit log gets reset
 
     updateCheckInterval: 86400000, // 24 hrs
@@ -71,7 +72,7 @@ angular.module('zmApp', [
     loginScreenString2: "var currentView = 'console'",
     desktopUrl: "/zm",
     desktopApiUrl: "/api/zm",
-    latestRelease: "https://api.github.com/repos/pliablepixels/zmNinja/releases/latest",
+    latestRelease: "https://api.github.com/repos/zoneminder/zmninja/releases/latest",
     blogUrl: "https://medium.com/zmninja/latest?format=json",
     nphSwitchTimer: 3000,
     eventHistoryTimer: 5000,
