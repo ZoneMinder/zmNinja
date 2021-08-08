@@ -1384,7 +1384,7 @@ angular.module('zmApp.controllers')
       // console.log("**************From String: " + $rootScope.fromString);
       //  console.log("**************To String: " + $rootScope.toString);
 
-      // reloading - may solve https://github.com/pliablepixels/zmNinja/issues/36
+      // reloading - may solve https://github.com/zoneminder/zmninja/issues/36
       // if you are in the same mid event page $state.go won't work
 
       $scope.id = monitorId;

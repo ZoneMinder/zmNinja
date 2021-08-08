@@ -72,7 +72,7 @@ angular.module('zmApp', [
     loginScreenString2: "var currentView = 'console'",
     desktopUrl: "/zm",
     desktopApiUrl: "/api/zm",
-    latestRelease: "https://api.github.com/repos/pliablepixels/zmNinja/releases/latest",
+    latestRelease: "https://api.github.com/repos/zoneminder/zmninja/releases/latest",
     blogUrl: "https://medium.com/zmninja/latest?format=json",
     nphSwitchTimer: 3000,
     eventHistoryTimer: 5000,

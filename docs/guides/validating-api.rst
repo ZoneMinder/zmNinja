@@ -23,7 +23,7 @@ Make sure ZM APIs are working:
 ''''''''''''''''''''''''''''''
 
 **Note 1**: nginx users, if you are facing API issues, please see if `this
-page <https://github.com/pliablepixels/zmNinja/wiki/How-to-configure-APIs-with-nginx>`__
+page <https://github.com/zoneminder/zmninja/wiki/How-to-configure-APIs-with-nginx>`__
 helps)
 
 **Note 2**: It is **important** that you run the API tests from the device you plan to use zmNinja with. Very often, I've seen folks doing API tests on the same server ZM is running on and then face issues (mostly due to network connectivity) when using zmNinja because it is running on a different device. So, I'd recommend you open a chrome browser on the device you plan to use zmNinja on (desktop or mobile) and then run these tests.

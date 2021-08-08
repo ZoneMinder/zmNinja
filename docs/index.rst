@@ -17,7 +17,7 @@ Welcome to zmNinja's documentation!
         Event Notification Server <https://zmeventnotification.readthedocs.io/en/latest/index.html>
         Help for each screen <https://docs.google.com/document/d/e/2PACX-1vS9z-ANNUbPRMhCWbS-PFJtB_6y6O_vwrZfLE6-TjPo3O0bPQeMUjjeTSXFvILU_w4ZTgU01CM9Hz8p/pub>
 
-`Github Repository <https://github.com/pliablepixels/zmNinja>`__
+`Github Repository <https://github.com/zoneminder/zmninja>`__
 
 :doc:`guides/FAQ`
         A detailed FAQ for zmNinja, including common issues related to installation, streaming and troubleshooting
