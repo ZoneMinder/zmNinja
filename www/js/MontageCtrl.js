@@ -2510,7 +2510,8 @@ angular.module('zmApp.controllers')
           ($scope.MontageMonitors[i].Monitor.listDisplay == 'noshow')) {
           continue;
         }
-        query = ld.url+'/index.php?view=request&request=stream&command=99';
+        query = $scope.MontageMonitors[i].Monitor.recordingURL+'/index.php?view=request&request=stream&command=99';
+        //query = ld.url+'/index.php?view=request&request=stream&command=99';
         query= query + $rootScope.authSession;
         query+= appendConnKey($scope.MontageMonitors[i].Monitor.connKey);
         //if (query) query += NVR.insertSpecialTokens();

@@ -934,7 +934,7 @@ memory (aka very efficient) and then sends notifications of events to
 listeners (you can write your own app that listen as well as use
 zmNinja). This is a chapter on its own, and I have a dedicated
 page/project for this
-`here <https://github.com/pliablepixels/zmeventserver>`__. I'd encourage
+`here <https://github.com/ZoneMinder/zmeventnotification>`__. I'd encourage
 you to install and use it - its very nice.
 
 It looks like you allow me to modify the frequency of push notifications. Very cool - will it send me all events that I missed if I make the frequency of a monitor event push to say, 600 seconds?
