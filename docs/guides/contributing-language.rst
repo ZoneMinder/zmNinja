@@ -3,18 +3,18 @@ Contributing a new language
 
 If you are familiar with using git, I'd prefer if you follow the Pull
 Request process
-`here <https://github.com/pliablepixels/zmNinja/blob/master/CONTRIBUTING.md#steps-for-code-contribution>`__.
+`here <https://github.com/zoneminder/zmninja/blob/master/CONTRIBUTING.md#steps-for-code-contribution>`__.
 
 Adding a new language
 ^^^^^^^^^^^^^^^^^^^^^
 
 -  Languages translations are available
-   `here <https://github.com/pliablepixels/zmNinja/tree/master/www/lang>`__
+   `here <https://github.com/zoneminder/zmninja/tree/master/www/lang>`__
 -  To contribute a new language, add a new ``locale-xx.json`` (where
    ``xx`` is your language code).
 -  Ideally, you should also provide a language translation for the
    zmNinja help file inside
-   `lang/help <https://github.com/pliablepixels/zmNinja/tree/master/www/lang/help>`__
+   `lang/help <https://github.com/zoneminder/zmninja/tree/master/www/lang/help>`__
 
 The best way is to simply look at an existing language translation and
 follow the same model for yours. If any language translation keywords

@@ -841,12 +841,12 @@ angular.module('zmApp.controllers')
     $scope.cancelReorder = function () {
       $scope.modal.remove();
       ld.packeryPositions = JSON.stringify(beforeReorderPositions);
-        ld.currentMontageProfile='';
+        //ld.currentMontageProfile='';
         NVR.debug ('Updating positions:'+JSON.stringify(ld.packeryPositions));
-        ld.currentMontageProfile = "__reorder__";
-        $scope.currentProfileName = $translate.instant('kMontage');
+        //ld.currentMontageProfile = "__reorder__";
+        //$scope.currentProfileName = $translate.instant('kMontage');
       $timeout ( function () {
-        finishReorder(true);
+        finishReorder(false, true);
       },300);
 
     };
@@ -912,9 +912,9 @@ angular.module('zmApp.controllers')
 
     };
 
-    function finishReorder(match_reorder) {
+    function finishReorder(match_reorder, no_init_packery) {
 
-      currentStreamState = streamState.STOPPED;
+      currentStreamState = simulStreaming? streamState.ACTIVE: streamState.SNAPSHOT;
 
 
       //console.log ("AFTER REORDER="+JSON.stringify(beforeReorderPositions));
@@ -932,7 +932,7 @@ angular.module('zmApp.controllers')
       }
 
 
-      initPackery();
+      if (!no_init_packery) { initPackery();}
      // ld.packeryPositions = JSON.stringify(beforeReorderPositions);
 
     }
@@ -2418,7 +2418,7 @@ angular.module('zmApp.controllers')
       monitor_found = false;
       for (var p=0; p < positions.length; p++) {
         if (mon[m].Monitor.Id == positions[p].attr) {
-          NVR.debug ('Monitor '+positions[p].attr+ ' found in position array');
+          NVR.debug ('Monitor '+positions[p].attr+ ' found in position array with listDisplay='+positions[p].display);
           found = true;
           monitor_found = true;
           if ( mon[m].Monitor.Function == 'None' && positions[p].display!='noshow') {
@@ -2435,10 +2435,9 @@ angular.module('zmApp.controllers')
         }
       } // pos
 
-
       if (!monitor_found && !$scope.currentZMGroupName ) {
         NVR.debug (mon[m].Monitor.Name+' not found, profile='+ld.currentMontageProfile+' and group='+$scope.currentZMGroupName);
-        mon[m].Monitor.listDisplay = ((ld.currentMontageProfile == $translate.instant('kMontageDefaultProfile') || !ld.currentMontageProfile || !positions.length)) ?'show':'noshow';
+        mon[m].Monitor.listDisplay = ((ld.currentMontageProfile == $translate.instant('kMontageDefaultProfile')  || !positions.length)) ?'show':'noshow';
         NVR.debug (ld.currentMontageProfile + '=> Making '+mon[m].Monitor.Name+' to '+mon[m].Monitor.listDisplay+' as this monitor was not found in profile');
 
       }
@@ -2508,7 +2507,8 @@ angular.module('zmApp.controllers')
           ($scope.MontageMonitors[i].Monitor.listDisplay == 'noshow')) {
           continue;
         }
-        query = ld.url+'/index.php?view=request&request=stream&command=99';
+        query = $scope.MontageMonitors[i].Monitor.recordingURL+'/index.php?view=request&request=stream&command=99';
+        //query = ld.url+'/index.php?view=request&request=stream&command=99';
         query= query + $rootScope.authSession;
         query+= appendConnKey($scope.MontageMonitors[i].Monitor.connKey);
         //if (query) query += NVR.insertSpecialTokens();

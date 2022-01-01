@@ -24,7 +24,7 @@ angular.module('zmApp.controllers').controller('zmApp.InvalidApiCtrl', ['$scope'
   };
 
   $scope.readFAQ = function () {
-    window.open('https://github.com/pliablepixels/zmNinja/wiki/Validating-if-APIs-work-on-ZM', '_blank', 'location=yes');
+    window.open('https://github.com/zoneminder/zmninja/wiki/Validating-if-APIs-work-on-ZM', '_blank', 'location=yes');
     return false;
   };
 

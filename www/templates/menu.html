@@ -156,6 +156,13 @@
               <span style="color:#268d3a;">{{$root.newVersionAvailable}}</span>
             </ion-item>
           </div>
+
+          <ion-item ng-click="endOfLife()" nav-clear menu-close>
+            <span class=" item-icon-left">
+              <i class="icon ion-android-hand"></i>
+            </span> {{'kEndOfLifeNotice'|translate}}
+          </ion-item>
+          
           <div ng-if="$root.platformOS=='android'">
             <ion-item ng-click="$root.exitApp();">
               <span class=" item-icon-left">
@@ -173,6 +180,9 @@
         <ion-item ng-if="$root.LoginData.isKiosk" ng-click="exitKiosk()">
           <i class="ion-unlocked"></i> {{'kKioskModeExit' | translate}}
         </ion-item>
+
+
+
         </ion-list>
         <!--</ion-scroll>-->
       </ion-content>

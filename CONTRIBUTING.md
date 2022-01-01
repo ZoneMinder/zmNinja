@@ -1,5 +1,10 @@
 ## Contributing to zmNinja
 
+### v1.6.009 and above
+The license of zmNinja is GPLv3 and zmNinja appstore/playstore apps have been made free. The ZoneMinder devs have offered to take over zmNinja source, please contact them directly for any questions. It is their choice on what do
+do with future app/play store releases and continue to offer it free or charge.
+### v1.6.008 and below
+
 The source code will always be available under CC BY-NC-SA 4.0. If you'd like to contribute please know that if your changes are accepted and merged they will make it to the App/Play Store when I publish the app. This does not entitle you to any remuneration - If you still would like to contribute and make this solution better, please go right ahead. If you feel this prohibits you from contributing, please create a bug report or enhancement request via the github issue tracker and I'll incorporate it when I have time/agree its a good idea.
 
 Thanks.

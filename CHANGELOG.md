@@ -1,5 +1,37 @@
 # Changelog
 
+## [v1.6.009](https://github.com/pliablepixels/zmNinja/tree/v1.6.009) (2021-07-14)
+
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.6.008...v1.6.009)
+
+**Fixed bugs:**
+
+- Adding new monitors seems to mess up organization and always get turned off [\#1067](https://github.com/pliablepixels/zmNinja/issues/1067)
+- Montage profiles [\#1057](https://github.com/pliablepixels/zmNinja/issues/1057)
+
+**Closed issues:**
+
+- zmNinja end of life notice [\#1081](https://github.com/pliablepixels/zmNinja/issues/1081)
+- 24hr Review when accessed from different time zone, pulls old events. [\#1074](https://github.com/pliablepixels/zmNinja/issues/1074)
+- Delay when playing events [\#1073](https://github.com/pliablepixels/zmNinja/issues/1073)
+- Auto play while viewing videos from Events List doesn't respect "hidden" attribute [\#1072](https://github.com/pliablepixels/zmNinja/issues/1072)
+- zmNinja not working properly with Zoneminder v1.36.1 [\#1069](https://github.com/pliablepixels/zmNinja/issues/1069)
+- No monitors visible after upgrade to 1.36.0 [\#1066](https://github.com/pliablepixels/zmNinja/issues/1066)
+- No windows build of v1.6.008 [\#1064](https://github.com/pliablepixels/zmNinja/issues/1064)
+- small issue since you changed the app to stack unread notifications. [\#1051](https://github.com/pliablepixels/zmNinja/issues/1051)
+- Copying log creates semi-permanent text overlay on display outside app - zmNinja Android 10 - OnePlus 6 [\#1021](https://github.com/pliablepixels/zmNinja/issues/1021)
+
+**Merged pull requests:**
+
+- EOL [\#1080](https://github.com/pliablepixels/zmNinja/pull/1080) ([florie1706](https://github.com/florie1706))
+- EOL [\#1079](https://github.com/pliablepixels/zmNinja/pull/1079) ([maymaymay](https://github.com/maymaymay))
+- \#1073 formatting and cosmetics... [\#1076](https://github.com/pliablepixels/zmNinja/pull/1076) ([maymaymay](https://github.com/maymaymay))
+- \#1067 make sure we don't get stuck in a loop between ZM groups and mo… [\#1071](https://github.com/pliablepixels/zmNinja/pull/1071) ([florie1706](https://github.com/florie1706))
+- \#1067 make sure we don't get stuck in a loop between ZM groups and mo… [\#1070](https://github.com/pliablepixels/zmNinja/pull/1070) ([maymaymay](https://github.com/maymaymay))
+- update zh\_TW translation and apply translation to some texts [\#1063](https://github.com/pliablepixels/zmNinja/pull/1063) ([civita](https://github.com/civita))
+-  \#1057 bazillion hacks to make this work [\#1062](https://github.com/pliablepixels/zmNinja/pull/1062) ([florie1706](https://github.com/florie1706))
+- \#1057 bazillion hacks to make this work [\#1061](https://github.com/pliablepixels/zmNinja/pull/1061) ([maymaymay](https://github.com/maymaymay))
+
 ## [v1.6.008](https://github.com/pliablepixels/zmNinja/tree/v1.6.008) (2021-04-18)
 
 [Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v1.6.006...v1.6.008)
@@ -10,7 +42,6 @@
 
 **Fixed bugs:**
 
-- Montage profiles [\#1057](https://github.com/pliablepixels/zmNinja/issues/1057)
 - Monitors that don't have analysis enabled are not shown in zmNinja [\#1055](https://github.com/pliablepixels/zmNinja/issues/1055)
 - Issue when disabling all cameras in zmES settings of zmNinja [\#1050](https://github.com/pliablepixels/zmNinja/issues/1050)
 - Monitors not updating in zmNinja after RUN state change. [\#1047](https://github.com/pliablepixels/zmNinja/issues/1047)
@@ -31,7 +62,6 @@
 - \#1050 don't allow all monitors to be disabled in ES, show monitor sub… [\#1053](https://github.com/pliablepixels/zmNinja/pull/1053) ([florie1706](https://github.com/florie1706))
 - \#1050 don't allow all monitors to be disabled in ES, show monitor sub… [\#1052](https://github.com/pliablepixels/zmNinja/pull/1052) ([maymaymay](https://github.com/maymaymay))
 - \#1039 prompt before delete [\#1042](https://github.com/pliablepixels/zmNinja/pull/1042) ([maymaymay](https://github.com/maymaymay))
-- \#1039 prompt before delete [\#1040](https://github.com/pliablepixels/zmNinja/pull/1040) ([florie1706](https://github.com/florie1706))
 
 ## [v1.6.006](https://github.com/pliablepixels/zmNinja/tree/v1.6.006) (2021-02-20)
 
@@ -105,6 +135,7 @@
 
 **Merged pull requests:**
 
+- \#1039 prompt before delete [\#1040](https://github.com/pliablepixels/zmNinja/pull/1040) ([florie1706](https://github.com/florie1706))
 - Update source.rst [\#1007](https://github.com/pliablepixels/zmNinja/pull/1007) ([nestorwheelock](https://github.com/nestorwheelock))
 
 ## [v1.6.000](https://github.com/pliablepixels/zmNinja/tree/v1.6.000) (2020-10-12)
@@ -882,10 +913,8 @@
 
 **Merged pull requests:**
 
-- Signed-off-by: Veress Krisztián \<krive001@gmail.com\> [\#560](https://github.com/pliablepixels/zmNinja/pull/560) ([krive001](https://github.com/krive001))
-- Email not configured [\#544](https://github.com/pliablepixels/zmNinja/pull/544) ([florie1706](https://github.com/florie1706))
 - kEmailNotConfigured [\#540](https://github.com/pliablepixels/zmNinja/pull/540) ([maymaymay](https://github.com/maymaymay))
-- update language spanish language with new keys [\#525](https://github.com/pliablepixels/zmNinja/pull/525) ([fxrnando](https://github.com/fxrnando))
+- New string kCycleMontageInterval [\#532](https://github.com/pliablepixels/zmNinja/pull/532) ([florie1706](https://github.com/florie1706))
 
 ## [v1.2.44](https://github.com/pliablepixels/zmNinja/tree/v1.2.44) (2017-09-25)
 
@@ -917,7 +946,9 @@
 
 **Merged pull requests:**
 
+- Email not configured [\#544](https://github.com/pliablepixels/zmNinja/pull/544) ([florie1706](https://github.com/florie1706))
 -  \#530 - allow you to customize timer for montage cycle [\#531](https://github.com/pliablepixels/zmNinja/pull/531) ([maymaymay](https://github.com/maymaymay))
+- update language spanish language with new keys [\#525](https://github.com/pliablepixels/zmNinja/pull/525) ([fxrnando](https://github.com/fxrnando))
 - Create CODE\_OF\_CONDUCT.md [\#524](https://github.com/pliablepixels/zmNinja/pull/524) ([pliablepixels](https://github.com/pliablepixels))
 - Update locale-fr.json [\#518](https://github.com/pliablepixels/zmNinja/pull/518) ([cryptage21](https://github.com/cryptage21))
 - Added new strings according to v1.2.41 [\#512](https://github.com/pliablepixels/zmNinja/pull/512) ([florie1706](https://github.com/florie1706))
@@ -949,7 +980,6 @@
 **Merged pull requests:**
 
 - montage profile save - show existing list too [\#511](https://github.com/pliablepixels/zmNinja/pull/511) ([maymaymay](https://github.com/maymaymay))
--  \#509 - default profile for all monitors and "workspace" [\#510](https://github.com/pliablepixels/zmNinja/pull/510) ([maymaymay](https://github.com/maymaymay))
 
 ## [v1.2.40](https://github.com/pliablepixels/zmNinja/tree/v1.2.40) (2017-03-19)
 
@@ -970,6 +1000,7 @@
 
 **Merged pull requests:**
 
+-  \#509 - default profile for all monitors and "workspace" [\#510](https://github.com/pliablepixels/zmNinja/pull/510) ([maymaymay](https://github.com/maymaymay))
 - Update locale-de.json [\#497](https://github.com/pliablepixels/zmNinja/pull/497) ([florie1706](https://github.com/florie1706))
 - Update locale-fr 1.2.39 [\#495](https://github.com/pliablepixels/zmNinja/pull/495) ([cryptage21](https://github.com/cryptage21))
 - Buttons in this view were the wrong way around [\#494](https://github.com/pliablepixels/zmNinja/pull/494) ([florie1706](https://github.com/florie1706))
@@ -1033,7 +1064,6 @@
 **Merged pull requests:**
 
 - let's make GIF and MP4 an option in Dev Settings \#454 [\#456](https://github.com/pliablepixels/zmNinja/pull/456) ([maymaymay](https://github.com/maymaymay))
-- 433 adding dutch language files [\#435](https://github.com/pliablepixels/zmNinja/pull/435) ([steelyard-nl](https://github.com/steelyard-nl))
 
 ## [v1.2.37](https://github.com/pliablepixels/zmNinja/tree/v1.2.37) (2017-02-11)
 
@@ -1097,6 +1127,7 @@
 - 440 hard coded text found  [\#442](https://github.com/pliablepixels/zmNinja/pull/442) ([steelyard-nl](https://github.com/steelyard-nl))
 - sorted keys \#437 [\#439](https://github.com/pliablepixels/zmNinja/pull/439) ([maymaymay](https://github.com/maymaymay))
 - 437 hard coded text alert found [\#438](https://github.com/pliablepixels/zmNinja/pull/438) ([steelyard-nl](https://github.com/steelyard-nl))
+- 433 adding dutch language files [\#435](https://github.com/pliablepixels/zmNinja/pull/435) ([steelyard-nl](https://github.com/steelyard-nl))
 -  you can now toggle a dev option to hide/unhide archived \(flagged\) ev… [\#434](https://github.com/pliablepixels/zmNinja/pull/434) ([maymaymay](https://github.com/maymaymay))
 - Translation update to \#423 [\#425](https://github.com/pliablepixels/zmNinja/pull/425) ([maymaymay](https://github.com/maymaymay))
 
@@ -1169,7 +1200,6 @@
 - Translation updates [\#396](https://github.com/pliablepixels/zmNinja/pull/396) ([maymaymay](https://github.com/maymaymay))
 -  Translation adjustments. [\#393](https://github.com/pliablepixels/zmNinja/pull/393) ([maymaymay](https://github.com/maymaymay))
 - Translation updates to \#383 [\#392](https://github.com/pliablepixels/zmNinja/pull/392) ([maymaymay](https://github.com/maymaymay))
-- 384 spanish trans [\#385](https://github.com/pliablepixels/zmNinja/pull/385) ([fxrnando](https://github.com/fxrnando))
 
 ## [v1.2.31](https://github.com/pliablepixels/zmNinja/tree/v1.2.31) (2016-12-02)
 
@@ -1204,6 +1234,7 @@
 **Merged pull requests:**
 
 - Translation updates. [\#386](https://github.com/pliablepixels/zmNinja/pull/386) ([maymaymay](https://github.com/maymaymay))
+- 384 spanish trans [\#385](https://github.com/pliablepixels/zmNinja/pull/385) ([fxrnando](https://github.com/fxrnando))
 - more minor fixes [\#378](https://github.com/pliablepixels/zmNinja/pull/378) ([maymaymay](https://github.com/maymaymay))
 - minor fixes [\#377](https://github.com/pliablepixels/zmNinja/pull/377) ([maymaymay](https://github.com/maymaymay))
 - minor fixes [\#376](https://github.com/pliablepixels/zmNinja/pull/376) ([maymaymay](https://github.com/maymaymay))
@@ -1499,6 +1530,7 @@
 - check if android is exiting on background [\#240](https://github.com/pliablepixels/zmNinja/issues/240)
 - Enhancement: zmNinja as surveillance solution [\#236](https://github.com/pliablepixels/zmNinja/issues/236)
 - Application not recorvering from connection errors [\#199](https://github.com/pliablepixels/zmNinja/issues/199)
+- Event Montage unstable [\#183](https://github.com/pliablepixels/zmNinja/issues/183)
 - \[DESKTOP\] Playback control bar lost some features in 1.0.9 [\#176](https://github.com/pliablepixels/zmNinja/issues/176)
 
 ## [v1.1.7](https://github.com/pliablepixels/zmNinja/tree/v1.1.7) (2016-04-23)
@@ -1611,7 +1643,6 @@
 
 **Closed issues:**
 
-- Event Montage unstable [\#183](https://github.com/pliablepixels/zmNinja/issues/183)
 - No image for monitors nor events [\#181](https://github.com/pliablepixels/zmNinja/issues/181)
 - Android build fails [\#180](https://github.com/pliablepixels/zmNinja/issues/180)
 - iPhone stopped working [\#178](https://github.com/pliablepixels/zmNinja/issues/178)
@@ -1757,7 +1788,7 @@
 
 ## [v0.87.3](https://github.com/pliablepixels/zmNinja/tree/v0.87.3) (2015-12-15)
 
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.2...v0.87.3)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87...v0.87.3)
 
 **Implemented enhancements:**
 
@@ -1777,13 +1808,13 @@
 
 - Timeline on v0.87.2 shows only motion events [\#105](https://github.com/pliablepixels/zmNinja/issues/105)
 
-## [v0.87.2](https://github.com/pliablepixels/zmNinja/tree/v0.87.2) (2015-11-20)
-
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87...v0.87.2)
-
 ## [v0.87](https://github.com/pliablepixels/zmNinja/tree/v0.87) (2015-11-20)
 
-[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.1...v0.87)
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.2...v0.87)
+
+## [v0.87.2](https://github.com/pliablepixels/zmNinja/tree/v0.87.2) (2015-11-20)
+
+[Full Changelog](https://github.com/pliablepixels/zmNinja/compare/v0.87.1...v0.87.2)
 
 **Fixed bugs:**
 
