@@ -1,39 +1,43 @@
 {
   "project_info": {
-    "project_number": "710936220256",
-    "firebase_url": "https://ninja-1105.firebaseio.com",
-    "project_id": "ninja-1105",
-    "storage_bucket": "ninja-1105.appspot.com"
+    "project_number": "625362857243",
+    "project_id": "zoneminder-ninja",
+    "storage_bucket": "zoneminder-ninja.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:710936220256:android:aefe6da818d70d0b",
+        "mobilesdk_app_id": "1:625362857243:android:c81c1e1d6e31d22bd9f7be",
         "android_client_info": {
-          "package_name": "com.pliablepixels.zmninja_pro"
+          "package_name": "com.zoneminder.zmNinja"
         }
       },
       "oauth_client": [
         {
-          "client_id": "710936220256-lkqe18pbja8qubnorii7d3oi9n9avind.apps.googleusercontent.com",
+          "client_id": "625362857243-h1phf5lf80ckqv0nbspfji3g08trot6k.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAZnFKzI4mhH3Tzg-czSe_hc8loXIi2xkw"
+          "current_key": "AIzaSyAtBQdDm4yzDZzjhKB0ojpYLKcbTXmZMyg"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "625362857243-h1phf5lf80ckqv0nbspfji3g08trot6k.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "625362857243-6skuep7gb2j2dqk5qtk6kea2kbne88v7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.zoneminder.zmninja-pro"
+              }
+            }
+          ]
         }
       }
     }
