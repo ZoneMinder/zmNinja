@@ -1567,7 +1567,7 @@ angular.module('zmApp.controllers')
         if (!$scope.singleMonitorModalOpen && simulStreaming) {
           NVR.debug("Killing all streams in montage to save memory/nw...");
 
-          for (i = 0; i < $scope.MontageMonitors.length; i++) {
+          for (var i = 0; i < $scope.MontageMonitors.length; i++) {
             if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show')
               NVR.killLiveStream(
                 $scope.MontageMonitors[i].Monitor.connKey,
@@ -1723,7 +1723,11 @@ angular.module('zmApp.controllers')
             NVR.stopNetwork();
           } else {
             for (var i = 0; i < $scope.MontageMonitors.length; i++) {
-              if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show') NVR.killLiveStream($scope.MontageMonitors[i].Monitor.connKey, $scope.MontageMonitors[i].Monitor.controlURL, $scope.MontageMonitors[i].Monitor.Name);
+              if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show')
+                NVR.killLiveStream(
+                  $scope.MontageMonitors[i].Monitor.connKey,
+                  $scope.MontageMonitors[i].Monitor.controlURL,
+                  $scope.MontageMonitors[i].Monitor.Name);
             }
           }
 
