@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-packageName="com.pliablepixels.zmninja_pro" id="com.pliablepixels.zmninja_pro" ios-CFBundleIdentifier="com.pliablepixels.zmninja-pro" version="1.6.009" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-packageName="com.zoneminder.zmNinja" id="com.zoneminder.zmNinja" ios-CFBundleIdentifier="com.zoneminder.zmNinja" version="1.6.009" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>zmNinja</name>
     <description>
 	High performance ZoneMinder client
   </description>
-    <author email="pliablepixels@gmail.com" href="http://pliablepixels.us/">
-	Pliable Pixels
+    <author email="appsupport@zoneminder.com" href="https://zoneminder.com/">
+	Zoneminder Inc
   </author>
     <content src="index.html" />
     <allow-navigation href="gap://ready" />

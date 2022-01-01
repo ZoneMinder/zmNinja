@@ -1,8 +1,8 @@
 {
     "ios": {
         "debug": {
-            "codeSignIdentity": "iPhone Developer",
-            "developmentTeam": "EN3PJ8YF59",
+            "codeSignIdentity": "Apple Development",
+            "developmentTeam": "P97TSUFFDX",
             "packageType": "development",
             "automaticProvisioning": true,
             "buildFlag": [
@@ -11,8 +11,8 @@
             ]
         },
         "release": {
-            "codeSignIdentity": "iPhone Developer",
-            "developmentTeam": "EN3PJ8YF59",
+            "codeSignIdentity": "Apple Development",
+            "developmentTeam": "P97TSUFFDX",
             "packageType": "app-store",
             "automaticProvisioning": true,
             "buildFlag": [

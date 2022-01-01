@@ -24,7 +24,7 @@ Output of ``ionic info``
 
 ::
 
- 
+
     Ionic:
 
    Ionic CLI         : 6.9.3 (/Users/pp/.nvm/versions/node/v12.17.0/lib/node_modules/@ionic/cli)
@@ -59,9 +59,9 @@ Install Dependencies - needed for all platforms
 Install NodeJS
 ~~~~~~~~~~~~~~
 
-I use `nvm <https://github.com/nvm-sh/nvm>`__ to install NodeJS. It allows you to 
-easily switch node versions. Follow their instructions and use the same node major 
-version you see above (12.x). Note that it is entirely possible another version of 
+I use `nvm <https://github.com/nvm-sh/nvm>`__ to install NodeJS. It allows you to
+easily switch node versions. Follow their instructions and use the same node major
+version you see above (12.x). Note that it is entirely possible another version of
 node works. This is the only one I've tested with. I don't think minot version changes
 will cause issues (example, ``12.18`` etc.).
 
@@ -70,14 +70,14 @@ Install cordova and ionic
 
 .. code:: bash
 
-    npm install -g cordova@9.0.0 @ionic/cli 
+    npm install -g cordova@9.0.0 @ionic/cli
     npm install @ionic/v1-toolkit --save-dev
     npm install -g cordova-res
     gem install cocoapods
 
 
 If you don't have ``gem`` that means you need to install ruby. Installing ruby
-installs gobs of nonsense. Too bad. 
+installs gobs of nonsense. Too bad.
 (Note you may need to do ``sudo`` depending on how your system is set
 up. It's `better you
 don't <https://johnpapa.net/how-to-use-npm-global-without-sudo-on-osx/>`__,
@@ -123,13 +123,13 @@ this)
 
 (Harder) If you need picture notification support in push
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-As of Aug 2020, cordova-ios does not support multiple targets, nor does 
+As of Aug 2020, cordova-ios does not support multiple targets, nor does
 it support automatic building of notification extensions. So there is manual work to be done:
 
-- Open up ``platforms/ios/zmNinja.xcworkspace`` in XCode
+- Open up ``platforms/ios/zmNinja.workspace`` in XCode
 - Go to ``File->Workspace Settings`` and select ``Legacy Build System``
 - Go to ``Target->zmNinja->Build Settings`` and set "Swift Language Version" to ``Swift 4``
-- Go to ``File->New->Target->Notification Service Extension``, select Objective C 
+- Go to ``File->New->Target->Notification Service Extension``, select Objective C
 - In the "Product Name" put in ``zmNinjaNotification`` (your BundleID should now read  ``com.pliablepixels.zmninja-pro.zmNinjaNotification``)
 - Say "Yes" to "Activate zmNinjaNotification scheme?" popup
 - Now go to zmNinjaNotification target and make version and  build same as zmNinja
@@ -138,7 +138,7 @@ it support automatic building of notification extensions. So there is manual wor
 - ``cp etc/NotificationService.m platforms/ios/zmNinjaNotification/``
 - Please make sure you select the right development teams for both zmNinja and zmNinjaNotification so the app can be signed
 
-Starting 1.5.0, zmNinja uses the `cordova-plugin-firebasex <https://github.com/dpa99c/cordova-plugin-firebasex>`__ 
+Starting 1.5.0, zmNinja uses the `cordova-plugin-firebasex <https://github.com/dpa99c/cordova-plugin-firebasex>`__
 library for push notifications. The older cordova-push-plugin is no longer supported by the author.
 If you are facing compilation issues that relate to this plugin, please make sure you read it's `install section <https://github.com/dpa99c/cordova-plugin-firebasex#installation>`__,
 especially around outdated pods et. al.
@@ -203,7 +203,7 @@ over adb, you'd do something like
 
     adb install -r debug_files/android-debug.apk #if you did --debug
     or,
-    adb install -r release_files/zmNinja.apk #if you did --release 
+    adb install -r release_files/zmNinja.apk #if you did --release
 
 Making a desktop build
 ----------------------
@@ -244,7 +244,7 @@ Your packages will be created in the ``dist`` folder
 Troubleshooting
 ---------------
 
-Lots of things can go wrong. 
+Lots of things can go wrong.
 
 * Please make sure you don't post issues about why your own build is not working - please figure it out
 * Look carefully at error messages
