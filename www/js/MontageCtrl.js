@@ -2236,7 +2236,6 @@ function loadStreamQueryStatus () {
 
 $scope.constructStream = function(monitor) {
   var stream;
-  var fps = NVR.getLogin().montageliveFPS;
   //console.log ('MID='+monitor.Monitor.Id+" listDisplay:"+monitor.Monitor.listDisplay);
   if (currentStreamState == streamState.STOPPED || monitor.Monitor.listDisplay == 'noshow' ) {
     //console.log ("STREAM=empty and auth="+$rootScope.authSession);
@@ -2256,18 +2255,18 @@ $scope.constructStream = function(monitor) {
     // console.log(stream);
   } else {
     stream = monitor.Monitor.streamingURL +
-    "/nph-zms?mode=" + getMode()  +
+    "/nph-zms?mode=" + getMode() +
     "&monitor=" + monitor.Monitor.Id +
     "&scale=" + $scope.LoginData.montageQuality +
-    "&buffer="+ $scope.LoginData.liveStreamBuffer +
     "&rand=" + randToAvoidCacheMem + monitor.Monitor.Id;
 
+    var fps = NVR.getLogin().montageliveFPS;
     if (fps) {
       stream +='&maxfps='+fps;
     }
   }
 
-  stream  += $rootScope.authSession;
+  stream += $rootScope.authSession;
   stream += appendConnKey(monitor.Monitor.connKey);
 
   if (stream) stream += NVR.insertSpecialTokens();
