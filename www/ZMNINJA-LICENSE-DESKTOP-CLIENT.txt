@@ -5,13 +5,16 @@ http://creativecommons.org/licenses/by-nc-sa/4.0/
 In summary: Share Alike, Adapt,Attribute, NonCommercial
 
 zmNinja source code is also open for commerical licensing and white-labeling.
-Please contact pliablepixels@gmail.com
+Please contact info@zoneminder.com
 
 For Desktop Clients Binaries: 
 
 The Desktop clients binaries free to download and use ONLY for users
 who are using the desktop client with the free and open source ZoneMinder
-software. If you are selling a service based on zoneminder and are either distributing the Desktop Client to your users or asking your users to use the desktop client by download it themselves, you are violating the non-commercial use. You will need to procure a license before you do so.
+software. If you are selling a service based on zoneminder and are either
+distributing the Desktop Client to your users or asking your users to use the
+desktop client by download it themselves, you are violating the non-commercial
+use. You will need to procure a license before you do so.
 
 Be nice, please.
 
