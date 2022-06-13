@@ -1512,7 +1512,7 @@ angular.module('zmApp.controllers')
       // once regenerated
       if (simulStreaming) {
         currentStreamState = streamState.ACTIVE;
-        NVR.debug ('Regenerating connkeys so old kills wont affect');
+        NVR.debug('Regenerating connkeys so old kills wont affect');
         for (var i = 0; i < $scope.MontageMonitors.length; i++) {
           $scope.MontageMonitors[i].Monitor.connKey = NVR.regenConnKeys($scope.MontageMonitors[i]);
         }
@@ -1583,7 +1583,7 @@ angular.module('zmApp.controllers')
     }
 
     function onResume() {
-      NVR.debug ("resume called, hard refreshing monitor lists just to make sure...");
+      NVR.debug("resume called, hard refreshing monitor lists just to make sure...");
       NVR.getMonitors(1);
       // we should be going to portal login so no need here
       //NVR.debug ("Montage resume called, regenerating all connkeys");
@@ -1985,19 +1985,19 @@ angular.module('zmApp.controllers')
 
     $scope.processImageError = function(monitor) {
       if (currentStreamState != streamState.ACTIVE) return;
-      if (monitor.Monitor.listDisplay=='blank') return;
+      if (monitor.Monitor.listDisplay == 'blank') return;
       var mintimesec = 10;
       var nowt = moment();
       var thent = monitor.Monitor.regenTime || moment();
-      if (nowt.diff(thent, 'seconds') >=mintimesec) {
-        console.log ('IMAGE ERROR CALLING REGEN');
+      if (nowt.diff(thent, 'seconds') >= mintimesec) {
+        console.log('IMAGE ERROR CALLING REGEN');
         NVR.regenConnKeys(monitor);
-        NVR.debug ("Image load error for: "+monitor.Monitor.Id+" regenerated connKey is:"+monitor.Monitor.connKey);
+        NVR.debug("Image load error for: "+monitor.Monitor.Id+" regenerated connKey is:"+monitor.Monitor.connKey);
       } else {
         var dur = mintimesec - nowt.diff(thent, 'seconds');
-        NVR.debug ("Image load error for Monitor: "+monitor.Monitor.Id+" scheduling for connkey regen in "+dur+"s");
+        NVR.debug("Image load error for Monitor: "+monitor.Monitor.Id+" scheduling for connkey regen in "+dur+"s");
         monitor.Monitor.regenHandle = $timeout ( function() {
-          NVR.debug ('deferred image error, calling regen');
+          NVR.debug('deferred image error, calling regen');
           //console.log ('DEFERRED IMAGE ERROR CALLING REGEN');
           NVR.regenConnKeys(monitor);}, dur*1000 );
       }
