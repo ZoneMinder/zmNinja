@@ -2582,7 +2582,7 @@ $scope.$on('$ionicView.unloaded', function () {
 $scope.resetSizesWithInput = function () {
   $scope.data = {};
   var myPopup = $ionicPopup.show({
-    template: '<input type="number" ng-model="data.cols">',
+    template: '<input type="number" ng-model="data.cols" min="1" step="1"/>',
     title: $translate.instant('kMontageResizeCols'),
     scope: $scope,
     buttons: [
@@ -2609,7 +2609,7 @@ $scope.resetSizesWithInput = function () {
 
       // var p = parseInt(100.0/res + 0.2);
       p = parseFloat (100.0/res).toFixed(3);
-      NVR.debug ("Resizing monitors to: "+p);
+      NVR.debug("Resizing monitors to: "+p);
 
       // document.documentElement.style.setProperty('--grid-width', p+"%");
       // document.documentElement.style.setProperty('--grid-width', p);
@@ -2626,7 +2626,7 @@ $scope.resetSizes = function (unhideAll, percent) {
   if (!percent) percent="50";
   for (var i = 0; i < $scope.MontageMonitors.length; i++) {
     if (unhideAll) {
-      NVR.debug ('Setting '+$scope.MontageMonitors[i].Monitor.Name+' to show');
+      NVR.debug('Setting '+$scope.MontageMonitors[i].Monitor.Name+' to show');
       $scope.MontageMonitors[i].Monitor.listDisplay = 'show';
     }
     if ($scope.isDragabillyOn) {
