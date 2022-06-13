@@ -30,12 +30,9 @@ angular.module('zmApp.controllers')
       var snapshotFrame = 1; // will be 'snapshot'
       // if ZM >= 1.31
 
-
-
       var monitors = [];
       var zmgroups = [];
       var multiservers = [];
-
 
       var migrationComplete = false;
       $rootScope.initComplete = false; // will be true when init is fully done to take care of spurious state changes at times 
@@ -105,7 +102,6 @@ angular.module('zmApp.controllers')
           text: 'Swedish',
           value: 'se'
         },
-
       ];
 
       var serverGroupList = {};
@@ -234,7 +230,6 @@ angular.module('zmApp.controllers')
         'eventViewThumbsSize': 'small',
         'currentZMState': 'unknown' ,
         'retrieveFramesForEvents': true,
-
       };
 
       var defaultLoginData = angular.copy(loginData);
@@ -244,7 +239,6 @@ angular.module('zmApp.controllers')
         'ZM_PATH_ZMS': '',
         'ZM_MIN_STREAMING_PORT': '-1'
       };
-
 
       /**
        * Allows/Disallows self signed certs
@@ -259,13 +253,11 @@ angular.module('zmApp.controllers')
           cordova.plugin.http.useBasicAuth(loginData.basicAuthUser, loginData.basicAuthPassword);
         }
         var cid = loginData.zmNinjaCustomId.replace('%APPVER%',zmAppVersion);
-        debug ("Setting cordova header X-ZmNinja to "+cid);
+        debug("Setting cordova header X-ZmNinja to "+cid);
         // setup custom header
         cordova.plugin.http.setHeader('*', 'X-ZmNinja', cid);
 
-
         if (!loginData.enableStrictSSL) {
-
           //alert("Enabling insecure SSL");
           log(">>>> Disabling strict SSL checking (turn off  in Dev Options if you can't connect)");
           cordova.plugin.http.setServerTrustMode('nocheck', function () {
@@ -278,14 +270,10 @@ angular.module('zmApp.controllers')
             log(">>> Android: enabling inline image view for self signed certs");
             cordova.plugins.certificates.trustUnsecureCerts(true);
           }
-
         } else {
-
           log(">>>> Enabling strict SSL checking (turn off  in Dev Options if you can't connect)");
-
         }
       }
-
 
       /**
        * Checks if a complex object is empty
@@ -313,7 +301,6 @@ angular.module('zmApp.controllers')
         return true;
       }
 
-
       function clear_unsupported() {
         loginData.unsupported = {};
         return setLogin(loginData);
@@ -326,11 +313,10 @@ angular.module('zmApp.controllers')
       }
 
       function get_unsupported(p) {
-        return  p? loginData.unsupported[p]:loginData.unsupported;
+        return p ? loginData.unsupported[p] : loginData.unsupported;
       }
 
       function computeDeviceSize() {
-
         var pixelRatio = window.devicePixelRatio || 1;
         $rootScope.pixelRatio = pixelRatio;
         $rootScope.devWidth = ((window.innerWidth > 0) ? window.innerWidth : screen.width);
@@ -343,11 +329,7 @@ angular.module('zmApp.controllers')
         //$rootScope.devHeight *= pixelRatio;
         $rootScope.videoHeight = $rootScope.devHeight - 20;
         debug("resize/orient: " + $rootScope.devWidth + "(w) * " + $rootScope.devHeight+"(h)");
-        
-
       }
-
-      
 
       function getBandwidth() {
         // if mode is not on always return high
@@ -363,22 +345,14 @@ angular.module('zmApp.controllers')
         }
         // else return real state
 
-        var networkState = navigator.connection.type;
-        var strState;
-        switch (networkState) {
-
+        switch (navigator.connection.type) {
           case Connection.WIFI:
-            strState = "highbw";
-            break;
+            return "highbw";
           case Connection.ETHERNET:
-            strState = "highbw";
-            break;
+            return "highbw";
           default:
-            strState = "lowbw";
-            break;
-
+            return "lowbw";
         }
-        return strState;
       }
 
       //--------------------------------------------------------------------------
@@ -394,7 +368,6 @@ angular.module('zmApp.controllers')
             var regex3 = /&token=([^&]*)/g;
             var regex4 = /&auth=([^&]*)/g;
 
-
             //console.log ("VAL IS " + val);
             val = val.replace(regex1, "<password removed>");
             val = val.replace(regex2, "<password removed>");
@@ -409,18 +382,15 @@ angular.module('zmApp.controllers')
         }
       }
 
-
-      // custom caching function
-      // as native http doesn't cache
-
-      function delete_cache (key) {
+      // custom caching function as native http doesn't cache
+      function delete_cache(key) {
         return localforage.removeItem(key);
       }
 
       function delete_all_caches() {
         
-        debug ('CACHE: Clearing all unsupported flags');
-        debug ('CACHE: Flushing all network API caches...');
+        debug('CACHE: Clearing all unsupported flags');
+        debug('CACHE: Flushing all network API caches...');
 
         return clear_unsupported()
         .then ( function() {return localforage.removeItem('cached_monitors');})
@@ -430,14 +400,9 @@ angular.module('zmApp.controllers')
         .then ( function () {return localforage.removeItem('cached_timezone');})
         .then ( function () {return localforage.removeItem('cached_zmgroups');})
         .catch ( function (err) {debug ('Error removing all caches: '+JSON.stringify(err)); return ('error');});
-
-        
-        
       }
 
       function cache_or_http(url,key,doCrypt, expiry) {
-
-        
         if (!loginData.useAPICaching) {
           debug ('CACHE: Not being used, as it is disabled');
           return $http.get(url);
@@ -451,39 +416,35 @@ angular.module('zmApp.controllers')
         return localforage.getItem(key)
         .then (function (cache_data) {
             if (cache_data) {
-              debug ('CACHE: found for key: '+key+' with expiry of:'+cache_data.expiry+'s');
+              debug('CACHE: found for key: '+key+' with expiry of:'+cache_data.expiry+'s');
               data = cache_data.data;
               t = moment(cache_data.time);
-              diff = moment().diff(t,'seconds');        
-              if (diff >=cache_data.expiry )  {
-                debug ('CACHE: cached value for key:'+key+' has expired as '+diff+' >='+cache_data.expiry);
-                return localforage.removeItem (key)
-                .then (function() {
+              diff = moment().diff(t, 'seconds');        
+              if (diff >=cache_data.expiry) {
+                debug('CACHE: cached value for key:'+key+' has expired as '+diff+' >='+cache_data.expiry);
+                return localforage.removeItem(key)
+                .then(function() {
                   return cache_or_http(url, key, doCrypt, expiry);
-               
                 })
                 .catch (function(err) {
-                  debug ('CACHE: error deleting key, err:'+JSON.stringify(err)+' but still proceeding with another call to cache_or_http');
+                  debug('CACHE: error deleting key, err:'+JSON.stringify(err)+' but still proceeding with another call to cache_or_http');
                   return cache_or_http(url, key, doCrypt, expiry);
                 });
-              }
-              else {
+              } else {
                 debug ('CACHE: cached value for key:'+key+' is good as '+diff+' <'+cache_data.expiry);
               }
 
               //data = JSON.parse(data);
               if (doCrypt) {
-                debug ('CACHE: decryption requested');
+                debug('CACHE: decryption requested');
                 data = decrypt(data);
                 return (data);  
-                
               } else {
                 data = JSON.parse(data);
                 return (data);
               }
-            
             } else {
-              debug ('CACHE: NOT found for:'+key+ ' reverting to HTTP');
+              debug('CACHE: NOT found for:'+key+ ' reverting to HTTP');
               return $http.get(url)
               .then ( function (data) {
                 debug ('HTTP function in cache returned:'+(typeof data));
@@ -492,13 +453,11 @@ angular.module('zmApp.controllers')
                   'time': null,
                   'expiry': expiry
                 };
-                debug ('CACHE: storing key data in cache now, with expiry of '+expiry);
+                debug('CACHE: storing key data in cache now, with expiry of '+expiry);
                 if (doCrypt) {
-                  debug ('CACHE: encrypting request');
-                  var ct = encrypt(data);
-                  cache_entry.data = ct;
-                }
-                else {
+                  debug('CACHE: encrypting request');
+                  cache_entry.data = encrypt(data);
+                } else {
                   cache_entry.data = JSON.stringify(data);
                 }
                 cache_entry.time = moment().toString();
@@ -507,13 +466,11 @@ angular.module('zmApp.controllers')
                 .then (function() { return (data);});
                 
               })
-              .catch ( function (err) {
-                log ('CACHE: error with http get '+JSON.stringify(err));
+              .catch ( function(err) {
+                log('CACHE: error with http get '+JSON.stringify(err));
                 return (err);
-               
               });
-            }
-            
+            } // end if cache data
         })
         .catch ( function (err) {
           //debug ('cache_or_http error:'+JSON.stringify(err));
@@ -522,7 +479,6 @@ angular.module('zmApp.controllers')
         }) ;
         //debug ('returning promise');
         //return d.promise;
-    
       }
 
       function getZMState() {
@@ -536,12 +492,10 @@ angular.module('zmApp.controllers')
           */
           var currentState = 'unknown';
 
-          for (var i=0; i < data.states .length; i++ ) {
-         
-            var active = data.states[i].State.IsActive;
-            if (active == '1' ) {
+          for (var i=0; i < data.states.length; i++ ) {
+            if (data.states[i].State.IsActive == '1') {
               currentState = data.states[i].State.Name;
-             break; 
+              break; 
             }
           }
           if (loginData.currentZMState != currentState) {
@@ -553,8 +507,6 @@ angular.module('zmApp.controllers')
               //loginData.packeryPositionsArray = {};
               loginData.packeryPositions= undefined;
 
-              
-
               setLogin(loginData)
               .then (function(v) {
                 d.resolve(data);
@@ -562,9 +514,7 @@ angular.module('zmApp.controllers')
                 proceedWithFreshLogin(true);
                 return d.promise;
               });     
-        
             });
-         
           } else {
             debug ('ZM State has not changed, still at '+loginData.currentZMState);
             setLogin(loginData)
@@ -572,11 +522,10 @@ angular.module('zmApp.controllers')
               d.resolve(data);
               return d.promise;
             });
-           
           }
           return d.promise;
         }, function (err) {
-          debug ('Error parsing State API:'+JSON.stringify(err));
+          debug('Error parsing State API:'+JSON.stringify(err));
           d.resolve(err);
           return d.promise;
         });
@@ -643,7 +592,7 @@ angular.module('zmApp.controllers')
             d.resolve(true);
             return (d.promise);
           } else {
-            debug ('No groups found');
+            debug('No groups found');
             d.resolve(true);
             return (d.promise);
           }
@@ -659,7 +608,7 @@ angular.module('zmApp.controllers')
       function getZmsMultiPortSupport(forceReload) {
         var d = $q.defer();
         if (configParams.ZM_MIN_STREAMING_PORT == -1 || forceReload) {
-          log("Checking value of ZM_MIN_STREAMING_PORT for the first time");
+          debug("Checking value of ZM_MIN_STREAMING_PORT for the first time");
           var apiurl = loginData.apiurl;
           var myurl = apiurl + '/configs/viewByName/ZM_MIN_STREAMING_PORT.json?' + $rootScope.authSession;
           cache_or_http(myurl,'cached_multi_port', false, 3600*24)
@@ -670,13 +619,12 @@ angular.module('zmApp.controllers')
                 if (data.config && data.config.Value) {
                   configParams.ZM_MIN_STREAMING_PORT = data.config.Value;
                   setCurrentServerMultiPortSupported(true);
-                  log("Got min streaming port value of: " + configParams.ZM_MIN_STREAMING_PORT);
+                  debug("Got min streaming port value of: " + configParams.ZM_MIN_STREAMING_PORT);
                 } else {
                   setCurrentServerMultiPortSupported(false);
-                  log("ZM_MIN_STREAMING_PORT not configured, disabling");
+                  debug("ZM_MIN_STREAMING_PORT not configured, disabling");
                   configParams.ZM_MIN_STREAMING_PORT = 0;
                 }
-
 
                 d.resolve(configParams.ZM_MIN_STREAMING_PORT);
                 return (d.promise);
@@ -693,15 +641,11 @@ angular.module('zmApp.controllers')
             configParams.ZM_MIN_STREAMING_PORT);
           d.resolve(configParams.ZM_MIN_STREAMING_PORT);
           return (d.promise);
-
         }
         return (d.promise);
-
       }
 
       function proceedWithFreshLogin(noBroadcast) {
-
-     
         // recompute rand anyway so even if you don't have auth
         // your stream should not get frozen
         $rootScope.rand = Math.floor((Math.random() * 100000) + 1);
@@ -710,27 +654,19 @@ angular.module('zmApp.controllers')
         // console.log ("***** STATENAME IS " + statename);
   
         var d = $q.defer();
-              log("Doing fresh login to ZM");
+        log("Doing fresh login to ZM");
         var httpDelay = loginData.enableSlowLoading ? zm.largeHttpTimeout : zm.httpTimeout;
   
-      
-        str =  "<a style='color:white; text-decoration:none' href='#' ng-click='$root.cancelAuth()' <i class='ion-close-circled'></i>&nbsp;" + $translate.instant('kAuthenticating')+"</a>";
-        
-       
-  
-        if (str) {
-          $ionicLoading.show({
-            template: str,
-            noBackdrop: true,
-            duration: httpDelay
-          });
-        }
-  
+        str = "<a style='color:white; text-decoration:none' href='#' ng-click='$root.cancelAuth()' <i class='ion-close-circled'></i>&nbsp;" + $translate.instant('kAuthenticating')+"</a>";
+        $ionicLoading.show({
+          template: str,
+          noBackdrop: true,
+          duration: httpDelay
+        });
   
         //first login using new API
         $rootScope.authSession = '';
         var loginAPI = loginData.apiurl + '/host/login.json';
-      
   
         $http({
             method: 'post',
@@ -759,7 +695,6 @@ angular.module('zmApp.controllers')
               $ionicLoading.hide();
               var succ;
               try {
-  
                 succ = JSON.parse(textsucc.data);
   
                 if (!succ.version) {
@@ -781,7 +716,7 @@ angular.module('zmApp.controllers')
                   return d.promise;
                 }
                 debug("API based login returned. ");
-                console.log (JSON.stringify(succ));
+                console.log(JSON.stringify(succ));
                 setCurrentServerVersion(succ.version);
                 $ionicLoading.hide();
                 //$rootScope.loggedIntoZm = 1;
@@ -804,20 +739,17 @@ angular.module('zmApp.controllers')
                   tokenExpiryTimer = $timeout ( function () {
                     $rootScope.$broadcast('token-expiry');
                   }, succ.access_token_expires * 1000);
-                  
                 
                   loginData.refreshTokenExpires = moment.utc().add(succ.refresh_token_expires, 'seconds');
               
-                  log ("Current time is: UTC "+moment.utc().format("YYYY-MM-DD hh:mm:ss"));
-                  log ("New refresh token expires on: UTC "+loginData.refreshTokenExpires.format("YYYY-MM-DD hh:mm:ss"));
-                  log ("New access token expires on: UTC "+loginData.accessTokenExpires.format("YYYY-MM-DD hh:mm:ss"));
+                  log("Current time is: UTC "+moment.utc().format("YYYY-MM-DD hh:mm:ss"));
+                  log("New refresh token expires on: UTC "+loginData.refreshTokenExpires.format("YYYY-MM-DD hh:mm:ss"));
+                  log("New access token expires on: UTC "+loginData.accessTokenExpires.format("YYYY-MM-DD hh:mm:ss"));
                   setLogin(loginData);
-  
-                }
-                else {
+                } else {
                   if (succ.credentials != undefined) {
                     if (succ.credentials != '') {
-                      log ("Could not recover token details, trying old auth credentials");
+                      log("Could not recover token details, trying old auth credentials");
                       loginData.isTokenSupported = false;
                       setLogin(loginData);
                       $rootScope.authSession = "&" + succ.credentials;
@@ -826,40 +758,28 @@ angular.module('zmApp.controllers')
                           loginData.password;
                       }
                     } else {
-                      // incase auth is turned off, but user said
-                    // its on. 
+                      // incase auth is turned off, but user said its on. 
                       $rootScope.authSession="&nonauth=none";
                       debug ('Your auth seems to be turned off, but you said yes');
-                      
                     }
-                    
+                  } else {
+                    log("Neither token nor old cred worked. Seems like an error");
                   }
-                  else {
-                    log ("Neither token nor old cred worked. Seems like an error");
-                  }
-                }
-                
-  
+                }  // end if succ.refresh_token
                 
                 loginData.loginAPISupported = true;
                 setLogin(loginData);
-  
 
                 log("Stream authentication construction: " +
                   $rootScope.authSession);
   
                 log("Successfully logged into Zoneminder via API");
   
-  
-  
                 d.resolve("Login Success");
                 if (!noBroadcast) $rootScope.$broadcast('auth-success', succ);
                 return d.promise;
-  
               } catch (e) {
                 debug("Login API approach did not work...");
-              
-               
                 loginData.loginAPISupported = false;
                 loginData.isTokenSupported = false;
                 setLogin(loginData);
@@ -874,9 +794,7 @@ angular.module('zmApp.controllers')
                       return (d.promise);
                     });
                 return d.promise;
-  
               }
-
             },
             function (err) {
               //console.log("******************* API login error " + JSON.stringify(err));
@@ -896,39 +814,30 @@ angular.module('zmApp.controllers')
                     d.reject("Login Error");
                     return (d.promise);
                   });
-  
             }
           ); // post .then
   
         return d.promise;
-        
       }
 
     function loginWebScrape(noBroadcast) {
-     
       var d = $q.defer();
       if ($rootScope.userCancelledAuth) {
-        debug ('NVR loginWebScrape: User cancelled auth, not proceeding');
+        debug('NVR loginWebScrape: User cancelled auth, not proceeding');
         d.reject(true);
         return d.promise;
       }
       debug("Logging in using old web-scrape method");
 
       $ionicLoading.show({
-       
         template: "<a style='color:white; text-decoration:none' href='#' ng-click='$root.cancelAuth()' <i class='ion-close-circled'></i>&nbsp;" + $translate.instant('kAuthenticatingWebScrape')+"</a>",
         noBackdrop: true,
         duration: httpDelay
       });
 
-
-      
-         
-
       var httpDelay = loginData.enableSlowLoading ? zm.largeHttpTimeout : zm.httpTimeout;
       //NVR.debug ("*** AUTH LOGIN URL IS " + loginData.url);
       $http({
-
           method: 'post',
           timeout: httpDelay,
           //withCredentials: true,
@@ -940,9 +849,9 @@ angular.module('zmApp.controllers')
           },
           transformRequest: function (obj) {
             var str = [];
-            for (var p in obj)
-              str.push(encodeURIComponent(p) + "=" +
-                encodeURIComponent(obj[p]));
+            for (var p in obj) {
+              str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+            }
             var params = str.join("&");
             return params;
           },
@@ -965,15 +874,12 @@ angular.module('zmApp.controllers')
             // so we will check if the data has
             // <title>ZM - Login</title> -- it it does then its the login page
 
-            if (data.indexOf(zm.loginScreenString1) >=0) {
+            if (data.indexOf(zm.loginScreenString1) >= 0) {
               //eventServer.start();
               //$rootScope.loggedIntoZm = 1;
-
               log("zmAutologin successfully logged into Zoneminder");
               $rootScope.apiValid = true;
-
               // now go to authKey part, so don't return yet...
-
             } else //  this means login error
             {
               // $rootScope.loggedIntoZm = -1;
@@ -992,7 +898,6 @@ angular.module('zmApp.controllers')
             $rootScope.authSession = '';
             getAuthKey($rootScope.validMonitorId)
               .then(function (success) {
-
                   //console.log(success);
                   //console.log ("***** SETTING AUTHSESSION IN AUTHKEY"+success);
                   $rootScope.authSession = success;
@@ -1001,7 +906,6 @@ angular.module('zmApp.controllers')
                   d.resolve("Login Success");
                   $rootScope.$broadcast('auth-success', data);
                   return d.promise;
-
                 },
                 function (error) {
                   //console.log(error);
@@ -1011,9 +915,7 @@ angular.module('zmApp.controllers')
                   d.resolve("Login Success");
                   if (!noBroadcast) $rootScope.$broadcast('auth-success', data);
                 });
-
             return (d.promise);
-
           },
           function (error, status) {
 
@@ -1021,7 +923,6 @@ angular.module('zmApp.controllers')
             $ionicLoading.hide();
 
             //console.log("**** ZM Login FAILED");
-
             // FIXME: Is this sometimes results in null
 
             log("zmAutologin Error " + JSON.stringify(error) + " and status " + status);
@@ -1038,7 +939,6 @@ angular.module('zmApp.controllers')
       function getAuthKey(mid, ck) {
 
         var d = $q.defer();
-        var myurl;
 
         if (!loginData.isUseAuth) {
           $rootScope.authSession = "";
@@ -1052,20 +952,23 @@ angular.module('zmApp.controllers')
           return d.promise;
         }
 
-        if (loginData.currentServerVersion && (versionCompare(loginData.currentServerVersion, zm.versionWithLoginAPI) != -1 || loginData.loginAPISupported)) {
+        if (loginData.currentServerVersion
+          &&
+          (versionCompare(loginData.currentServerVersion, zm.versionWithLoginAPI) != -1 
+            ||
+            loginData.loginAPISupported)
+        ) {
 
-          myurl = loginData.apiurl + '/host/login.json';
+          const myurl = loginData.apiurl + '/host/login.json';
           debug("Server version " + loginData.currentServerVersion + " > 1.31.41, so using login API:" + myurl);
           $http.get(myurl)
             .then(function (s) {
-
                 debug("Credentials API returned: " + JSON.stringify(s));
                 if (!s.data || s.data.credentials == undefined) {
                   $rootScope.authSession = "";
                   d.resolve($rootScope.authSession);
                   debug("login() API Succeded, but did NOT return credentials key: " + JSON.stringify(s));
                   return d.promise;
-
                 } else {
                   if (s.data.credentials != '') {
                     $rootScope.authSession = "&" + s.data.credentials;
@@ -1073,8 +976,7 @@ angular.module('zmApp.controllers')
                       $rootScope.authSession = $rootScope.authSession +
                         loginData.password;
                     }
-                  }
-                  else {
+                  } else {
                     // incase auth is turned off, but user said
                     // its on. 
                     $rootScope.authSession="&nonauth=none";
@@ -1084,20 +986,16 @@ angular.module('zmApp.controllers')
                   d.resolve($rootScope.authSession);
                   return d.promise;
                 }
-
               },
               function (e) {
-
                 //console.log ("***** CLEARING AUTHSESSION IN GETCREDENTIALS");
                 $rootScope.authSession = "";
                 d.resolve($rootScope.authSession);
                 debug("AuthHash API Error: " + JSON.stringify(e));
                 return d.promise;
-
               }
             );
           return d.promise;
-
         }
         //old way without login API
 
@@ -1143,10 +1041,8 @@ angular.module('zmApp.controllers')
                   d.resolve(as);
                   return d.promise;
                 }
-
                 return (d.promise);
               }
-
             },
             function (error) {
               log("NVR: Error resolving auth key " + JSON.stringify(error));
@@ -1154,12 +1050,9 @@ angular.module('zmApp.controllers')
               return (d.promise);
             });
         return (d.promise);
-
       }
 
       function log(val, logtype) {
-
-
         if (loginData.enableLogs) {
           if (val !== undefined) {
             var regex1 = /"password":".*?"/g;
@@ -1167,13 +1060,11 @@ angular.module('zmApp.controllers')
             var regex3 = /&token=([^&]*)/g;
             var regex4 = /&auth=([^&]*)/g;
 
-
             //console.log ("VAL IS " + val);
             val = val.replace(regex1, "<password removed>");
             val = val.replace(regex2, "<password removed>");
             val = val.replace (regex3, "&token=<removed>");
             val = val.replace (regex4, "&auth=<removed>");
-
           }
           // make sure password is removed
           //"username":"zmninja","password":"xyz",
@@ -1219,47 +1110,37 @@ angular.module('zmApp.controllers')
                 monitors[m].Monitor.listDisplay = 'show';
                 //console.log("*************ENABLE NEW MONITOR");
               }
-
-
             }
-
-          }
+          } // end foreach monitor
 
         } else // if there are no packery positions, make sure all are displayed! 
         {
           debug("no packery profile, making sure monitors are show");
           for (var m1 = 0; m1 < monitors.length; m1++) {
             monitors[m1].Monitor.listDisplay = 'show';
-
           }
-
-
         }
-       
-      }
+      } // end function reloadMonitorDisplayStatus()
 
       function setLogin(newLogin) {
-
         // if we are here, we should remove cache
         loginData = angular.copy(newLogin);
        //console.log ('****** SET LOGIN:'+JSON.stringify(loginData));
         $rootScope.LoginData = loginData;
         serverGroupList[loginData.serverName] = angular.copy(loginData);
-        var ct = encrypt(serverGroupList);
   
-        return localforage.setItem("serverGroupList", ct)
+        return localforage.setItem("serverGroupList", encrypt(serverGroupList))
           .then(function () {
             return localforage.setItem("defaultServerName", loginData.serverName);
           })
           .then(function () {
-
             return localforage.removeItem("settings-temp-data");
           })
           .catch(function (err) {
             log("SetLogin localforage store error " + JSON.stringify(err));
             return ('error');
           });
-      }
+      } // end function setLogin(newLogin)
 
       //credit: https://gist.github.com/alexey-bass/1115557
       function versionCompare(left, right) {
@@ -1268,17 +1149,15 @@ angular.module('zmApp.controllers')
 
         var a = left.split('.');
         var b = right.split('.');
-        var i = 0;
         var len = Math.max(a.length, b.length);
 
-        for (; i < len; i++) {
+        for (var i=0; i < len; i++) {
           if ((a[i] && !b[i] && parseInt(a[i]) > 0) || (parseInt(a[i]) > parseInt(b[i]))) {
             return 1;
           } else if ((b[i] && !a[i] && parseInt(b[i]) > 0) || (parseInt(a[i]) < parseInt(b[i]))) {
             return -1;
           }
         }
-
         return 0;
       }
 
@@ -1312,7 +1191,6 @@ angular.module('zmApp.controllers')
           if (components.port) loginData.streamingurl = loginData.streamingurl + ":" + components.port;
           if (components.path) loginData.streamingurl = loginData.streamingurl + components.path;
 
-
           components = URI.parse(loginData.apiurl);
           loginData.apiurl = components.scheme + "://" + components.host;
           if (components.port) loginData.apiurl = loginData.apiurl + ":" + components.port;
@@ -1333,11 +1211,7 @@ angular.module('zmApp.controllers')
           $rootScope.basicAuthToken = btoa(loginData.basicAuthUser + ':' + loginData.basicAuthPassword);
           $rootScope.basicAuthHeader = 'Basic ' + $rootScope.basicAuthToken;
           debug("Basic authentication detected, constructing Authorization Header");
-
-          // console.log ("BASIC AUTH SET TO:"+$rootScope.basicAuthHeader);
-
         }
-
 
         if (typeof loginData.enableAlarmCount === 'undefined') {
           debug("enableAlarmCount does not exist, setting to true");
@@ -1413,16 +1287,12 @@ angular.module('zmApp.controllers')
           loginData.defaultPushSound = false;
         }
 
-
         //console.log("INIT SIMUL=" + loginData.disableSimulStreaming);
         //console.log("INIT PLATFORM IS=" + $rootScope.platformOS);
         if (typeof loginData.disableSimulStreaming == 'undefined') {
-
-
           loginData.disableSimulStreaming = false;
           //console.log("INIT DISABLING SIMUL:" + loginData.disableSimulStreaming);
         }
-
 
         if (typeof loginData.exitOnSleep == 'undefined') {
           debug("exitOnSleep does not exist. Setting to false");
@@ -1432,27 +1302,21 @@ angular.module('zmApp.controllers')
         if (typeof loginData.enableBlog == 'undefined') {
           debug("enableBlog does not exist. Setting to true");
           loginData.enableBlog = true;
-
         }
 
         if (typeof loginData.packeryPositionsArray == 'undefined') {
           debug("packeryPositionsArray does not exist. Setting to empty");
           loginData.packeryPositionsArray = {};
-
         }
-
 
         if (typeof loginData.packeryPositions == 'undefined') {
           debug("packeryPositions does not exist. Setting to empty");
           loginData.packeryPositions = "";
-
         }
-
    
         if (typeof loginData.use24hr == 'undefined') {
           //debug("use24hr does not exist. Setting to false");
           loginData.use24hr = false;
-
         }
 
         if (typeof timelineModalGraphType == 'undefined') {
@@ -1464,7 +1328,6 @@ angular.module('zmApp.controllers')
         if (typeof loginData.resumeDelay == 'undefined') {
           //debug("resumeDelay does not exist. Setting to 0");
           loginData.resumeDelay = 0;
-
         }
         // override resumeDelay - it was developed on a wrong assumption
         loginData.resumeDelay = 0;
@@ -1472,21 +1335,15 @@ angular.module('zmApp.controllers')
         if (typeof loginData.montageHistoryQuality == 'undefined') {
           debug("montageHistoryQuality does not exist. Setting to 50");
           loginData.montageHistoryQuality = "50";
-
         }
-
-
 
         if (typeof loginData.vibrateOnPush == 'undefined') {
           debug("vibrate on push not found, setting to true");
           loginData.vibrateOnPush = true;
-
         }
 
         if (typeof loginData.isFullScreen == 'undefined') {
-
           loginData.isFullScreen = false;
-
         }
 
         if (typeof loginData.reloadInMontage == 'undefined') {
