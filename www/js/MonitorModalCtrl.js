@@ -1328,34 +1328,27 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   }
 
 
-  $scope.constructSingleStream = function () {
-
-    var  ld = NVR.getLogin();
-
-    var scale = (currentStreamState == streamState.SNAPSHOT_LOWQUALITY) ? '10':$scope.quality;
-
-    var stream;
-    var fps =ld.singleliveFPS;
-    stream = $scope.monitor.Monitor.streamingURL +
+  $scope.constructSingleStream = function() {
+    var ld = NVR.getLogin();
+    var scale = (currentStreamState == streamState.SNAPSHOT_LOWQUALITY) ? '10' : $scope.quality;
+    var fps = ld.singleliveFPS;
+    var stream = $scope.monitor.Monitor.streamingURL +
       "/nph-zms?mode=" + getSingleStreamMode() +
       "&monitor=" + $scope.monitorId +
       "&scale=" + scale;
 
     if (fps) {
-      stream +='&maxfps='+fps;
+      stream += '&maxfps='+fps;
     }
-    stream += $rootScope.authSession +
-      appendSingleStreamConnKey();
+    stream += $rootScope.authSession + appendSingleStreamConnKey();
 
-      if (currentStreamState != streamState.SNAPSHOT_LOWQUALITY)
-        stream += "&rand=" + $rootScope.modalRand + "&buffer="+ld.liveStreamBuffer;
+    if (currentStreamState != streamState.SNAPSHOT_LOWQUALITY)
+      stream += "&rand=" + $rootScope.modalRand;
 
     //console.log ("STREAM="+stream);
 
-    if (stream) stream += NVR.insertSpecialTokens();
+    stream += NVR.insertSpecialTokens();
     return stream;
-
-
   };
 
 
@@ -1373,14 +1366,13 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   //reloaads mon - do we need it?
   //-------------------------------------------------------------
 
-  $scope.reloadView = function () {
+  $scope.reloadView = function() {
     NVR.log("Reloading view for modal view, recomputing rand");
     $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
     $scope.isModalActive = true;
   };
 
-  $scope.scaleImage = function () {
-
+  $scope.scaleImage = function() {
     $scope.imageFit = !$scope.imageFit;
     if ($scope.imageFit)
       $scope.aspectFit = "xMidYMid meet";
@@ -1413,7 +1405,6 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
       NVR.debug("Nullifying  " + element.src);
       element.src = "";
     }
-
   });
 
   $scope.$on('$ionicView.unloaded', function () {
