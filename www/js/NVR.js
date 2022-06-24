@@ -217,7 +217,6 @@ angular.module('zmApp.controllers')
         'kioskPassword': '',
         'useAPICaching': true,
         'pauseStreams': false,
-        'liveStreamBuffer': 10,
         'zmNinjaCustomId':undefined, // filled in init. custom header
         'obfuscationScheme': 'lzs', // or 'aes'
         'showAnimation': true,
@@ -1644,10 +1643,6 @@ angular.module('zmApp.controllers')
         if (typeof loginData.pauseStreams == 'undefined') {
           loginData.pauseStreams = false;
 
-        }
-
-        if (typeof loginData.liveStreamBuffer == 'undefined') {
-          loginData.liveStreamBuffer = 10;
         }
 
         if ((typeof loginData.zmNinjaCustomId == 'undefined') || (loginData.zmNinjaCustomId == '')) {
