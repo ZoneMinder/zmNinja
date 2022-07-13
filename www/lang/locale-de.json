@@ -90,8 +90,6 @@
     "kEnableStrictSSL"           :"Aktiviere strikten SSL Check",
     "kEnableThumbs"              :"Vorschau in Aufnahmenliste aktivieren",
     "kEnableThumbsSub"           :"(ZM 1.31 oder API-Update wird benötigt)",
-    "kEndOfLifeNotice"           :"Supportende",
-    "kEndOfLifeNoticeText"       :"Bitte beachte den Hinweis zum Supportende von zmNinja:",
     "kEnterPin"                  :"PIN eingeben",
     "kError"                     :"Fehler",
     "kErrorChangingMonitors"     :"Fehler beim speichern der Kameraeinstellungen. Bitte Logs überprüfen",
