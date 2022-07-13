@@ -6,7 +6,7 @@ new app names due to some app store policies.
 
 ![](https://github.com/zoneminder/zmNinja/blob/master/sample_images/zmn.png?raw=true "icon") 
 
-[zmNinja website](http://pliablepixels.github.io)
+[zmNinja website](http://zmninja.zoneminder.com)
 
 zmNinja is a multi platform (iOS, Android, Windows Desktop, Mac Desktop, Linux Desktop) client for ZoneMinder users.
 [ZoneMinder](http://www.zoneminder.com) is an incredible open source camera monitoring system and is used
