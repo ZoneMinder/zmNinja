@@ -2896,15 +2896,11 @@ angular.module('zmApp.controllers')
         },
 
         regenConnKeys: function (mon) {
-
-         return regenConnKeys (mon);
+          return regenConnKeys (mon);
         },
-
-      
 
         getMonitors: function (forceReload) {
           //console.log("** Inside ZMData getMonitors with forceReload=" + forceReload);
-
 
           $ionicLoading.show({
             template: $translate.instant('kLoadingMonitors'),
@@ -2926,36 +2922,34 @@ angular.module('zmApp.controllers')
             
             getZMState().then(function(data) {
               getZmsMultiPortSupport()
-              .then(function (zmsPort) {
+              .then(function(zmsPort) {
 
                 var controlURL = "";
 
                 debug("ZMS Multiport reported: " + zmsPort);
                 debug("Monitor URL to fetch is:" + myurl);
-                cache_or_http(myurl,'cached_monitors', true,3600*24)
+                cache_or_http(myurl, 'cached_monitors', true, 3600*24)
                 //$http.get(myurl /*,{timeout:15000}*/ )
-                  .then(function (data) {
+                  .then(function(data) {
                       debug("CACHE: cached monitor data type is:" + typeof data);
                       if (typeof data != 'object') {
-                        debug ('CACHE: This is an error situation as I did not get an object');
+                        debug('CACHE: This is an error situation as I did not get an object');
                         if (typeof data == 'string') {
-                          debug ('trying to force a JSON parse');
+                          debug('trying to force a JSON parse');
                           try {
                             data = JSON.parse(data);
-                          }
-                          catch (e) {
-                            debug ('Error force parsing data '+ JSON.stringify(e));
+                          } catch (e) {
+                            debug('Error force parsing data '+ JSON.stringify(e));
                           }
                         }
                       }
                       data = data.data;
                       if (data.monitors) monitors = data.monitors;
 
-
                       // Now let's make sure we remove repeating monitors
                       // may happen in groups case
 
-                      debug ("Before duplicate processing, we have: "+monitors.length+" monitors");
+                      debug("Before duplicate processing, we have: "+monitors.length+" monitors");
                       //console.log (JSON.stringify(monitors));
                       var monitorHash = {};
                       for (var mo in monitors) {
@@ -2982,7 +2976,7 @@ angular.module('zmApp.controllers')
                       debug("Inside getMonitors, will also regen connkeys");
                       debug("Now trying to get multi-server data, if present");
                       cache_or_http(apiurl + "/servers.json?" + $rootScope.authSession, 'cached_multi_servers', true, 3600*24)
-                        .then(function (data) {
+                        .then(function(data) {
                             data = data.data;
                             // We found a server list API, so lets make sure
                             // we get the hostname as it will be needed for playback
@@ -2997,10 +2991,9 @@ angular.module('zmApp.controllers')
                             }
                             debug("default multi-server protocol will be:" + multiserver_scheme);
 
-                            for (var i = 0; i < monitors.length; i++) {
-
+                            for (var i=0; i < monitors.length; i++) {
                                // zm 1.33.15 prefixes 'ROTATE_' to orientation
-                               monitors[i].Monitor.Orientation  = monitors[i].Monitor.Orientation.replace('ROTATE_','');
+                               monitors[i].Monitor.Orientation  = monitors[i].Monitor.Orientation.replace('ROTATE_', '');
 
                               var recordingType = '';
                               if (monitors[i].Monitor.SaveJPEGs > 0) {
@@ -3028,7 +3021,6 @@ angular.module('zmApp.controllers')
                                   serverFound = true;
                                   break;
                                 }
-
                               }
                               if (serverFound) {
                                 // we found a monitor using a multi-server
@@ -3045,16 +3037,12 @@ angular.module('zmApp.controllers')
                                 }
 
                                 //   debug("Monitor " + monitors[i].Monitor.Id + " has a recording server hostname of " + multiservers[j].Server.Hostname);
-
-
-
                                 // Now here is the logic, I need to retrieve serverhostname,
                                 // and slap on the host protocol and path. Meh.
 
                                 var s = URI.parse(loginData.streamingurl);
                                 var m = URI.parse(multiservers[j].Server.Hostname);
                                 var p = URI.parse(loginData.url);
-
 
                                 debug("recording server reported  is " + JSON.stringify(m));
                                 //debug("portal  parsed is " + JSON.stringify(p));
@@ -3065,10 +3053,7 @@ angular.module('zmApp.controllers')
                                 var baseurl = "";
                                 var streamingurl = "";
 
-
                                 st += (m.scheme ? m.scheme : p.scheme) + "://"; // server scheme overrides 
-
-
 
                                 // if server doesn't have a protocol, what we want is in path
                                 if (!m.host) {
@@ -3098,7 +3083,6 @@ angular.module('zmApp.controllers')
                                     var sport = parseInt(zmsPort) + parseInt(monitors[i].Monitor.Id);
                                     st = st + ':' + sport;
                                   }
-
                                 }
 
                                 baseurl = st;
@@ -3110,8 +3094,6 @@ angular.module('zmApp.controllers')
                                 streamingurl += (s.path ? s.path : p.path);
 
                                 //console.log ("STEP 3: ST="+st);
-
-
                                 //console.log ("----------STREAMING URL PARSED AS " + st);
 
                                 monitors[i].Monitor.streamingURL = st;
@@ -3168,13 +3150,12 @@ angular.module('zmApp.controllers')
                                 //console.log ("NO SERVER MATCH CONSTRUCTED STREAMING PATH="+st2);
                                 monitors[i].Monitor.baseURL = loginData.url;
                                 monitors[i].Monitor.imageMode = (versionCompare($rootScope.apiVersion, "1.30") == -1) ? "path" : "fid";
-
-
                               } // non multiserver end
-                            }
+                            } // end foreach monitor
+
                             // now get packery hide if applicable
                             reloadMonitorDisplayStatus();
-                            getZMGroups().then ( function (succ) {
+                            getZMGroups().then( function (succ) {
                               d.resolve(monitors);
                             return d.promise;
                             });
@@ -3205,9 +3186,6 @@ angular.module('zmApp.controllers')
                                 var sport = parseInt(zmsPort) + parseInt(monitors[i].Monitor.Id);
                                 st = st + ':' + sport;
                                 if (p.path) st += p.path;
-
-
-
                               }
 
                               monitors[i].Monitor.streamingURL = st;
@@ -3216,19 +3194,16 @@ angular.module('zmApp.controllers')
 
                               monitors[i].Monitor.imageMode = (versionCompare($rootScope.apiVersion, "1.30") == -1) ? "path" : "fid";
                               //debug("API " + $rootScope.apiVersion + ": Monitor " + monitors[i].Monitor.Id + " will use " + monitors[i].Monitor.imageMode + " for direct image access");
-
-                            }
+                            } // end foreach monitor
                             getZMGroups().then ( function (succ) {
                               d.resolve(monitors);
                             return d.promise;
                             });
                             return d.promise;
-
                           });
 
                       $ionicLoading.hide();
                       log("Monitor load was successful, loaded " + monitors.length + " monitors");
-
                     },
                     function (err) {
                       //console.log("HTTP Error " + err);
@@ -3247,7 +3222,6 @@ angular.module('zmApp.controllers')
               });
             });
       
-            
             return d.promise;
 
           } else // monitors are loaded
@@ -3281,13 +3255,12 @@ angular.module('zmApp.controllers')
             noBroadcast = obj.nobroadcast;
             tryAccess = obj.access;
             tryRefresh = obj.refresh;
-
           }
 
           var d = $q.defer();
         
-           // This is a good time to check if auth is used :-p
-           if (!loginData.isUseAuth) {
+          // This is a good time to check if auth is used :-p
+          if (!loginData.isUseAuth) {
             log("Auth is disabled, setting authSession to empty");
             $rootScope.apiValid = true;
             $rootScope.authSession = '';
@@ -3295,14 +3268,11 @@ angular.module('zmApp.controllers')
   
             if (!noBroadcast) $rootScope.$broadcast('auth-success', 'no auth');
             return (d.promise);
-  
           }
   
-  
           // lets first try tokens and stored tokens
-          if (loginData.isTokenSupported) 
-          {
-            log ("Detected token login supported");
+          if (loginData.isTokenSupported) {
+            log("Detected token login supported");
             var now = moment.utc();
             var diff_access = moment.utc(loginData.accessTokenExpires).diff(now, 'minutes');
             var diff_refresh = moment.utc(loginData.refreshTokenExpires).diff(now, 'minutes');
@@ -3315,17 +3285,18 @@ angular.module('zmApp.controllers')
                   tokenExpiryTimer = $timeout ( function () {
                     $rootScope.$broadcast('token-expiry');
                   }, diff_access * 60  * 1000);
-                  
-              
-              
               $rootScope.authSession = '&token='+loginData.accessToken;
               d.resolve("Login success via access token");
 //              console.log ("**************** TOKEN SET="+$rootScope.authSession);
               if (!noBroadcast) $rootScope.$broadcast('auth-success', ''  );
               return d.promise;
-            } 
-            // then see if we have at least 30 mins left for refresh token
-            else if (moment.utc(loginData.refreshTokenExpires).isAfter(now) &&  diff_refresh  >=zm.refreshTokenLeewayMin && tryRefresh) {
+            } else if (
+              moment.utc(loginData.refreshTokenExpires).isAfter(now)
+              &&
+              (diff_refresh >=zm.refreshTokenLeewayMin)
+              &&
+              tryRefresh) {
+              // then see if we have at least 30 mins left for refresh token
               log ("Refresh token still has "+diff_refresh+" minutes left, using it");
               var loginAPI = loginData.apiurl + '/host/login.json?token='+loginData.refreshToken;
               $http({
@@ -3337,28 +3308,32 @@ angular.module('zmApp.controllers')
                 succ = succ.data;
                 if (succ.access_token) {
 
-                 // console.log ("**************** TOKEN SET="+succ.access_token);
                   $rootScope.authSession = '&token='+succ.access_token;
-                  log ("New access token retrieved: ..."+succ.access_token.substr(-5));
+
+                  // Icon: I think the -5 is to make the logged token unusable
+                  log("New access token retrieved: ..."+succ.access_token.substr(-5));
                   loginData.accessToken = succ.access_token;
-                  loginData.accessTokenExpires = moment.utc().add(succ.access_token_expires,'seconds');
-                  //succ.access_token_expires = 30;
+                  loginData.accessTokenExpires = moment.utc().add(succ.access_token_expires, 'seconds');
                   $rootScope.tokenExpires = succ.access_token_expires;
-                  log ('----> Setting token re-login after '+succ.access_token_expires+' seconds');
+
+                  log('----> Setting token re-login after '+succ.access_token_expires+'-100 seconds');
+                  // Icon: We actually want to get a new token BEFORE this one expires in order to avoid failed login in logs.
+                  // So subtract 100 seconds.
+                  if (succ.access_token_expires > 100) succ.access_token_expires -= 100;
+
                   if (tokenExpiryTimer) $timeout.cancel(tokenExpiryTimer);
-                  tokenExpiryTimer = $timeout ( function () {
+                  tokenExpiryTimer = $timeout( function() {
                     $rootScope.$broadcast('token-expiry');
                   }, succ.access_token_expires * 1000);
-                  log ("Current time is: UTC "+moment.utc().format("YYYY-MM-DD hh:mm:ss"));
-                  log ("New access token expires on: UTC "+loginData.accessTokenExpires.format("YYYY-MM-DD hh:mm:ss"));
-                  log ("New access token expires on:"+loginData.accessTokenExpires.format("YYYY-MM-DD hh:mm:ss"));
+
+                  log("Current time is: UTC "+moment.utc().format("YYYY-MM-DD hh:mm:ss"));
+                  log("New access token expires on: UTC "+loginData.accessTokenExpires.format("YYYY-MM-DD hh:mm:ss"));
                   loginData.isTokenSupported = true;
                   setLogin(loginData);
                   d.resolve("Login success via refresh token");
-                  if (!noBroadcast) $rootScope.$broadcast('auth-success', ''  );
+                  if (!noBroadcast) $rootScope.$broadcast('auth-success', '');
                   return d.promise;
-                }
-                else {
+                } else {
                   log ('ERROR:Trying to refresh with refresh token:'+JSON.stringify(succ));
                   return proceedWithFreshLogin(noBroadcast)
                   .then (function (succ) { 
@@ -3369,7 +3344,6 @@ angular.module('zmApp.controllers')
                     d.resolve(err); 
                     return (d.promise);
                   });
-  
                 }
               },
               function (err) {
