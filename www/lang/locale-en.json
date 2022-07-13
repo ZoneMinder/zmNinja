@@ -90,8 +90,6 @@
     "kEnableStrictSSL"           :"Enable strict SSL check",
     "kEnableThumbs"              :"Enable thumbnails in events list",
     "kEnableThumbsSub"           :"(needs ZM 1.31 or API update)",
-    "kEndOfLifeNotice"           :"End of Life Notice",
-    "kEndOfLifeNoticeText"       :"Please read zmNinja End of Life Notice here:",
     "kEnterPin"                  :"Enter PIN",
     "kError"                     :"Error",
     "kErrorChangingMonitors"     :"Error changing monitors. Please check logs",
