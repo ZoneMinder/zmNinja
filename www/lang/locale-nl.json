@@ -90,8 +90,6 @@
     "kEnableStrictSSL"           :"SSL controle strikt toepassen",
     "kEnableThumbs"              :"Gebruik thumbnails in gebeurtenissenlijst",
     "kEnableThumbsSub"           :"(heeft ZM 1.31 or API update nodig)",
-    "kEndOfLifeNotice"           :"Kennisgeving einde levensduur",
-    "kEndOfLifeNoticeText"       :"Lees zmNinja kennisgeving einde levensduur hier:",
     "kEnterPin"                  :"PIN invoeren",
     "kError"                     :"Fout",
     "kErrorChangingMonitors"     :"Fout tijdens wisselen monitors. Kijk logs na",
