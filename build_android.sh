@@ -1,5 +1,5 @@
 #!/bin/bash
-SDK_VERSION='30.0.2'
+SDK_VERSION='32.0.0'
 
 
 build_debug() {
@@ -15,7 +15,6 @@ build_debug() {
 
 build_release() {
         echo "*********** Building Release Build **************"
-        echo "----> Only building native. Not building crosswalk anymore due to compatibility issues <----------"
         # App signining credentials in this file
         NINJAKEYSTORE=~/personal/zmninja_keys/zmNinja.keystore
 
@@ -37,26 +36,14 @@ build_release() {
 
         ############ Native web view build ###############################
 
-            echo "${ver}: Building Release mode for android 5+..."
+            echo "${ver}: Building Release mode for android..."
             echo "--------------------------------------------"
-            
-        #    No longer needed as we are not supporting Xwalk
-        #    echo "Removing android and re-adding..."
-        #    cordova platform remove android
-        #    cordova platform add android@6.4.0
 
-           #clean up past build stuff
-        #    echo "Adding default browser..."
-        #    cordova plugin remove cordova-plugin-crosswalk-webview
-
-            # use the right plugin for SSL certificate mgmt
-        #    cordova plugin remove cordova-plugin-crosswalk-certificate-pp-fork
-        #    cordova plugin add cordova-plugin-certificates
             cp "$NINJAKEYSTORE" platforms/android/
 
             # Make sure native builds are only deployed in devices >= Android 5
             # minSdk and targetSdk version are in config.xml
-            cordova build android --release --  --versionCode=${ver} 
+            cordova build android --release --  --versionCode=${ver}
 
             # copy build to release folder and sign
             cp platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk release_files/android-release-unsigned.apk
@@ -71,7 +58,7 @@ build_release() {
             fi
 
             $ANDROID_SDK_ROOT/build-tools/${SDK_VERSION}/zipalign -v 4 android-release-unsigned.apk zmNinja.apk
-            rm -f android-release-unsigned.apk 
+            rm -f android-release-unsigned.apk
             cd ..
 
          # Do a phone perm check
@@ -109,13 +96,13 @@ case $key in
     shift # past argument
     ;;
 esac
-done  
+done
 
 ./electron_js/sync_versions.sh
 
 APPVER=`cat config.xml | grep "<widget" | sed -n 's/.*version="\([^"]*\).*/\1/p'`
 # multipleApk adds 2 and 4 in Xwalk builds for arm and x86 respectively
-ver_pre5=${APPVER//.} 
+ver_pre5=${APPVER//.}
 ver=${APPVER//.}9
 
 
@@ -144,4 +131,4 @@ cordova plugin remove cordova-plugin-certificates-pp-fork > /dev/null 2>&1
 
 echo "If you faced DEX etc goofy errors, cd platforms/android && gradle clean or try removing/adding android"
 
-  
+
