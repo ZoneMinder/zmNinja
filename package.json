@@ -144,7 +144,7 @@
     "bower": "^1.8.12",
     "cordova-plugin-firebasex": "^10.2.0",
     "dotenv": "^8.2.0",
-    "electron": "^11.2.3",
+    "electron": "^18.3.7",
     "electron-builder": "^22.10.5",
     "electron-cli": "^0.2.8",
     "electron-notarize": "^1.0.0",
