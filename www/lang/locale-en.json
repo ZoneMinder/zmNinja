@@ -16,7 +16,7 @@
     "kApplyingChanges"           :"Applying changes. Please wait",
     "kArrangingImages"           :"arranging images",
     "kAt"                        :"at",
-    "kAuthHashDisabled"          :" AUTH_HASH_LOGINS needs to be enabled to display images. Please restart ZM afer enabling it.",
+    "kAuthHashDisabled"          :"AUTH_HASH_LOGINS needs to be enabled to display images. Please restart ZM after enabling it.",
     "kAuthSuccess"               :"authentication success",
     "kAuthenticating"            :"authenticating",
     "kAuthenticatingWebScrape"   :"authenticating via web scrape",
