@@ -1461,6 +1461,7 @@ angular.module('zmApp', [
                 NVR.debug("Not changing bandwidth state, as auto change is not on");
               }
               NVR.log("Your network is online, re-authenticating");
+              NVR.startSSHConnection();
               zmAutoLogin.doLoginNoLogout($translate.instant('kReAuthenticating'));
     
 

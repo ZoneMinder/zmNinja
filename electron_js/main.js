@@ -1,10 +1,10 @@
 const electron = require('electron');
 const windowStateKeeper = require('electron-window-state');
-const {app, globalShortcut, Menu} = electron;
+const {app, globalShortcut, Menu, ipcMain} = electron;
 const {dialog} = require('electron')
 const path = require('path');
 const url = require('url');
-
+const {connect_ssh, generate_and_store_keypair, get_event_hook, get_public_key} = require('ssh_tunnel_proxy');
 
 // Module to create native browser window.
 const {BrowserWindow} = electron;
@@ -12,7 +12,21 @@ var isFs = false;
 var isProxy = false;
 var argv = require('minimist')(process.argv.slice(1));
 
+ipcMain.on('connect_ssh_sync', async function(event,opts) {
 
+  // only allow connection on remote server to system ports http,https,ssh and user ports >1023
+  const port_whitelist = {
+    80:true,
+    443:true,
+    22:true
+  }
+  await connect_ssh(opts, port_whitelist);
+  event.returnValue = 'connected';
+});
+ipcMain.on("generate_keypair", async (event, ...args) => await generate_and_store_keypair(...args));
+ipcMain.on("get_public_key", async (event, ...args) => await get_public_key(...args));
+
+const ssh_event_hook = get_event_hook();
 
 console.log ("ARGV="+JSON.stringify(argv));
 
@@ -66,7 +80,10 @@ function createAlternateWindow() {
     width: 800,
     height: 800,
     icon: path.join(__dirname, '/../resources/icon.png'),
-    webPreferences:{nodeIntegration:false}});
+    webPreferences:{
+      nodeIntegration:false,
+      preload: path.join(__dirname, 'preload.js')
+    }});
 
     console.log ("startUrl");
     const startUrl = process.env.ELECTRON_START_URL || url.format({
@@ -111,22 +128,32 @@ function createWindow() {
       //file: 'main.json',
       defaultWidth: 1000,
       defaultHeight: 800,
-      webPreferences:{nodeIntegration:false}
-
-   });
-  win = new BrowserWindow({
+      webPreferences:{
+        nodeIntegration:false
+      }});
+    win = new BrowserWindow({
         x: mainWindowState.x,
         y: mainWindowState.y,
         width: mainWindowState.width,
         height: mainWindowState.height,
         icon: path.join(__dirname, '/../resources/icon.png'),
-        webPreferences:{nodeIntegration:false}});
-//
+        webPreferences:{
+          nodeIntegration:false,
+          preload: path.join(__dirname, 'preload.js')
+        }});
+
+        ssh_event_hook.on('status',(...args)=>{
+          win.webContents.send('ssh_status',...args);
+        });
+        ssh_event_hook.on('debug',(...args)=>{
+          win.webContents.send('ssh_debug',...args);
+        });
+        ssh_event_hook.on('error',(...args)=>{
+          win.webContents.send('ssh_error',...args);
+        });
+        
+        //
     console.log (path.join(__dirname, '/../resources/icon.png'));
-
-
-
-
   /*  win.webContents.session.webRequest.onHeadersReceived({}, (d, c) => {
     if(d.responseHeaders['x-frame-options'] || d.responseHeaders['X-Frame-Options']){
         delete d.responseHeaders['x-frame-options'];
@@ -136,8 +163,6 @@ function createWindow() {
   });*/
 
   mainWindowState.manage(win);
-
-
 
   // fs will be arg 1 if its not run in electron debug mode
   if (argv.fs)
@@ -152,11 +177,13 @@ function createWindow() {
        win.webContents.session.setProxy({proxyRules:argv.proxy}, function() {});
   }
 
-  if (argv.debug) {
+  if (argv['inspect'] || argv['inspect-brk']) {
     // Open the DevTools.
+    console.log('running in debug mode')
     win.webContents.openDevTools();
+    app.commandLine.appendSwitch('remote-debugging-port', '8315')
   }
-  //win.webContents.openDevTools();
+
   // and load the index.html of the app.
 
   const startUrl = process.env.ELECTRON_START_URL || url.format({
@@ -302,7 +329,6 @@ console.log ("Setting uncaught exception handler...");
 process.on('uncaughtException', function (err) {
   console.log("***WHOOPS TIME****"+err);
 });
-
 
 console.log ("will-quit");
 app.on('will-quit', () => {
