@@ -1,7 +1,7 @@
 {
   "name": "zmninjapro",
   "description": "Home security mobile app for ZoneMinder",
-  "version":"1.6.010",
+  "version": "1.6.010",
   "displayName": "zmNinja",
   "author": "Pliable Pixels",
   "license": "custom see LICENSE.md",
@@ -145,7 +145,8 @@
     "regexp.prototype.flags": "^1.3.1",
     "sass": "^1.57.1",
     "save-dev": "^0.0.1-security",
-    "source-map-support": "^0.5.21"
+    "source-map-support": "^0.5.21",
+    "ssh_tunnel_proxy": "^1.0.0"
   },
   "devDependencies": {
     "@ionic/v1-toolkit": "^1.0.22",
