@@ -685,23 +685,16 @@ angular.module('zmApp.controllers')
         }
 
         // initialize ssh message handlers
-        sshModule.ssh_status((event, msg, status,data) => {
-          //log(msg+' status:'+status+' data:'+data);
-          switch (status) {
-            case 'ready':
-              const kmsg = 'SSH tunnel to ';
-              const msg = kmsg + loginData.serverName+' at '+data;
-              debug(msg);
-              $ionicLoading.show({'template':msg,'duration':1500,showBackdrop: false});
-              break;
-            case 'listening':
-              break;
-          }
+        sshModule.ready((event, data) => {
+            const kmsg = 'SSH tunnel to ';
+            const msg = kmsg + loginData.serverName+' ready';
+            debug(msg);
+            $ionicLoading.show({'template':msg,'duration':1500,showBackdrop: false});
         });
-        sshModule.ssh_debug((event,msg)=>{
+        sshModule.debug((event,msg)=>{
           debug(msg);
         })
-        sshModule.ssh_error((event,err)=>{
+        sshModule.error((event,err)=>{
           displayBanner('error',['SSH error:'+err]);
           debug(err);
         });
