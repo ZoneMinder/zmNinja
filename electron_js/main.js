@@ -4,7 +4,6 @@ const {app, globalShortcut, Menu, ipcMain} = electron;
 const {dialog} = require('electron')
 const path = require('path');
 const url = require('url');
-const {connect_ssh, generate_and_store_keypair, get_event_hook, get_public_key} = require('ssh_tunnel_proxy');
 
 // Module to create native browser window.
 const {BrowserWindow} = electron;
@@ -12,21 +11,6 @@ var isFs = false;
 var isProxy = false;
 var argv = require('minimist')(process.argv.slice(1));
 
-ipcMain.on('connect_ssh_sync', async function(event,opts) {
-
-  // only allow connection on remote server to system ports http,https,ssh and user ports >1023
-  const port_whitelist = {
-    80:true,
-    443:true,
-    22:true
-  }
-  await connect_ssh(opts, port_whitelist);
-  event.returnValue = 'connected';
-});
-ipcMain.on("generate_keypair", async (event, ...args) => await generate_and_store_keypair(...args));
-ipcMain.on("get_public_key", async (event, ...args) => await get_public_key(...args));
-
-const ssh_event_hook = get_event_hook();
 
 console.log ("ARGV="+JSON.stringify(argv));
 
@@ -64,7 +48,44 @@ if (!gotTheLock) {
   })
 }
 
+async function init_sshTunnelProxy(win) {
+
+  const SSHTunnelProxy = require('ssh_tunnel_proxy');
+  const sshTunnelProxy = new SSHTunnelProxy();
   
+  ipcMain.on('connect_ssh_sync', async function(event,opts) {
+    // only allow connection on remote server to system ports http,https,ssh and user ports >1023
+    const portWhitelist = {
+      80:true,
+      443:true,
+      22:true
+    }
+    await sshTunnelProxy.connectSSH(opts, portWhitelist);
+    event.returnValue = 'connected';
+  });
+
+  ipcMain.on("generate_keypair", async (event, ...args) => await sshTunnelProxy.generateAndStoreKeypair(...args));
+
+  ipcMain.on("get_public_key", async (event, ...args) => await sshTunnelProxy.getPublicKey(...args));
+
+  ipcMain.on("network_online", (event, ...args) => sshTunnelProxy.onNetworkOnline(...args));
+
+  ipcMain.on("network_offline", (event, ...args) => sshTunnelProxy.onNetworkOffline(...args));
+
+  sshTunnelProxy.on('ready',(...args)=>{
+    win.webContents.send('ready',...args);
+  });
+
+  sshTunnelProxy.on('debug',(...args)=>{
+    win.webContents.send('debug',...args);
+  });
+
+  sshTunnelProxy.on('error',(...args)=>{
+    win.webContents.send('error',...args);
+  });
+
+};
+
 function newWindow() {
   createAlternateWindow();
 }
@@ -142,15 +163,7 @@ function createWindow() {
           preload: path.join(__dirname, 'preload.js')
         }});
 
-        ssh_event_hook.on('status',(...args)=>{
-          win.webContents.send('ssh_status',...args);
-        });
-        ssh_event_hook.on('debug',(...args)=>{
-          win.webContents.send('ssh_debug',...args);
-        });
-        ssh_event_hook.on('error',(...args)=>{
-          win.webContents.send('ssh_error',...args);
-        });
+    init_sshTunnelProxy(win);
         
         //
     console.log (path.join(__dirname, '/../resources/icon.png'));
