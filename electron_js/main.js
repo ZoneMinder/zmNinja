@@ -50,7 +50,7 @@ if (!gotTheLock) {
 
 async function init_sshTunnelProxy(win) {
 
-  const SSHTunnelProxy = require('ssh_tunnel_proxy');
+  const { SSHTunnelProxy } = require('ssh_tunnel_proxy');
   const sshTunnelProxy = new SSHTunnelProxy();
   
   ipcMain.on('connect_ssh_sync', async function(event,opts) {
@@ -64,25 +64,19 @@ async function init_sshTunnelProxy(win) {
     event.returnValue = 'connected';
   });
 
-  ipcMain.on("generate_keypair", async (event, ...args) => await sshTunnelProxy.generateAndStoreKeypair(...args));
+  ipcMain.on('generate_keypair', async (event, ...args) => await sshTunnelProxy.generateAndStoreKeypair(...args));
 
-  ipcMain.on("get_public_key", async (event, ...args) => await sshTunnelProxy.getPublicKey(...args));
+  ipcMain.on('get_public_key', async (event, ...args) => await sshTunnelProxy.getPublicKey(...args));
 
-  ipcMain.on("network_online", (event, ...args) => sshTunnelProxy.onNetworkOnline(...args));
+  ipcMain.on('network_online', (event, ...args) => sshTunnelProxy.onNetworkOnline(...args));
 
-  ipcMain.on("network_offline", (event, ...args) => sshTunnelProxy.onNetworkOffline(...args));
+  ipcMain.on('network_offline', (event, ...args) => sshTunnelProxy.onNetworkOffline(...args));
 
-  sshTunnelProxy.on('ready',(...args)=>{
-    win.webContents.send('ready',...args);
-  });
+  sshTunnelProxy.on('ready',(...args) => win.webContents.send('ready',...args));
 
-  sshTunnelProxy.on('debug',(...args)=>{
-    win.webContents.send('debug',...args);
-  });
+  sshTunnelProxy.on('debug',(...args) => win.webContents.send('debug',...args));
 
-  sshTunnelProxy.on('error',(...args)=>{
-    win.webContents.send('error',...args);
-  });
+  sshTunnelProxy.on('error',(...args) => win.webContents.send('error',...args));
 
 };
 
