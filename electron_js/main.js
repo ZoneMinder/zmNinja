@@ -72,7 +72,7 @@ async function init_sshTunnelProxy(win) {
 
   ipcMain.on('network_offline', (event, ...args) => sshTunnelProxy.onNetworkOffline(...args));
 
-  sshTunnelProxy.on('ready',(...args) => win.webContents.send('ready',...args));
+  sshTunnelProxy.on('ssh_tunnel_ready',(...args) => win.webContents.send('ready',...args));
 
   sshTunnelProxy.on('debug',(...args) => win.webContents.send('debug',...args));
 
