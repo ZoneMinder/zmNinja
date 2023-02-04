@@ -1,7 +1,7 @@
 {
   "name": "zmninjapro",
   "description": "Home security mobile app for ZoneMinder",
-  "version":"1.6.010",
+  "version": "1.6.010",
   "displayName": "zmNinja",
   "author": "Pliable Pixels",
   "license": "custom see LICENSE.md",
@@ -146,7 +146,7 @@
     "sass": "^1.57.1",
     "save-dev": "^0.0.1-security",
     "source-map-support": "^0.5.21",
-    "ssh_tunnel_proxy": "^1.2.5"
+    "ssh_tunnel_proxy": "^1.2.9"
   },
   "devDependencies": {
     "@electron/rebuild": "^3.2.10",
@@ -183,6 +183,9 @@
     "productName": "zmninja-pro",
     "compression": "normal",
     "asar": true,
+    "asarUnpack": [
+      "node_modules/ssh_tunnel_proxy"
+    ],
     "afterSign": "electron_js/notarize.js",
     "directories": {
       "buildResources": "electron_js/icons"
