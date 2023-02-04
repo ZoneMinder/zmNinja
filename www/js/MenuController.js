@@ -134,14 +134,12 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
 
     }
 
-
     if (window.cordova) {
 
       if (loginData.isUseBasicAuth) {
         NVR.debug("Cordova HTTP: configuring basic auth");
         cordova.plugin.http.useBasicAuth(loginData.basicAuthUser, loginData.basicAuthPassword);
       }
-
       if (!loginData.enableStrictSSL) {
 
         //alert("Enabling insecure SSL");

@@ -1,17 +1,15 @@
 const electron = require('electron');
 const windowStateKeeper = require('electron-window-state');
-const {app, globalShortcut, Menu} = electron;
+const {app, globalShortcut, Menu, ipcMain} = electron;
 const {dialog} = require('electron')
 const path = require('path');
 const url = require('url');
-
 
 // Module to create native browser window.
 const {BrowserWindow} = electron;
 var isFs = false;
 var isProxy = false;
 var argv = require('minimist')(process.argv.slice(1));
-
 
 
 console.log ("ARGV="+JSON.stringify(argv));
@@ -50,7 +48,38 @@ if (!gotTheLock) {
   })
 }
 
+async function init_sshTunnelProxy(win) {
+
+  const { SSHTunnelProxy } = require('ssh_tunnel_proxy');
+  const sshTunnelProxy = new SSHTunnelProxy();
   
+  ipcMain.on('connect_ssh_sync', async function(event,opts) {
+    // only allow connection on remote server to system ports http,https,ssh and user ports >1023
+    const portWhitelist = {
+      80:true,
+      443:true,
+      22:true
+    }
+    await sshTunnelProxy.connectSSH(opts, portWhitelist);
+    event.returnValue = 'connected';
+  });
+
+  ipcMain.on('generate_keypair', async (event, ...args) => await sshTunnelProxy.generateAndStoreKeypair(...args));
+
+  ipcMain.on('get_public_key', async (event, ...args) => await sshTunnelProxy.getPublicKey(...args));
+
+  ipcMain.on('network_online', (event, ...args) => sshTunnelProxy.onNetworkOnline(...args));
+
+  ipcMain.on('network_offline', (event, ...args) => sshTunnelProxy.onNetworkOffline(...args));
+
+  sshTunnelProxy.on('ssh_tunnel_ready',(...args) => win.webContents.send('ready',...args));
+
+  sshTunnelProxy.on('debug',(...args) => win.webContents.send('debug',...args));
+
+  sshTunnelProxy.on('error',(...args) => win.webContents.send('error',...args));
+
+};
+
 function newWindow() {
   createAlternateWindow();
 }
@@ -66,7 +95,10 @@ function createAlternateWindow() {
     width: 800,
     height: 800,
     icon: path.join(__dirname, '/../resources/icon.png'),
-    webPreferences:{nodeIntegration:false}});
+    webPreferences:{
+      nodeIntegration:false,
+      preload: path.join(__dirname, 'preload.js')
+    }});
 
     console.log ("startUrl");
     const startUrl = process.env.ELECTRON_START_URL || url.format({
@@ -111,22 +143,24 @@ function createWindow() {
       //file: 'main.json',
       defaultWidth: 1000,
       defaultHeight: 800,
-      webPreferences:{nodeIntegration:false}
-
-   });
-  win = new BrowserWindow({
+      webPreferences:{
+        nodeIntegration:false
+      }});
+    win = new BrowserWindow({
         x: mainWindowState.x,
         y: mainWindowState.y,
         width: mainWindowState.width,
         height: mainWindowState.height,
         icon: path.join(__dirname, '/../resources/icon.png'),
-        webPreferences:{nodeIntegration:false}});
-//
+        webPreferences:{
+          nodeIntegration:false,
+          preload: path.join(__dirname, 'preload.js')
+        }});
+
+    init_sshTunnelProxy(win);
+        
+        //
     console.log (path.join(__dirname, '/../resources/icon.png'));
-
-
-
-
   /*  win.webContents.session.webRequest.onHeadersReceived({}, (d, c) => {
     if(d.responseHeaders['x-frame-options'] || d.responseHeaders['X-Frame-Options']){
         delete d.responseHeaders['x-frame-options'];
@@ -136,8 +170,6 @@ function createWindow() {
   });*/
 
   mainWindowState.manage(win);
-
-
 
   // fs will be arg 1 if its not run in electron debug mode
   if (argv.fs)
@@ -152,11 +184,13 @@ function createWindow() {
        win.webContents.session.setProxy({proxyRules:argv.proxy}, function() {});
   }
 
-  if (argv.debug) {
+  if (argv['inspect'] || argv['inspect-brk']) {
     // Open the DevTools.
+    console.log('running in debug mode')
     win.webContents.openDevTools();
+    app.commandLine.appendSwitch('remote-debugging-port', '8315')
   }
-  //win.webContents.openDevTools();
+
   // and load the index.html of the app.
 
   const startUrl = process.env.ELECTRON_START_URL || url.format({
@@ -302,7 +336,6 @@ console.log ("Setting uncaught exception handler...");
 process.on('uncaughtException', function (err) {
   console.log("***WHOOPS TIME****"+err);
 });
-
 
 console.log ("will-quit");
 app.on('will-quit', () => {

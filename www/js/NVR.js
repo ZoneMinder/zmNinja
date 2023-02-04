@@ -21,7 +21,7 @@ angular.module('zmApp.controllers')
         DO NOT TOUCH zmAppVersion
         It is changed by sync_version.sh
       */
-      var zmAppVersion = "1.6.009";
+      var zmAppVersion = "1.6.010";
      
       var isBackground = false;
       var justResumed = false;
@@ -128,6 +128,14 @@ angular.module('zmApp.controllers')
         'keepAwake': true, // don't dim/dim during live view
         'isUseAuth': true, // true if user wants ZM auth
         'isUseBasicAuth': false,
+        'isUseSSH': false,
+        'sshUser':"",
+        'sshPassword':"",
+        'sshHostname':"",
+        'sshHostport':"",
+        'sshLocalforward':"",
+        'sshPublicKey':"",
+        'NgrokApiKey':"",
         'basicAuthUser': '',
         'basicAuthPassword': '',
         'isUseEventServer': false, // true if you configure the websocket event server
@@ -239,6 +247,11 @@ angular.module('zmApp.controllers')
         'ZM_MIN_STREAMING_PORT': '-1'
       };
 
+      const sshServiceName = 'zmNinja';
+      if ( ionic.Platform.platforms.includes('browser')) {
+        document.addEventListener('resume', resumeAfterSleep);
+      }
+
       /**
        * Allows/Disallows self signed certs
        * 
@@ -251,6 +264,8 @@ angular.module('zmApp.controllers')
           debug("Cordova HTTP: configuring basic auth");
           cordova.plugin.http.useBasicAuth(loginData.basicAuthUser, loginData.basicAuthPassword);
         }
+        // sshtodo: setup cordova plugin for usessh
+
         var cid = loginData.zmNinjaCustomId.replace('%APPVER%',zmAppVersion);
         debug("Setting cordova header X-ZmNinja to "+cid);
         // setup custom header
@@ -359,9 +374,9 @@ angular.module('zmApp.controllers')
       //--------------------------------------------------------------------------
 
       // separate out a debug so we don't do this if comparison for normal logs
-      function debug(val) {
+      var debug = function(val) {
         if (loginData.enableDebug && loginData.enableLogs) {
-          if (val !== undefined) {
+          if (val != undefined) {
             var regex1 = /"password":".*?"/g;
             var regex2 = /&pass=.*?(?=["&]|$)/g;
             var regex3 = /&token=([^&]*)/g;
@@ -375,12 +390,11 @@ angular.module('zmApp.controllers')
           }
 
           $ionicPlatform.ready(function () {
-            $fileLogger.debug(val);
+            $fileLogger.debug('debug',val);
           });
-          //console.log (val);
+          return Function.prototype.bind.call(console.log, console,val);
         }
-      }
-
+      }('');
       // custom caching function as native http doesn't cache
       function delete_cache(key) {
         return localforage.removeItem(key);
@@ -642,6 +656,65 @@ angular.module('zmApp.controllers')
           return (d.promise);
         }
         return (d.promise);
+      }
+
+      // event resume after sleep, attempt to re-establish ssh connection
+      function resumeAfterSleep() {
+        // attempt to restart ssh connection if ssh enabled
+        startSSHConnection();
+      }
+
+      // start ssh connection if ssh enabled
+      function startSSHConnection() {
+
+        if (!loginData.isUseSSH) return;
+
+        const myBanner = (msg) => {
+          var contentBannerInstance =
+          $ionicContentBanner.show({
+            text: [msg],
+            interval: 2000,
+            type: 'info',
+            transition: 'vertical',
+            cancelOnStateChange: false
+          });
+  
+          $timeout(function () {
+            contentBannerInstance();
+          }, 6000);
+        }
+
+        // initialize ssh message handlers
+        sshModule.ready((event, data) => {
+            const kmsg = 'SSH tunnel to ';
+            const msg = kmsg + loginData.serverName+' ready';
+            debug(msg);
+            $ionicLoading.show({'template':msg,'duration':1500,showBackdrop: false});
+        });
+        sshModule.debug((event,msg)=>{
+          debug(msg);
+        })
+        sshModule.error((event,err)=>{
+          displayBanner('error',['SSH error:'+err]);
+          debug(err);
+        });
+
+        // initialize ssh connection parameters
+        var sshParams = {
+          'username':loginData.sshUser,
+          'password':loginData.sshPassword,
+          'host':loginData.sshHostname,
+          'port':loginData.sshHostport,
+          'proxy_ports':loginData.sshLocalforward.split(','),
+          'service_name':sshServiceName,
+          'server_name':loginData.serverName,
+          'ngrok_api':loginData.NgrokApiKey
+        }
+        const msg = 'Starting SSH tunnel';
+        debug(msg);
+        //myBanner(msg);
+        //$ionicLoading.show({'template':msg,'duration':2000});
+        sshModule.connect_ssh_sync(sshParams);
       }
 
       function proceedWithFreshLogin(noBroadcast) {
@@ -1051,9 +1124,9 @@ angular.module('zmApp.controllers')
         return (d.promise);
       }
 
-      function log(val, logtype) {
+      var log = function(val, logtype) {
         if (loginData.enableLogs) {
-          if (val !== undefined) {
+          if (val != undefined) {
             var regex1 = /"password":".*?"/g;
             var regex2 = /&pass=.*?(?=["&]|$)/g;
             var regex3 = /&token=([^&]*)/g;
@@ -1068,12 +1141,13 @@ angular.module('zmApp.controllers')
           // make sure password is removed
           //"username":"zmninja","password":"xyz",
           //val = val.replace(/\"password:\",
+          const _logtype = (logtype === undefined) ? 'debug' : logtype;
           $ionicPlatform.ready(function () {
-            $fileLogger.log(logtype, val);
+              $fileLogger.log(_logtype, val);
           });
-          // console.log (val);
+          return Function.prototype.bind.call(console.log,  console,_logtype, val);
         }
-      }
+      }('');
 
       function reloadMonitorDisplayStatus() {
         debug("Loading hidden/unhidden status for profile:" + loginData.currentMontageProfile);
@@ -1173,6 +1247,22 @@ angular.module('zmApp.controllers')
           loginData.basicAuthPassword = '';
           $rootScope.basicAuthHeader = '';
           $rootScope.basicAuthToken = '';
+        }
+
+        if (typeof loginData.isUseSSH === 'undefined') {
+          loginData.isUseSSH = false;
+          loginData.sshUser = '';
+          loginData.sshPassword = '';
+          loginData.sshHostname = '';
+          loginData.sshHostport = '';
+          loginData.sshLocalforward = '';
+          loginData.sshPublicKey = '';
+          loginData.NgrokApiKey = '';
+        }
+
+        // generate keypair one time only if not found
+        if (loginData.sshPublicKey==='' || loginData.sshPublicKey === undefined) {
+          loginData.sshPublicKey = sshModule.generate_keypair(sshServiceName,loginData.serverName);
         }
 
         if (loginData.url.indexOf('@') != -1) {
@@ -1874,19 +1964,10 @@ angular.module('zmApp.controllers')
           return isEmpty(obj);
         },
 
-        log: function (val, type) {
-          var logtype = 'info';
-          if (type != undefined)
-            logtype = type;
-          log(val, logtype);
+        log: log,
 
-        },
-
-        debug: function (val) {
-
-          debug(val);
-        },
-
+        debug: debug,
+        
         evaluateTappedNotification: function () {
 
           var state = "";
@@ -2135,9 +2216,9 @@ angular.module('zmApp.controllers')
             return d.promise;
           }
 
-          /*   window.cordova.plugin.cloudsettings.enableDebug(function(){
+           window.cordova.plugin.cloudsettings.enableDebug(function(){
                console.log("Debug mode enabled");
-           });*/
+           });
 
           log("CloudSync: Syncing with cloud if enabled...");
 
@@ -2433,6 +2514,8 @@ angular.module('zmApp.controllers')
 
           return angular.copy(loginData);
         },
+
+        startSSHConnection: startSSHConnection,
 
         getServerGroups: function () {
           return angular.copy(serverGroupList);
@@ -3246,7 +3329,6 @@ angular.module('zmApp.controllers')
         },
 
         proceedWithLogin: function (obj) {
-
           var noBroadcast = false;
           var tryAccess = true;
           var tryRefresh = true;
@@ -3258,6 +3340,9 @@ angular.module('zmApp.controllers')
           }
 
           var d = $q.defer();
+
+          // attempt to start ssh connection if ssh enabled
+          startSSHConnection();
         
           // This is a good time to check if auth is used :-p
           if (!loginData.isUseAuth) {
@@ -3269,7 +3354,6 @@ angular.module('zmApp.controllers')
             if (!noBroadcast) $rootScope.$broadcast('auth-success', 'no auth');
             return (d.promise);
           }
-  
           // lets first try tokens and stored tokens
           if (loginData.isTokenSupported) {
             log("Detected token login supported");
@@ -3373,17 +3457,17 @@ angular.module('zmApp.controllers')
          
           } // is token supported
           else {
-            log ("Token login not being used");
-          // coming here means token reloads fell through
-            return proceedWithFreshLogin(noBroadcast)
-            .then (function (succ) { 
-              d.resolve(succ); 
-              return (d.promise);
-            },
-            function(err) { 
-              d.resolve(err); 
-              return (d.promise);
-            });
+              log ("Token login not being used");
+              // coming here means token reloads fell through
+              return proceedWithFreshLogin(noBroadcast)
+              .then (function (succ) { 
+                d.resolve(succ); 
+                return (d.promise);
+              },
+              function(err) { 
+                d.resolve(err); 
+                return (d.promise);
+              });
           }
           return (d.promise);
         

@@ -68,6 +68,42 @@
         </div>
       </div>
 
+      <!-- ssh authentication -->
+      <div class="item item-text-wrap">
+        <ion-checkbox ng-model="loginData.isUseSSH">{{'kUseSSH' | translate }}</ion-checkbox>
+        <div ng-if="loginData.isUseSSH">
+          <label class="item item-input item-floating-label">
+            <span class="input-label">{{'kUserName'|translate}}</span>
+            <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="{{'kUserName' | translate}}"
+              ng-model="loginData.sshUser">
+          </label>
+          <label class="item item-input item-floating-label">
+            <span class="input-label">{{'kPassword' | translate}}</span>
+            <input type="password" placeholder="{{'kPassword' | translate}}" ng-model="loginData.sshPassword">
+          </label>
+          <label class="item item-input item-floating-label">
+            <span class="input-label">{{'kSSHHostname' | translate}}</span>
+            <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="{{'kSSHHostname' | translate}}" ng-model="loginData.sshHostname">
+          </label>
+          <label class="item item-input item-floating-label">
+            <span class="input-label">{{'kSSHHostport' | translate}}</span>
+            <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="{{'kSSHHostport' | translate}}" ng-model="loginData.sshHostport">
+          </label>
+          <label class="item item-input item-floating-label">
+            <span class="input-label">{{'kSSHLocalForward' | translate}}</span>
+            <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="{{'kSSHLocalForward' | translate}}" ng-model="loginData.sshLocalforward">
+          </label>
+          <label class="item item-input item-floating-label">
+            <span class="input-label">{{'kSSHPublicKey' | translate}}</span>
+            <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="{{'kSSHPublicKey' | translate}}" ng-model="loginData.sshPublicKey">
+          </label>
+          <label class="item item-input item-floating-label">
+            <span class="input-label">{{'kSSHApiKey' | translate}}</span>
+            <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="{{'kSSHApiKey' | translate}}" ng-model="loginData.NgrokApiKey">
+          </label>
+        </div>
+      </div>
+
       <p ng-if="loginData.isUseBasicAuth" style="font-size:0.8em; color:#e84118">{{'kWarningBasicAuth' | translate}}</p>
 
       <label class="item item-input item-floating-label">

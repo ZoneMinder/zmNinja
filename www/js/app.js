@@ -1429,6 +1429,7 @@ angular.module('zmApp', [
         $timeout(function () {
           $rootScope.online = false;
           NVR.log("************** Your network went offline");
+          sshModule.network_offline();
 
           //$rootScope.$emit('network-change', "offline");
 
@@ -1444,6 +1445,7 @@ angular.module('zmApp', [
             return;
           }
           NVR.log("************ Your network came back online");
+          sshModule.network_online();
 
           $rootScope.online = true;
   
@@ -1461,6 +1463,7 @@ angular.module('zmApp', [
                 NVR.debug("Not changing bandwidth state, as auto change is not on");
               }
               NVR.log("Your network is online, re-authenticating");
+              NVR.startSSHConnection();
               zmAutoLogin.doLoginNoLogout($translate.instant('kReAuthenticating'));
     
 
