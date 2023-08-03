@@ -174,7 +174,7 @@ angular.module('mgo-angular-wizard').directive('wizard', function() {
                     //setting variable to false so all other step changes must pass validation
                     firstRun = false;
                 } else {
-                    //createing variables to capture current state that goTo() was invoked from and allow booleans
+                    //creating variables to capture current state that goTo() was invoked from and allow booleans
                     var thisStep;
                     //getting data for step you are transitioning out of
                     if($scope.currentStepNumber() > 0){
@@ -253,7 +253,7 @@ angular.module('mgo-angular-wizard').directive('wizard', function() {
             }
 
             $scope.currentStepNumber = function() {
-                //retreive current step number
+                //retrieve current step number
                 return stepIdx($scope.selectedStep) + 1;
             };
 

@@ -2,7 +2,7 @@
 
 /**
  * After prepare, files are copied to the platforms/ios and platforms/android folders.
- * Lets clean up some of those files that arent needed with this hook.
+ * Lets clean up some of those files that aren't needed with this hook.
  */
 var fs = require('fs');
 var path = require('path');

@@ -50,7 +50,7 @@ Please download binaries from [here](https://github.com/zoneminder/zmNinja/relea
 Key Features 
 -------------
 * Push Notifications  Object detection/face recognition for alarms (Needs the [eventserver](https://github.com/zoneminder/zmeventserver) to be set up)
-* Multiple languages (English, French, German, Spanish, Portugese, Dutch, and more)
+* Multiple languages (English, French, German, Spanish, Portuguese, Dutch, and more)
 * H264 video support
 * live views of monitors
 * Montage view (with multiple montage profile settings/sizes)

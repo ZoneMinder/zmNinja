@@ -137,7 +137,7 @@ angular.module('ngCordova.plugins.3dtouch', [])
             },
 
             /*
-             * Add a hanlder function for force touch events,
+             * Add a handler function for force touch events,
              *
              * @param    function callback
              * @return   promise
@@ -4016,7 +4016,7 @@ angular.module('ngCordova.plugins.googleAnalytics', [])
 // install   :
 // link      :
 
-// Google Maps needs ALOT of work!
+// Google Maps needs A LOT of work!
 // Not for production use
 
 angular.module('ngCordova.plugins.googleMap', [])
@@ -4059,7 +4059,7 @@ angular.module('ngCordova.plugins.googleMap', [])
         map.setVisible(isVisible);
         return q.promise;
       },
-      // I don't know how to deallocate te map and the google map plugin.
+      // I don't know how to deallocate the map and the google map plugin.
       cleanup: function () {
         map = null;
         // delete map;

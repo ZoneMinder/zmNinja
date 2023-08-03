@@ -19,7 +19,7 @@ of the server you are installing ZM in. If not, zmNinja's SSL handshake will fai
 If you have used 'make-ssl-cert' or a similar tool that automatically generates the cert for you, its very likely
 you have certificate that uses the 'unix hostname' of your server. That will not work.
 
-Assuming you are usin apache and have SSL enabled, here is how to regenerate the certs
+Assuming you are using apache and have SSL enabled, here is how to regenerate the certs
 
 This will create a self-signed certificate/key pair and store it in /etc/apache2/ssl (you may have to create that directory, or store it elsewhere)
 

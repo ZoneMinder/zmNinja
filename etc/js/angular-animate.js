@@ -241,7 +241,7 @@ function resolveElementClasses(existing, toAdd, toRemove) {
     var obj = {};
     forEach(classes, function(klass) {
       // sometimes the split leaves empty string values
-      // incase extra spaces were applied to the options
+      // in case extra spaces were applied to the options
       if (klass.length) {
         obj[klass] = true;
       }
@@ -493,7 +493,7 @@ var $$AnimateChildrenDirective = [function() {
  * ```
  *
  * To actually start the animation we need to run `animation.start()` which will then return a promise that we can hook into to detect when the animation ends.
- * If we choose not to run the animation then we MUST run `animation.end()` to perform a cleanup on the element (since some CSS classes and stlyes may have been
+ * If we choose not to run the animation then we MUST run `animation.end()` to perform a cleanup on the element (since some CSS classes and styles may have been
  * applied to the element during the preparation phase). Note that all other properties such as duration, delay, transitions and keyframes are just properties
  * and that changing them will not reconfigure the parameters of the animation.
  *
@@ -529,7 +529,7 @@ var $$AnimateChildrenDirective = [function() {
  * ({@link ngAnimate#css-staggering-animations Click here to learn how CSS-based staggering works in ngAnimate.})
  * * `staggerIndex` - The numeric index representing the stagger item (e.g. a value of 5 is equal to the sixth item in the stagger; therefore when a
  * `stagger` option value of `0.1` is used then there will be a stagger delay of `600ms`)
- * `applyClassesEarly` - Whether or not the classes being added or removed will be used when detecting the animation. This is set by `$animate` when enter/leave/move animations are fired to ensure that the CSS classes are resolved in time. (Note that this will prevent any transitions from occuring on the classes being added and removed.)
+ * `applyClassesEarly` - Whether or not the classes being added or removed will be used when detecting the animation. This is set by `$animate` when enter/leave/move animations are fired to ensure that the CSS classes are resolved in time. (Note that this will prevent any transitions from occurring on the classes being added and removed.)
  *
  * @return {object} an object with start and end methods and details about the animation.
  *
@@ -746,7 +746,7 @@ var $AnimateCssProvider = ['$animateProvider', function($animateProvider) {
       }
 
       // we keep putting this in multiple times even though the value and the cacheKey are the same
-      // because we're keeping an interal tally of how many duplicate animations are detected.
+      // because we're keeping an internal tally of how many duplicate animations are detected.
       gcsLookup.put(cacheKey, timings);
       return timings;
     }
@@ -767,7 +767,7 @@ var $AnimateCssProvider = ['$animateProvider', function($animateProvider) {
 
           stagger = computeCssStyles($window, node, properties);
 
-          // force the conversion of a null value to zero incase not set
+          // force the conversion of a null value to zero in case not set
           stagger.animationDuration = Math.max(stagger.animationDuration, 0);
           stagger.transitionDuration = Math.max(stagger.transitionDuration, 0);
 
@@ -1144,7 +1144,7 @@ var $AnimateCssProvider = ['$animateProvider', function($animateProvider) {
           }
         };
 
-        // checking the stagger duration prevents an accidently cascade of the CSS delay style
+        // checking the stagger duration prevents an accidentally cascade of the CSS delay style
         // being inherited from the parent. If the transition duration is zero then we can safely
         // rely that the delay value is an intential stagger delay style.
         var maxStagger = itemIndex > 0
@@ -1169,7 +1169,7 @@ var $AnimateCssProvider = ['$animateProvider', function($animateProvider) {
         };
 
         function triggerAnimationStart() {
-          // just incase a stagger animation kicks in when the animation
+          // just in case a stagger animation kicks in when the animation
           // itself was cancelled entirely
           if (animationClosed) return;
 
@@ -3637,7 +3637,7 @@ var $$AnimationProvider = ['$animateProvider', function($animateProvider) {
  * ### Preventing Collisions With Third Party Libraries
  *
  * Some third-party frameworks place animation duration defaults across many element or className
- * selectors in order to make their code small and reuseable. This can lead to issues with ngAnimate, which
+ * selectors in order to make their code small and reusable. This can lead to issues with ngAnimate, which
  * is expecting actual animations on these elements and has to wait for their completion.
  *
  * You can prevent this unwanted behavior by using a prefix on all your animation classes:
