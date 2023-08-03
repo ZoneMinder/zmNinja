@@ -340,7 +340,7 @@ If you have used 'make-ssl-cert' or a similar tool that automatically
 generates the cert for you, its very likely you have certificate that
 uses the 'unix hostname' of your server. That will not work.
 
-Assuming you are usin apache and have SSL enabled, here is how to
+Assuming you are using apache and have SSL enabled, here is how to
 regenerate the certs (ubuntu specific, may need to tweak it for your
 distro)
 
