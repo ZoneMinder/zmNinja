@@ -25,7 +25,6 @@
       "cordova-plugin-advanced-websocket": {},
       "cordova-plugin-ionic-keyboard": {},
       "cordova-plugin-add-swift-support": {},
-      "cordova-plugin-certificates-pp-fork": {},
       "cordova-plugin-firebasex": {
         "FIREBASE_ANALYTICS_COLLECTION_ENABLED": "true",
         "FIREBASE_PERFORMANCE_COLLECTION_ENABLED": "true",
@@ -65,15 +64,18 @@
         "KEEP_AVAUDIOSESSION_ALWAYS_ACTIVE": "NO"
       },
       "cordova-sqlite-storage": {},
-      "cordova-plugin-cloud-settings": {},
       "cordova-plugin-customurlscheme": {
-        "URL_SCHEME": "zmninja"
+        "URL_SCHEME": "zmninja",
+        "ANDROID_SCHEME": " ",
+        "ANDROID_HOST": " ",
+        "ANDROID_PATHPREFIX": "/"
       },
       "cordova-plugin-device": {},
       "cordova-plugin-inappbrowser": {},
       "cordova-plugin-network-information": {},
       "cordova-plugin-statusbar": {},
-      "cordova-plugin-photo-library-zm": {}
+      "cordova-plugin-photo-library-zm": {},
+      "cordova-plugin-cloud-settings": {}
     }
   },
   "dependencies": {
@@ -81,7 +83,6 @@
     "clivas": "^0.2.0",
     "compare-func": "^2.0.0",
     "cordova": "^11.0.0",
-    "cordova-android": "^11.0.0",
     "cordova-ios": "^6.2.0",
     "cordova-library-helper-pp-fork": "^1.0.1",
     "cordova-plugin-add-swift-support": "^2.0.2",
@@ -91,10 +92,8 @@
     "cordova-plugin-android-permissions": "^1.1.3",
     "cordova-plugin-androidx-adapter": "^1.1.3",
     "cordova-plugin-app-version": "^0.1.14",
-    "cordova-plugin-cloud-settings": "^2.0.0",
     "cordova-plugin-customurlscheme": "^5.0.2",
     "cordova-plugin-device": "^2.1.0",
-    "cordova-plugin-file-transfer": "github:apache/cordova-plugin-file-transfer",
     "cordova-plugin-globalization": "^1.11.0",
     "cordova-plugin-ignore-lint-translation": "0.0.1",
     "cordova-plugin-inappbrowser": "^5.0.0",
@@ -138,6 +137,14 @@
   "devDependencies": {
     "@ionic/v1-toolkit": "^3.0.22",
     "bower": "^1.8.13",
+    "cordova-android": "^12.0.1",
+    "cordova-plugin-cloud-settings": "^2.0.0",
+    "cordova-plugin-file": "^8.0.0",
+    "cordova-plugin-file-transfer": "github:apache/cordova-plugin-file-transfer",
+    "cordova-plugin-firebasex": "^16.1.0",
+    "cordova-plugin-media": "^7.0.0",
+    "cordova-plugin-photo-library-zm": "^3.0.4",
+    "cordova-plugin-x-socialsharing-android12": "^6.0.5",
     "dotenv": "^16.0.1",
     "electron": "^20.0.1",
     "electron-builder": "^23.3.3",

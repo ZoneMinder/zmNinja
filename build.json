@@ -21,17 +21,10 @@
     },
   "android": {
     "debug": {
-      "keystore": "platforms/android/zmNinja.keystore",
-      "alias": "mykey1",
-      "keystoreType": "",
       "packageType": "apk"
     },
     "release": {
-      "keystore": "platforms/android/zmNinja.keystore",
-
-      "alias": "mykey2",
-      "keystoreType": "",
-      "packageType": "bundle"
+      "packageType": "apk"
     }
   }
 }
