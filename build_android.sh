@@ -50,15 +50,15 @@ build_release() {
             echo "Copied files to release_files"
 
             cd release_files/
-            jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore ../platforms/android/zmNinja.keystore android-release-unsigned.apk zmNinja
+            $ANDROID_SDK_ROOT/build-tools/${SDK_VERSION}/zipalign -v 4 android-release-unsigned.apk zmNinja.apk
+            rm -f android-release-unsigned.apk
+            $ANDROID_SDK_ROOT/build-tools/${SDK_VERSION}/apksigner sign --ks-key-alias zmNinja --ks ../platforms/android/zmNinja.keystore zmNinja.apk
 	        ret=$?
             if [ $ret -ne 0 ]; then
                 echo "Unable to sign jar, please fix the error(s) above"
                 exit 1
             fi
 
-            $ANDROID_SDK_ROOT/build-tools/${SDK_VERSION}/zipalign -v 4 android-release-unsigned.apk zmNinja.apk
-            rm -f android-release-unsigned.apk
             cd ..
 
          # Do a phone perm check
