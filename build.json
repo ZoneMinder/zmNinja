@@ -6,19 +6,25 @@
             "packageType": "development",
             "automaticProvisioning": true,
             "buildFlag": [
-                "-UseModernBuildSystem=0",
                 "LD_RUNPATH_SEARCH_PATHS = \"@executable_path/Frameworks\""
             ]
         },
         "release": {
-            "codeSignIdentity": "Apple Development",
+            "codeSignIdentity": "iPhone Developer",
             "developmentTeam": "P97TSUFFDX",
             "packageType": "app-store",
             "automaticProvisioning": true,
             "buildFlag": [
-                "-UseModernBuildSystem=0",
                 "LD_RUNPATH_SEARCH_PATHS = \"@executable_path/Frameworks\""
             ]
         }
+    },
+  "android": {
+    "debug": {
+      "packageType": "apk"
+    },
+    "release": {
+      "packageType": "apk"
     }
+  }
 }

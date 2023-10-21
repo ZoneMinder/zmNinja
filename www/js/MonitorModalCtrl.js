@@ -22,7 +22,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   $scope.imageZoomable = true;
   $scope.ptzButtonsShown = true;
   var streamQueryTimer = zm.streamQueryTimer;
-  
+
 
   var streamState = {
     SNAPSHOT: 1,
@@ -40,7 +40,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
       currentStreamState = streamState.ACTIVE;
       NVR.debug ('Forcing stream to regular quality, imageLoaded() was never called');
     }
-    
+
   },10000);
 
 
@@ -80,7 +80,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
   }
 
-  // Keyboard handler for desktop versions 
+  // Keyboard handler for desktop versions
   function keyboardHandler(evt) {
 
     var handled = false;
@@ -551,7 +551,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
           //t.addEventListener("mouseup",moveStop);
 
 
-          //console.log ("Found circle-"+i);   
+          //console.log ("Found circle-"+i);
         } else {
           // console.log ("did not find circle-"+i);
         }
@@ -723,7 +723,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     $scope.cw = img.naturalWidth;
     $scope.ch = img.naturalHeight;
 
-    
+
     $scope.zoneArray = [];
     $scope.circlePoints = [];
 
@@ -748,7 +748,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     // now create a points array for circle handles
 
     /* for (i = 0; i < $scope.zoneArray.length; i++) {
-      //jshint loopfunc: true 
+      //jshint loopfunc: true
       $scope.zoneArray[i].coords.split(' ')
         .forEach(function (itm) {
           var o = itm.split(',');
@@ -1107,7 +1107,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
       var c = mode == 'on' ? 'on' : 'off';
       var alarmurl = apiurl + "/monitors/alarm/id:" + mid + "/command:" + c + ".json?"+$rootScope.authSession;
       NVR.log("Invoking " + alarmurl);
-      
+
 
       var status = mode ? $translate.instant('kForcingAlarm') : $translate.instant('kCancellingAlarm');
       $ionicLoading.show({
@@ -1188,10 +1188,10 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     NVR.debug("ModalCtrl: Permission checking for write");
     var permissions = cordova.plugins.permissions;
-    permissions.hasPermission(permissions.WRITE_EXTERNAL_STORAGE, checkPermissionCallback, null);
+    permissions.checkPermission(permissions.WRITE_EXTERNAL_STORAGE, checkPermissionCallback, null);
 
     function checkPermissionCallback(status) {
-      if (!status.hasPermission) {
+      if (!status.checkPermission) {
         SaveError("No permission to write to external storage");
       }
       permissions.requestPermission(permissions.WRITE_EXTERNAL_STORAGE, succ, err);
@@ -1220,7 +1220,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
       '/zms?mode=single&monitor=' + mid;
       url += $rootScope.authSession;
 
-  
+
     url += NVR.insertSpecialTokens();
 
     NVR.log("SavetoPhone:Trying to save image from " + url);
@@ -1236,12 +1236,12 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
           var urle = encodeURI(url);
           var timestamp=moment().format('MMM-Do-YY-HH-mm-ss');
           var fname = "zmninja-mid-"+mid+'-'+timestamp+".jpg";
-    
+
           fileTransfer.download(urle, cordova.file.dataDirectory + fname,
             function (entry) {
               NVR.debug("local download complete: " + entry.toURL());
               NVR.debug("Now trying to move it to album");
-              cordova.plugins.photoLibrary.saveImage(entry.toURL(), album,
+              cordova.plugins.photoLibrary.saveImage(entry.nativeURL, album,
                 function (cameraRollAssetId) {
                   SaveSuccess();
                   $cordovaFile.removeFile(cordova.file.dataDirectory, fname)
@@ -1322,7 +1322,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
           duration: 2000
         });
       });
-    
+
     }
 
   }
@@ -1463,25 +1463,25 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
       return "&connkey=" + ck;
     }
 
-    function checkValidConnkey(query,i) {
+    function checkValidConnkey(query) {
       $http.get(query)
       .then (function (succ) {
-        
+
         //console.log ("SUCCESS="+JSON.stringify(succ.data));
 
         if (succ.data && succ.data.result && succ.data.result == "Error") {
-        
+
             NVR.log ("Single view: regenerating Connkey as Failed:"+query);
             $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
             $scope.streamState = 'bad';
-          
-         
+
+
         }
         else if (succ.data && succ.data.result && succ.data.result == "Ok") {
           $scope.streamState = 'good';
         }
 
-      }, 
+      },
       function (err) {
         NVR.log ("Single View: Stream Query ERR="+JSON.stringify(err));
       });
@@ -1498,14 +1498,14 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     query = ld.url+'/index.php?view=request&request=stream&command=99';
     query= query + $rootScope.authSession;
     query+= appendConnKey($scope.connKey);
-    checkValidConnkey(query,i);
+    checkValidConnkey(query);
 
   }
 
   //-------------------------------------------------------------
   // called to kill connkey, not sure if we really need it
   // I think we are calling window.stop() which is a hammer
-  // anyway 
+  // anyway
   //-------------------------------------------------------------
 
   function controlStream(cmd, disp, connkey, ndx) {
@@ -1655,9 +1655,9 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   // Retrieves PTZ state for each monitor
   //-------------------------------------------------------------
   // make sure following are correct:
-  // $scope.isControllable 
+  // $scope.isControllable
   // $scope.controlid
-  // 
+  //
   function configurePTZ(mid) {
     $scope.presetAndControl = $translate.instant('kMore');
     $scope.ptzWakeCommand = "";
@@ -1736,7 +1736,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
                   if (data.control.Control.CanMoveMap == '1') {
 
-                    //seems moveMap uses Up/Down/Left/Right, 
+                    //seems moveMap uses Up/Down/Left/Right,
                     // so no prefix
                     $scope.ptzMoveCommand = "";
                     $scope.ptzStopCommand = "moveStop";
