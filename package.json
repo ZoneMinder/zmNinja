@@ -143,7 +143,7 @@
     "cordova-plugin-file-transfer": "github:apache/cordova-plugin-file-transfer",
     "cordova-plugin-firebasex": "^16.1.0",
     "cordova-plugin-media": "^7.0.0",
-    "cordova-plugin-photo-library-zm": "^3.0.4",
+    "cordova-plugin-photo-library-zm": "^3.0.5",
     "cordova-plugin-x-socialsharing-android12": "^6.0.5",
     "dotenv": "^16.0.1",
     "electron": "^20.0.1",
