@@ -24,7 +24,7 @@
       "packageType": "apk"
     },
     "release": {
-      "packageType": "apk"
+      "packageType": "bundle"
     }
   }
 }
