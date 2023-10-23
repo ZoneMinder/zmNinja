@@ -6,7 +6,7 @@ build_debug() {
         echo "*********** Building Debug Build **************"
         rm -rf debug_files 2>/dev/null
         mkdir debug_files
-        ionic cordova build android
+        cordova build android
         # adding back wkwebview clears platform debug directory later
         cp platforms/android/app/build/outputs/apk/debug/app-debug.apk  debug_files
         echo "*** Your debug file has been moved to  debug_files/app-debug.apk"
