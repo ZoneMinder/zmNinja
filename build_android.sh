@@ -46,33 +46,43 @@ build_release() {
             cordova build android --release --  --versionCode=${ver}
 
             # copy build to release folder and sign
-            cp platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk release_files/android-release-unsigned.apk
-            echo "Copied files to release_files"
+            cp platforms/android/app/build/outputs/bundle/release/app-release.aab release_files/zmNinja.aab
+            echo "Signing bundle"
+            jarsigner -sigalg SHA256withRSA -digestalg SHA-256 -keystore platforms/android/zmNinja.keystore release_files/zmNinja.aab zmNinja
+            echo "Signed aab in release_files"
 
-            cd release_files/
-            $ANDROID_SDK_ROOT/build-tools/${SDK_VERSION}/zipalign -v 4 android-release-unsigned.apk zmNinja.apk
-            rm -f android-release-unsigned.apk
-            $ANDROID_SDK_ROOT/build-tools/${SDK_VERSION}/apksigner sign --ks-key-alias zmNinja --ks ../platforms/android/zmNinja.keystore zmNinja.apk
-	        ret=$?
-            if [ $ret -ne 0 ]; then
-                echo "Unable to sign jar, please fix the error(s) above"
-                exit 1
-            fi
+            # Build apk from bundle for verification if bundletool is available
+            if command -v bundletool >/dev/null 2>&1; then
+                bundletool build-apks --bundle=release_files/zmNinja.aab --output=release_files/zmNinja.apks --mode=universal
+                unzip -d release_files release_files/zmNinja.apks universal.apk
 
-            cd ..
+                cd release_files/
+                $ANDROID_SDK_ROOT/build-tools/${SDK_VERSION}/zipalign -v 4 universal.apk zmNinja.apk
+                rm -f zmNinja.apks universal.apk
+                echo "Signing apk"
+                $ANDROID_SDK_ROOT/build-tools/${SDK_VERSION}/apksigner sign --ks-key-alias zmNinja --ks ../platforms/android/zmNinja.keystore zmNinja.apk
+                ret=$?
+                if [ $ret -ne 0 ]; then
+                    echo "Unable to sign jar, please fix the error(s) above"
+                    exit 1
+                else
+                    echo "Signed apk in release_files"
+                fi
 
-         # Do a phone perm check
+                cd ..
 
-            ./checkperms.sh release_files/zmNinja.apk
-            echo "*** Phone State Check:"
-            ./checkperms.sh release_files/zmNinja.apk | grep PHONE_STATE
+                # Do a phone perm check
+                ./checkperms.sh release_files/zmNinja.apk
+                echo "*** Phone State Check:"
+                ./checkperms.sh release_files/zmNinja.apk | grep PHONE_STATE
 
-            echo "***VERSION CODE CHECKS:"
-            for f in release_files/*; do
-                echo "$f:"
-                `echo $ANDROID_SDK_ROOT`/build-tools/${SDK_VERSION}/aapt dump badging $f | grep versionCode
-                `echo $ANDROID_SDK_ROOT`/build-tools/${SDK_VERSION}/aapt dump badging $f | grep native-code
-            done
+                echo "***VERSION CODE CHECKS:"
+                for f in release_files/*.apk; do
+                    echo "$f:"
+                    `echo $ANDROID_SDK_ROOT`/build-tools/${SDK_VERSION}/aapt dump badging $f | grep versionCode
+                    `echo $ANDROID_SDK_ROOT`/build-tools/${SDK_VERSION}/aapt dump badging $f | grep native-code
+                done
+	    fi
 
   }
 
