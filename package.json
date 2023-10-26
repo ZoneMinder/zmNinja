@@ -167,8 +167,8 @@
   "main": "electron_js/main.js",
   "build": {
     "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
-    "appId": "com.pliablepixels.zmninja-pro",
-    "productName": "zmninja-pro",
+    "appId": "com.zoneminder.zmninja",
+    "productName": "zmninja",
     "compression": "normal",
     "asar": true,
     "afterSign": "electron_js/notarize.js",
