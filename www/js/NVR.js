@@ -382,6 +382,15 @@ angular.module('zmApp.controllers')
         }
       }
 
+      function object_to_query_string(obj) {
+        var str = [];
+        for (var p in obj)
+          str.push(encodeURIComponent(p) + "=" +
+            encodeURIComponent(obj[p]));
+        var params = str.join("&");
+        return params;
+      }
+
       // custom caching function as native http doesn't cache
       function delete_cache(key) {
         return localforage.removeItem(key);
@@ -760,7 +769,7 @@ angular.module('zmApp.controllers')
                     } else {
                       // incase auth is turned off, but user said its on.
                       $rootScope.authSession="&nonauth=none";
-                      debug ('Your auth seems to be turned off, but you said yes');
+                      debug('Your auth seems to be turned off, but you said yes');
                     }
                   } else {
                     log("Neither token nor old cred worked. Seems like an error");
@@ -880,8 +889,8 @@ angular.module('zmApp.controllers')
               log("zmAutologin successfully logged into Zoneminder");
               $rootScope.apiValid = true;
               // now go to authKey part, so don't return yet...
-            } else //  this means login error
-            {
+            } else {
+              //  this means login error
               // $rootScope.loggedIntoZm = -1;
               //console.log("**** ZM Login FAILED");
               log("zmAutologin Error: Bad Credentials ", "error");
@@ -3979,21 +3988,16 @@ angular.module('zmApp.controllers')
             return d.promise;
           }
 
-
          // $ionicLoading.show({ template: '<button class="button button-clear" style="line-height: normal; min-height: 0; min-width: 0;" ng-click="$root.cancel()"></button><i class="icon ion-chevron-up"></i> Loading...' });
-
 
           $ionicLoading.show({
             //template:$translate.instant('kCleaningUp'),
             template: "<a style='color:white; text-decoration:none' href='#' ng-click='$root.cancelAuth()' <i class='ion-close-circled'></i>&nbsp;" + $translate.instant('kCleaningUp')+"</a>",
             noBackdrop: true,
-
           });
-
 
           log(loginData.url + "=>Logging out of any existing ZM sessions...");
           $rootScope.authSession = "";
-
 
           // console.log("CURRENT SERVER: " + loginData.currentServerVersion);
 
@@ -4020,7 +4024,6 @@ angular.module('zmApp.controllers')
               );
             return d.promise;
           }
-
 
           // old logout mode
           debug("Logging out using Web method");

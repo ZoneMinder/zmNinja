@@ -850,14 +850,11 @@ angular.module('zmApp', [
         NVR.log ('-----> Access token is about to expire, re-doing login');
         _doLogin("");  
       }
-     
     });
 
     $rootScope.$on("auth-error", function () {
-
       NVR.debug("zmAutoLogin: Inside auth-error broadcast");
       NVR.displayBanner('error', ['ZoneMinder authentication failed', 'Please check settings']);
-
     });
 
     //------------------------------------------------------------------
@@ -875,11 +872,6 @@ angular.module('zmApp', [
       $state.go("app.zm-portal-login");
       return;
     });
-
-
-
-
-
 
     //------------------------------------------------------------------
     // doLogin() emits this when our auth credentials work
@@ -902,34 +894,25 @@ angular.module('zmApp', [
           contentBannerInstance();
         }, 2000);
         NVR.debug("auth-success broadcast:Successful");
-
+      } else {
+        NVR.debug("auth not being used, not creating banner");
       }
-      else {
-        NVR.debug ("auth not being used, not creating banner");
-      }
-     
 
       // we need AUTH_HASH_LOGIN to be on for WKWebView /mobile
       if (ld.isUseAuth && $rootScope.platformOS != 'desktop') {
         NVR.getAuthHashLogin()
           .then(function (data) {
-
               if (data.data && data.data.config.Value != '1') {
                 $ionicPopup.alert({
                   title: $translate.instant('kError'),
                   template: $translate.instant('kAuthHashDisabled')
                 });
               }
-
             },
             function (err) {
-            
              NVR.debug("Auth Hash error: " + JSON.stringify(err));
             });
       }
-
-
-
     });
 
     $rootScope.getProfileName = function () {
@@ -942,9 +925,7 @@ angular.module('zmApp', [
     };
 
     $rootScope.getServerTimeZoneNow = function () {
-
       return NVR.getTimeZoneNow();
-
     };
 
     $rootScope.isTzSupported = function () {
@@ -958,12 +939,11 @@ angular.module('zmApp', [
     //------------------------------------------------------------------
 
     function _doLoginNoLogout (str) {
-    
       return _doLogin(str);
     }
 
     function _doLogoutAndLogin(str) {
-      NVR.debug ("_doLogoutAndLogin: Clearing cookies");
+      NVR.debug("_doLogoutAndLogin: Clearing cookies");
 
       if (window.cordova) {
         // we need to do this or ZM will send same auth hash
@@ -999,16 +979,9 @@ angular.module('zmApp', [
           return;
         }
       );
-    
-      
-      
-      
     }
 
-
     function _doLogin(str) {
-     
-    
       var d = $q.defer();
       $rootScope.loginInProgress = true;
 
@@ -1021,7 +994,7 @@ angular.module('zmApp', [
       var ld = NVR.getLogin();
 
       //var statename = $ionicHistory.currentStateName();
-      NVR.debug ("Inside _doLogin()");
+      NVR.debug("Inside _doLogin()");
 
 /*
       if (statename == "montage-history") {
@@ -1046,7 +1019,6 @@ angular.module('zmApp', [
 
           // close it after 5 seconds
           $timeout(function () {
-
             alertPopup.close();
           }, 5000);
 
@@ -1054,7 +1026,6 @@ angular.module('zmApp', [
           d.reject("Error-disable recaptcha");
           return (d.promise);
         }
-
       });
 
       NVR.debug("Resetting zmCookie...");
@@ -1065,46 +1036,36 @@ angular.module('zmApp', [
       //console.log(">>>>>>>>>>>> CALLING DO LOGIN");
       NVR.proceedWithLogin()
         .then(function (success) {
-
             //NVR.debug("Storing login time as " + moment().toString());
             localforage.setItem("lastLogin", moment().toString());
             $rootScope.loginInProgress = false;
             d.resolve(success);
             return d.promise;
           },
-          function (error)
-          {
+          function (error) {
               $ionicLoading.hide();
               $rootScope.loginInProgress = false;
               d.reject(error);
               return d.promise;
           });
-
-          
       return d.promise;
-
-  
-
     }
     function start() {
       var ld = NVR.getLogin();
       // lets keep this timer irrespective of auth or no auth
       //$rootScope.loggedIntoZm = 0;
-      var timeInterval = ld.isTokenSupported ? zm.defaultAccessTokenExpiresMs: zm.loginInterval;
+      var timeInterval = ld.isTokenSupported ? zm.defaultAccessTokenExpiresMs : zm.loginInterval;
       $interval.cancel(zmAutoLoginHandle);
 
       if (ld.isTokenSupported) {
         NVR.debug ("------> Not starting login timer for token. We will start a one time timer when we know how soon the access token will live");
         _doLogin("");
-
       } else {
         NVR.debug ('We will relogin every '+timeInterval/1000+' seconds, token supported='+ld.isTokenSupported);
-      zmAutoLoginHandle = $interval(function () {
-        _doLogin("");
-      }, timeInterval); 
-
+        zmAutoLoginHandle = $interval(function () {
+          _doLogin("");
+        }, timeInterval); 
       }
-
     }
 
     function stop() {
@@ -1113,7 +1074,6 @@ angular.module('zmApp', [
       $interval.cancel(zmAutoLoginHandle);
       // $rootScope.loggedIntoZm = 0;
       NVR.log("Cancelling zmAutologin timer");
-
     }
 
     return {
@@ -1121,7 +1081,6 @@ angular.module('zmApp', [
       stop: stop,
       doLogin: _doLogoutAndLogin,
       doLoginNoLogout: _doLoginNoLogout
-
     };
   }])
 
@@ -1130,10 +1089,7 @@ angular.module('zmApp', [
   //====================================================================
 
   .run(function ($ionicPlatform, $ionicPopup, $rootScope, zm, $state, $stateParams, NVR, $cordovaSplashscreen, $http, $interval, zmAutoLogin, zmCheckUpdates, $fileLogger, $timeout, $ionicHistory, $window, $ionicSideMenuDelegate, EventServer, $ionicContentBanner, $ionicLoading, /* $ionicNativeTransitions,*/ $translate, $localstorage) {
-
-
     $ionicPlatform.ready(function () {
-
       //console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>INSIDE RUN");
 
       $fileLogger.setStorageFilename(zm.logFile);
@@ -1150,7 +1106,6 @@ angular.module('zmApp', [
         }
       });
 
-
       NVR.log("******* app .run device ready");
 
       $rootScope.dpadId = 0;
@@ -1164,14 +1119,11 @@ angular.module('zmApp', [
       $rootScope.platformOS = "desktop";
       NVR.log("Device is ready");
 
-      NVR.log ("setting size");
+      NVR.log("setting size");
       $timeout (function () {
-
         NVR.computeDeviceSize();
-
       },30);
       
-
       //console.log ("*************** PLATFORM IS: "+ionic.Platform.platform());
       var ua = navigator.userAgent.toLowerCase();
       NVR.debug ("UA is "+ua);
@@ -1182,8 +1134,6 @@ angular.module('zmApp', [
         $rootScope.platformOS = "android";
 
       NVR.log("You are running on " + $rootScope.platformOS);
-
-
 
       $rootScope.appName = "zmNinja";
       $rootScope.zmGlobalCookie = "";
@@ -1218,7 +1168,6 @@ angular.module('zmApp', [
         //window.stop();
         ionic.Platform.exitApp();
         //navigator.app.exitApp();
-
       };
  
       // This is a global exception interceptor
@@ -1231,16 +1180,13 @@ angular.module('zmApp', [
         NVR.debug(msg);
       };
 
-
       $rootScope.getLogin = function () {
         return NVR.getLogin();
       };
 
-
       $rootScope.proceedWithLogin = function(obj) {
         return NVR.proceedWithLogin(obj);
       };
-
      
       // DPAD Handler - disabled for now
       // when ready add ionic cordova plugin add https://github.com/pliablepixels/cordova-plugin-android-tv.git
@@ -1252,9 +1198,7 @@ angular.module('zmApp', [
           NVR.log("Not registering D-PAD handler, as you are not on android");
         }*/
 
-
       function dPadHandler(evt) {
-
         var handled = false;
 
         var keyCodes = {
@@ -1359,47 +1303,43 @@ angular.module('zmApp', [
       // set up network state handlers after 3secs
       // android seems to howl about this at app start?
       $timeout (function() {
+        NVR.log ("--------->Setting up network state handlers....");
+        window.addEventListener("offline", onOffline, false);
+        window.addEventListener("online", onOnline, false);
 
-      NVR.log ("--------->Setting up network state handlers....");
-      window.addEventListener("offline", onOffline, false);
-      window.addEventListener("online", onOnline, false);
-
-      NVR.log ("--------->Setting up global key handler...");
-      if ($rootScope.platformOS == 'desktop') {
-        window.addEventListener('keydown', keyboardHandler, true);
-    
-      }
-      if ($rootScope.platformOS == 'desktop') {
-        NVR.log ("---> Hacked up waked detection...");
-        detectWake();
-      }
-
+        NVR.log ("--------->Setting up global key handler...");
+        if ($rootScope.platformOS == 'desktop') {
+          window.addEventListener('keydown', keyboardHandler, true);
+        }
+        if ($rootScope.platformOS == 'desktop') {
+          NVR.log ("---> Hacked up waked detection...");
+          detectWake();
+        }
       },3000);
 
-
       function keyboardHandler(evt) {
-          if (evt.metaKey || evt.ctrlKey) {
-              if (evt.keyCode == 76) {
-                evt.preventDefault();
-                NVR.log ("---> Lock pressed");
-                if (!NVR.getLogin().usePin) {
-                    NVR.log ("not using pin, ignoring");
-                    return;
-                }
-                $ionicHistory.nextViewOptions({
-                    disableAnimate: true
-                  });
-                if ($state.current.name != 'app.zm-portal-login') {
-                    $rootScope.lastState = $state.current.name;
-                    $rootScope.$stateParams = $stateParams;
-                    $state.go ('app.zm-portal-login');
-                }
-                else {
-                    NVR.log ("Already at portal, not going again");
-                }
-                
-              }
+        if (evt.metaKey || evt.ctrlKey) {
+          if (evt.keyCode == 76) {
+            evt.preventDefault();
+            NVR.log ("---> Lock pressed");
+            if (!NVR.getLogin().usePin) {
+              NVR.log ("not using pin, ignoring");
+              return;
+            }
+            $ionicHistory.nextViewOptions({
+              disableAnimate: true
+            });
+            if ($state.current.name != 'app.zm-portal-login') {
+              $rootScope.lastState = $state.current.name;
+              $rootScope.$stateParams = $stateParams;
+              $state.go ('app.zm-portal-login');
+            }
+            else {
+              NVR.log ("Already at portal, not going again");
+            }
+
           }
+        }
       }
 
       // credit: https://blog.alexmaccaw.com/javascript-wake-event
@@ -1416,8 +1356,7 @@ angular.module('zmApp', [
             NVR.log ("********* YOU WOKE UP!!!!!");
             onOnline();
             iter = 1;
-          } 
-          else {
+          } else {
             //NVR.debug ("alive..."+iter);
             iter++;
           }
@@ -1435,8 +1374,6 @@ angular.module('zmApp', [
         });
       }
 
-      
-
       function onOnline() {
         $timeout(function () {
           if ($rootScope.online == true) {
@@ -1446,7 +1383,6 @@ angular.module('zmApp', [
           NVR.log("************ Your network came back online");
 
           $rootScope.online = true;
-  
               var networkState = "browser not supported";
               if (navigator.connection) networkState = navigator.connection.type;
               NVR.debug("Detected network type as: " + networkState);
@@ -1462,12 +1398,8 @@ angular.module('zmApp', [
               }
               NVR.log("Your network is online, re-authenticating");
               zmAutoLogin.doLoginNoLogout($translate.instant('kReAuthenticating'));
-    
-
         });
-
       }
-      
 
       // This code takes care of trapping the Android back button
       // and takes it to the menu.
@@ -1496,13 +1428,9 @@ angular.module('zmApp', [
       var checkOrientation = function () {
         // give rotation time to actually rotate, or width/height will be bogus
         $timeout ( function() {
-      
-        NVR.computeDeviceSize();
-        $rootScope.$broadcast('sizechanged');
-
+          NVR.computeDeviceSize();
+          $rootScope.$broadcast('sizechanged');
         },100);
-        
-
       };
 
       window.addEventListener("resize", checkOrientation, false);
@@ -1533,20 +1461,14 @@ angular.module('zmApp', [
       //----------------------------------------------------------------------------
 
       $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
-
-
         if (!$rootScope.initComplete && toState.name!= 'app.first-use') {
           NVR.debug ("---> Init not complete, ignoring state change request to "+toState.name);
           event.preventDefault();
           return;
-
         }
 
         var requireLogin = toState.data.requireLogin;
-
         $rootScope.dpadId = 0;
-
-
 
         if ($rootScope.apiValid == false && toState.name != 'app.invalidapi' && toState.data.requireLogin == true) {
           /*event.preventDefault();
@@ -1554,10 +1476,7 @@ angular.module('zmApp', [
           $state.transitionTo('app.invalidapi');*/
           NVR.log ('API not valid, not going to this state');
           return;
-
         }
-
-
 
         if ((NVR.hasLoginInfo() || toState.data.requireLogin == false) && toState.name != "app.invalidapi") {
           //console.log("State transition is authorized");
@@ -1566,14 +1485,11 @@ angular.module('zmApp', [
             toState.name != "app.first-use" &&
             toState.name != "app.zm-portal-login"
           ) {
-
            // NVR.debug("Setting last-desktop-state to:" + JSON.stringify(toState));
             localforage.setItem('last-desktop-state', {
               'name': toState.name,
               'params': toState.params
             });
-
-
           }
           $rootScope.dpadState = toState.name.replace("app.", "");
           return;
@@ -1589,7 +1505,6 @@ angular.module('zmApp', [
         }
 
         if (requireLogin) {
-      
           NVR.displayBanner('error', [$translate.instant('kCredentialsBody')]);
 
         /*  $ionicPopup.alert({
@@ -1616,7 +1531,6 @@ angular.module('zmApp', [
         });
 
         return;
-
       });
 
       // credit http://stackoverflow.com/a/2091331/1361529
@@ -1643,10 +1557,6 @@ angular.module('zmApp', [
 
       // $ionicPlatform.ready(function () {
 
-
-
-
-
       // handles URL launches
 
       window.handleOpenURL = function (url) {
@@ -1661,13 +1571,8 @@ angular.module('zmApp', [
           if (qm) $rootScope.tappedMid = parseInt(qm);
           NVR.log("external URL called with MID=" + $rootScope.tappedMid + " and/or EID=" + $rootScope.tappedEid);
           //console.log (">>>>>>>>> EID="+getQueryVariable(c.query, "eid"));
-
         }
-
-
-
       };
-
 
       //console.log("Mobile acc");
      /* if (window.cordova)
@@ -1891,18 +1796,9 @@ angular.module('zmApp', [
                 $rootScope.lastState = succ.name;
                 if ($rootScope.lastState.indexOf("app.") == -1) {
                   $rootScope.lastState = "app." + $rootScope.lastState;
-
-
                 }
                 $rootScope.lastStateParam = succ.params;
-
-
                 NVR.debug("last state=" + $rootScope.lastState + " param=" + $rootScope.lastStateParam);
-
-                
-
-
-
               }
               loadServices();
             }, function (err) {
@@ -1919,13 +1815,8 @@ angular.module('zmApp', [
           zmCheckUpdates.start();
          // NVR.log("Setting up POST LOGIN timer");
           setupPauseAndResume();
-
-        
-    
         }
-
       }
-
 
       function setupPauseAndResume() {
         NVR.log("Setting up pause and resume handler AFTER language is loaded...");
@@ -1942,13 +1833,9 @@ angular.module('zmApp', [
           NVR.debug("Android detected, using cordova-multiwindow plugin for onStop/onStart instead");
           window.MultiWindowPlugin.registerOnStop("app-pause", pauseHandler);
           window.MultiWindowPlugin.registerOnStart("app-resume", resumeHandler);
-
-
         }
 
-
         function resumeHandler() {
-         
           NVR.setBackground(false);
           NVR.setJustResumed(true);
           $ionicPlatform.ready(function () {
@@ -1961,13 +1848,9 @@ angular.module('zmApp', [
             document.addEventListener("online", onOnline, false);
             window.addEventListener("resize", checkOrientation, false);
 
-
-
             $rootScope.isDownloading = false;
 
             var ld = NVR.getLogin();
-
-
             // don't animate
             $ionicHistory.nextViewOptions({
               disableAnimate: true,
@@ -2004,18 +1887,14 @@ angular.module('zmApp', [
               $state.go("app.zm-portal-login");
               return;
             }
-
-
           });
         }
 
         function pauseHandler() {
-
           NVR.log ("-->Clearing online/offine");
           document.removeEventListener("offline", onOffline, false);
           document.removeEventListener("online", onOnline, false);
           window.removeEventListener("resize", checkOrientation, false);
-
 
           NVR.setBackground(true);
           NVR.setJustResumed(false);
@@ -2166,9 +2045,6 @@ angular.module('zmApp', [
                 });
                 return d.promise;
               } else {
-
-           
-
                 try {
                   d.resolve({
                     "data": JSON.parse(succ.data)
