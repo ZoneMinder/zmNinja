@@ -11,37 +11,28 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
   // logs into ZM
   //--------------------------------------------------------------------------
 
-  function login(u, zmu, zmp) {
+  function login(url, zmusername, zmpassword) {
     var d = $q.defer();
     $http({
         method: 'post',
         //withCredentials: true,
-        url: u,
+        url: url,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
           'Accept': 'application/json',
         },
-        transformRequest: function (obj) {
-          var str = [];
-          for (var p in obj)
-            str.push(encodeURIComponent(p) + "=" +
-              encodeURIComponent(obj[p]));
-          var params = str.join("&");
-          //console.log ("PARAMS in login:"+params);
-          return params;
-        },
-
+        transformRequest: NVR.object_to_query_string,
         data: {
-          username: zmu,
-          password: zmp,
+          username: zmusername,
+          password: zmpassword,
           action: "login",
           view: "console"
         }
       })
       .then(function (data, status, headers) {
           data = data.data;
-          //console.log("LOOKING FOR " + zm.loginScreenString);
-          //console.log("DATA RECEIVED " + JSON.stringify(data));
+          console.log("LOOKING FOR " + zm.loginScreenString);
+          console.log("DATA RECEIVED " + JSON.stringify(data));
           if (data.indexOf(zm.loginScreenString1) == -1 && 
               data.indexOf(zm.loginScreenString2) == -1 ) {
 
@@ -56,8 +47,6 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
             $scope.wizard.portalColor = "#e74c3c";
            // NVR.debug("Login response form was invalid,I am going to try JSON login");
 
-
-
             d.reject(false);
             return d.promise;
           }
@@ -71,9 +60,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
           return d.promise;
 
         });
-
     return d.promise;
-
   }
 
   //--------------------------------------------------------------------------
@@ -126,8 +113,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
   function findFirstReachableUrl(urls, tail) {
     var d = $q.defer();
     if (urls.length > 0) {
-      var t = "";
-      if (tail) t = tail;
+      var t = tail ? tail : "";
       //$ionicLoading.show({template: 'trying ' + urls[0].server});
       NVR.log("zmWizard test.." + urls[0] + t);
        return $http.get(urls[0] + t).then(function (succ) {
@@ -147,7 +133,6 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
           return d.promise;
         }
 
-
         return findFirstReachableUrl(urls.slice(1), tail);
       });
     } else {
@@ -155,11 +140,9 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
       NVR.log("zmWizard: findFirst returned no success");
       d.reject("No reachable URL");
       return d.promise;
-
     }
 
     return d.promise;
-
   }
 
   //--------------------------------------------------------------------------
@@ -246,7 +229,6 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                   },
                   function (error) {
                     NVR.log("Should never come here, getAuthKey doesn't return error");
-
                   });
 
               //console.log ("****CDING " + tail);
@@ -272,7 +254,6 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                     $scope.wizard.streamingColor = "#16a085";
                     d.resolve(true);
                     return d.promise;
-
                   },
                   function (error) {
                     $ionicLoading.hide();
@@ -293,11 +274,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
 
           });
     }
-
-    // https://server/zm/cgi-bin/nph-zms?mode=single&monitor=1&user=admin&pass=cc
-
     return d.promise;
-
   }
 
   //--------------------------------------------------------------------------
@@ -353,22 +330,16 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
       // we need to do this or ZM will send same auth hash
       // this was fixed in a PR dated Oct 18
      
-        cordova.plugin.http.clearCookies();
-        if ($scope.wizard.useauth && $scope.wizard.usebasicauth) {
-          NVR.debug ("setting basic auth with "+$scope.wizard.basicuser+":"+$scope.wizard.basicpassword);
-          cordova.plugin.http.useBasicAuth($scope.wizard.basicuser, $scope.wizard.basicpassword);
-  
-        }
-      
-     }
-      else {
-        angular.forEach($cookies, function (v, k) {
-          $cookies.remove(k);
-         });
+      cordova.plugin.http.clearCookies();
+      if ($scope.wizard.useauth && $scope.wizard.usebasicauth) {
+        NVR.debug ("setting basic auth with "+$scope.wizard.basicuser+":"+$scope.wizard.basicpassword);
+        cordova.plugin.http.useBasicAuth($scope.wizard.basicuser, $scope.wizard.basicpassword);
       }
-
-      
-
+    } else {
+      angular.forEach($cookies, function (v, k) {
+        $cookies.remove(k);
+      });
+    }
 
     $http({
         method: 'POST',
@@ -377,15 +348,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
           'Content-Type': 'application/x-www-form-urlencoded',
           'Accept': 'application/json',
         },
-        transformRequest: function (obj) {
-          var str = [];
-          for (var p in obj)
-            str.push(encodeURIComponent(p) + "=" +
-              encodeURIComponent(obj[p]));
-          var params = str.join("&");
-          return params;
-        },
-
+        transformRequest: NVR.object_to_query_string,
         data: {
           action: "logout",
           view: "login"
@@ -403,7 +366,6 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
       });
 
     return d.promise;
-
   }
 
   //--------------------------------------------------------------------------
@@ -418,16 +380,14 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
     $scope.wizard.fqportal = "";
     return true;
   };
+
   //--------------------------------------------------------------------------
   // tries to log into the portal and then discover api and cgi-bin
   //--------------------------------------------------------------------------
 
-  
   function loginWebScrape(u,zmu,zmp) {
     var d = $q.defer();
     NVR.debug("Logging in using old web-scrape method");
-
-   
 
     $ionicLoading.show({
       template: $translate.instant('kAuthenticatingWebScrape'),
@@ -435,12 +395,11 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
       duration: zm.httpTimeout
     });
 
-    u=u+'/index.php?view=console';
-    NVR.debug ("webscrape login to:"+u);
+    u = u + '/index.php?view=console';
+    NVR.debug("webscrape login to:"+u);
    
     //NVR.debug ("*** AUTH LOGIN URL IS " + loginData.url);
     $http({
-
         method: 'post',
         timeout: zm.httpTimeout,
         //withCredentials: true,
@@ -449,15 +408,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
           'Content-Type': 'application/x-www-form-urlencoded',
           'Accept': 'application/json',
         },
-        transformRequest: function (obj) {
-          var str = [];
-          for (var p in obj)
-            str.push(encodeURIComponent(p) + "=" +
-              encodeURIComponent(obj[p]));
-          var params = str.join("&");
-          return params;
-        },
-
+        transformRequest: NVR.object_to_query_string,
         data: {
           username: zmu,
           password: zmp,
@@ -490,7 +441,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
           {
             // $rootScope.loggedIntoZm = -1;
             //console.log("**** ZM Login FAILED");
-            NVR.log("zmAutologin Error: Bad Credentials ", "error");
+            NVR.log("zmAutologin web scrape Error: Bad Credentials ", "error");
             $scope.wizard.portalValidText = $translate.instant('kPortalDetectionFailed');
             $scope.wizard.portalColor = "#e74c3c";
             d.reject("Login Error");
@@ -500,9 +451,6 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
 
           // Now go ahead and re-get auth key 
           // if login was a success
-         
-         
-
         },
         function (error, status) {
 
@@ -540,12 +488,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
             },
             responseType: 'text',
             transformResponse: undefined,
-            transformRequest: function (obj) {
-              var str = [];
-              for (var p in obj)
-                str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-              return str.join("&");
-            },
+            transformRequest: NVR.object_to_query_string,
             data: {
               user: zmu,
               pass: zmp
@@ -578,52 +521,41 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                   return d.promise;
                 }
                 NVR.debug("API based login returned... ");
-              //  console.log (JSON.stringify(succ));
+                //  console.log (JSON.stringify(succ));
                 $ionicLoading.hide();
                 //$rootScope.loggedIntoZm = 1;
                 $rootScope.authSession = '';
                 if (succ.access_token) {
                   NVR.debug ('Got token, using it');
                   $rootScope.authSession = "&token=" + succ.access_token; 
-                }
-                else if (succ.credentials) {
+                } else if (succ.credentials) {
                   NVR.debug ('Got auth= not token, using it');
                   $rootScope.authSession = "&" + succ.credentials;
                   if (succ.append_password == '1') {
-                    $rootScope.authSession = $rootScope.authSession +
-                      loginData.password;
+                    $rootScope.authSession = $rootScope.authSession + loginData.password;
                   }
                 }
-
               
-                NVR.log("Stream authentication construction: " +
-                  $rootScope.authSession);
-
+                NVR.log("Stream authentication construction: " + $rootScope.authSession);
                 NVR.log("zmAutologin successfully logged into Zoneminder via API");
-
 
                 $scope.wizard.loginURL = $scope.wizard.fqportal;
                 $scope.wizard.portalValidText = $translate.instant('kPortal') + ": " + $scope.wizard.loginURL;
-            $scope.wizard.portalColor = "#16a085";
-
+                $scope.wizard.portalColor = "#16a085";
                 d.resolve("Login Success");
-
-
                 return d.promise;
 
               } catch (e) {
                 NVR.debug("Login API approach did not work...");
-              
+
                 loginWebScrape(u,zmu,zmp)
                   .then(function (succ) {
-
                     $scope.wizard.loginURL = $scope.wizard.fqportal;
                     $scope.wizard.portalValidText = $translate.instant('kPortal') + ": " + $scope.wizard.loginURL;
                     $scope.wizard.portalColor = "#16a085";
-
-                      d.resolve("Login Success");
-                      return d.promise;
-                    },
+                    d.resolve("Login Success");
+                    return d.promise;
+                  },
                     function (err) {
                       $ionicLoading.hide();
                       $scope.wizard.portalValidText = $translate.instant('kPortalDetectionFailed');
@@ -634,14 +566,10 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                 return d.promise;
 
               }
-
-
-
             },
             function (err) {
               NVR.debug("******************* API login error " + JSON.stringify(err));
               $ionicLoading.hide();
-
 
               if (1) {
                 //if (err  && err.data && 'success' in err.data) {
@@ -656,8 +584,6 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
                       d.reject("Login Error");
                       return (d.promise);
                     });
-
-
               } else {
                 // $rootScope.loggedIntoZm = -1;
                 //console.log("**** ZM Login FAILED");
@@ -666,20 +592,11 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
 
                 d.reject("Login Error");
                 return (d.promise);
-
               }
-
-
             }
           ); // post
-
-
-
         return d.promise;
       }
-
-    
-
 
   function validateData() {
     //console.log ("***** CLEARING AUTHSESSION IN VALIDATEDATA");
@@ -696,12 +613,10 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
     $scope.wizard.serverName = "";
 
     var d = $q.defer();
-
     var c = URI.parse($scope.wizard.portalurl);
 
     $scope.wizard.serverName = c.host;
-    if (c.port)
-      $scope.wizard.serverName += "-" + c.port;
+    if (c.port) $scope.wizard.serverName += "-" + c.port;
 
     var b = "";
     if ($scope.wizard.useauth && $scope.wizard.usebasicauth) {
@@ -716,7 +631,6 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
 
     if (u.slice(-1) == '/') {
       u = u.slice(0, -1);
-
     }
 
     $scope.wizard.fqportal = u;
@@ -867,7 +781,6 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
             buttons: [{
               text: $translate.instant('kButtonOk')
             }]
-
           });
           return false;
         }
@@ -878,7 +791,6 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
     WizardHandler.wizard().next();
     // start discovery;
     validateData();
-
   };
 
   //--------------------------------------------------------------------------
@@ -901,7 +813,6 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
     }
 
     if (!checkscheme($scope.wizard.portalurl)) {
-
       $scope.portalproto = [{
           text: "http",
           value: "http://"
@@ -925,9 +836,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
             NVR.debug("Protocol selected:" + $scope.myproto.proto);
             $scope.wizard.portalurl = $scope.myproto.proto + stripProto($scope.wizard.portalurl);
           }
-
         }]
-
       });
       return false;
     }
@@ -951,8 +860,8 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
       return false;
     }
 
-    if (c.userinfo) // basic auth stuff in here, take it out and put it into the next screen
-    {
+    if (c.userinfo) {
+      // basic auth stuff in here, take it out and put it into the next screen
       $scope.wizard.useauth = true;
       $scope.wizard.usebasicauth = true;
       var barray = c.userinfo.split(":", 2);
@@ -974,7 +883,6 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
   // part of auth wizard - toggles display of auth components
   //--------------------------------------------------------------------------
   $scope.toggleAuth = function () {
-
     if (!$scope.wizard.useauth) {
       $scope.wizard.usebasicauth = false;
       $scope.wizard.usezmauth = false;
@@ -1033,9 +941,6 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
       streamingValidText: "",
       streamingColor: "",
       serverName: "",
-
     };
-
   });
-
 }]);

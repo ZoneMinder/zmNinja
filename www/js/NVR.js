@@ -382,6 +382,15 @@ angular.module('zmApp.controllers')
         }
       }
 
+      function object_to_query_string(obj) {
+        var str = [];
+        for (var p in obj)
+          str.push(encodeURIComponent(p) + "=" +
+            encodeURIComponent(obj[p]));
+        var params = str.join("&");
+        return params;
+      }
+
       // custom caching function as native http doesn't cache
       function delete_cache(key) {
         return localforage.removeItem(key);
@@ -760,7 +769,7 @@ angular.module('zmApp.controllers')
                     } else {
                       // incase auth is turned off, but user said its on. 
                       $rootScope.authSession="&nonauth=none";
-                      debug ('Your auth seems to be turned off, but you said yes');
+                      debug('Your auth seems to be turned off, but you said yes');
                     }
                   } else {
                     log("Neither token nor old cred worked. Seems like an error");
@@ -880,8 +889,8 @@ angular.module('zmApp.controllers')
               log("zmAutologin successfully logged into Zoneminder");
               $rootScope.apiValid = true;
               // now go to authKey part, so don't return yet...
-            } else //  this means login error
-            {
+            } else {
+              //  this means login error
               // $rootScope.loggedIntoZm = -1;
               //console.log("**** ZM Login FAILED");
               log("zmAutologin Error: Bad Credentials ", "error");
@@ -3286,13 +3295,12 @@ angular.module('zmApp.controllers')
             noBroadcast = obj.nobroadcast;
             tryAccess = obj.access;
             tryRefresh = obj.refresh;
-
           }
 
           var d = $q.defer();
         
            // This is a good time to check if auth is used :-p
-           if (!loginData.isUseAuth) {
+          if (!loginData.isUseAuth) {
             log("Auth is disabled, setting authSession to empty");
             $rootScope.apiValid = true;
             $rootScope.authSession = '';
@@ -3300,14 +3308,11 @@ angular.module('zmApp.controllers')
   
             if (!noBroadcast) $rootScope.$broadcast('auth-success', 'no auth');
             return (d.promise);
-  
           }
   
-  
           // lets first try tokens and stored tokens
-          if (loginData.isTokenSupported) 
-          {
-            log ("Detected token login supported");
+          if (loginData.isTokenSupported) {
+            log("Detected token login supported");
             var now = moment.utc();
             var diff_access = moment.utc(loginData.accessTokenExpires).diff(now, 'minutes');
             var diff_refresh = moment.utc(loginData.refreshTokenExpires).diff(now, 'minutes');
@@ -3320,8 +3325,6 @@ angular.module('zmApp.controllers')
                   tokenExpiryTimer = $timeout ( function () {
                     $rootScope.$broadcast('token-expiry');
                   }, diff_access * 60  * 1000);
-                  
-              
               
               $rootScope.authSession = '&token='+loginData.accessToken;
               d.resolve("Login success via access token");
@@ -3330,7 +3333,7 @@ angular.module('zmApp.controllers')
               return d.promise;
             } 
             // then see if we have at least 30 mins left for refresh token
-            else if (moment.utc(loginData.refreshTokenExpires).isAfter(now) &&  diff_refresh  >=zm.refreshTokenLeewayMin && tryRefresh) {
+            else if (moment.utc(loginData.refreshTokenExpires).isAfter(now) && diff_refresh >=zm.refreshTokenLeewayMin && tryRefresh) {
               log ("Refresh token still has "+diff_refresh+" minutes left, using it");
               var loginAPI = loginData.apiurl + '/host/login.json?token='+loginData.refreshToken;
               $http({
@@ -3362,8 +3365,7 @@ angular.module('zmApp.controllers')
                   d.resolve("Login success via refresh token");
                   if (!noBroadcast) $rootScope.$broadcast('auth-success', ''  );
                   return d.promise;
-                }
-                else {
+                } else {
                   log ('ERROR:Trying to refresh with refresh token:'+JSON.stringify(succ));
                   return proceedWithFreshLogin(noBroadcast)
                   .then (function (succ) { 
@@ -4014,22 +4016,17 @@ angular.module('zmApp.controllers')
             d.resolve(true);
             return d.promise;
           }
-
          
          // $ionicLoading.show({ template: '<button class="button button-clear" style="line-height: normal; min-height: 0; min-width: 0;" ng-click="$root.cancel()"></button><i class="icon ion-chevron-up"></i> Loading...' });
 
-        
           $ionicLoading.show({
             //template:$translate.instant('kCleaningUp'),
             template: "<a style='color:white; text-decoration:none' href='#' ng-click='$root.cancelAuth()' <i class='ion-close-circled'></i>&nbsp;" + $translate.instant('kCleaningUp')+"</a>",
             noBackdrop: true,
-
           });
-
 
           log(loginData.url + "=>Logging out of any existing ZM sessions...");
           $rootScope.authSession = "";
-
 
           // console.log("CURRENT SERVER: " + loginData.currentServerVersion);
 
@@ -4056,7 +4053,6 @@ angular.module('zmApp.controllers')
               );
             return d.promise;
           }
-
 
           // old logout mode
           debug("Logging out using Web method");
