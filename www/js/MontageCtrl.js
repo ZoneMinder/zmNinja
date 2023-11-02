@@ -275,7 +275,7 @@ angular.module('zmApp.controllers')
       //console.log ("**** mygrid is " + JSON.stringify(elem));
 
       if (pckry) pckry.destroy();
-      NVR.debug ('Calling initPackery() with layout as:'+layouttype);
+      NVR.debug('Calling initPackery() with layout as:'+layouttype);
       pckry = new Packery('.grid', {
         itemSelector: '.grid-item',
         percentPosition: true,
@@ -286,7 +286,7 @@ angular.module('zmApp.controllers')
         transitionDuration: 0
       });
 
-      imagesLoaded(elem).on('progress', function (instance, img) {
+      imagesLoaded(elem).on('progress', function(instance, img) {
         var result = img.isLoaded ? 'loaded' : 'broken';
         // NVR.debug('~~loaded image is ' + result + ' for ' + img.img.src);
 

@@ -440,24 +440,6 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
    
   };
 
-  $scope.endOfLife = function() {
-
-    $rootScope.zmPopup = $ionicPopup.show({
-      scope: $scope,
-      template: $translate.instant('kEndOfLifeNoticeText')+ " <a href='https://forums.zoneminder.com/viewtopic.php?f=33&t=30996#p122445'>notice</a>",
-
-      title: $translate.instant('kEndOfLifeNotice'),
-
-      buttons: [{
-
-          text: $translate.instant('kButtonOk'),
-        }
-      ]
-    });
-
-  };
-
-
   $scope.switchLang = function () {
     $scope.lang = NVR.getLanguages();
     $scope.myopt = {

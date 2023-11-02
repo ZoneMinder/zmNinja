@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-packageName="com.zoneminder.zmNinja" id="com.zoneminder.zmNinja" ios-CFBundleIdentifier="com.zoneminder.zmNinja" version="1.6.009" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.zoneminder.zmNinja" version="1.6.010" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>zmNinja</name>
     <description>
 	High performance ZoneMinder client
@@ -8,23 +8,16 @@
 	Zoneminder Inc
   </author>
     <content src="index.html" />
-    <allow-navigation href="gap://ready" />
     <allow-navigation href="localhost://*" />
     <access launch-external="yes" origin="mailto:*" />
-    <access allows-arbitrary-loads-for-media="true" allows-arbitrary-loads-in-web-content="true" allows-local-networking="true" origin="*" />
+    <access origin="*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <preference name="KeyboardResize" value="true" />
     <preference name="KeyboardResizeMode" value="ionic" />
-    <preference name="xwalkMultipleApk" value="true" />
-    <preference name="AndroidPersistentFileLocation" value="Compatibility" />
     <preference name="iosPersistentFileLocation" value="Library" />
     <preference name="AllowInlineMediaPlayback" value="true" />
-    <preference name="CrosswalkAnimatable" value="true" />
-    <preference name="webviewbounce" value="false" />
-    <preference name="UIWebViewBounce" value="false" />
-    <preference name="StatusBarBackgroundColor" value="#2980b9" />
     <preference name="DisallowOverscroll" value="true" />
     <preference name="BackupWebStorage" value="none" />
     <preference name="AutoHideSplashScreen" value="false" />
@@ -35,28 +28,21 @@
     <preference name="SplashMaintainAspectRatio" value="true" />
     <preference name="FadeSplashScreen" value="false" />
     <preference name="BackgroundColor" value="#444444" />
-    <preference name="android-targetSdkVersion" value="29" />
-    <preference name="android-compileSdkVersion" value="29" />
+    <preference name="android-targetSdkVersion" value="33" />
+    <preference name="android-compileSdkVersion" value="33" />
     <preference name="android-minSdkVersion" value="22" />
     <preference name="SplashScreenBackgroundColor" value="#ababab" />
-    <feature name="StatusBar">
-        <param name="ios-package" onload="true" value="CDVStatusBar" />
-    </feature>
+    <preference name="StatusBarOverlaysWebView" value="false" />
+    <preference name="StatusBarBackgroundColor" value="#2980b9" />
     <platform name="ios">
+        <hook src="hooks/after_platform_add/010_create_notification_extension.js" type="after_platform_add" />
         <preference name="Orientation" value="all" />
-        <preference name="StatusBarOverlaysWebView" value="false" />
         <preference name="WKWebViewOnly" value="true" />
         <feature name="CDVWKWebViewEngine">
             <param name="ios-package" value="CDVWKWebViewEngine" />
         </feature>
         <preference name="CordovaWebViewEngine" value="CDVWKWebViewEngine" />
         <resource-file src="www/sounds/blop.caf" target="blop.caf" />
-        <custom-config-file parent="NSAppTransportSecurity" target="*-Info.plist">
-            <dict>
-                <key>NSAllowsArbitraryLoads</key>
-                <true />
-            </dict>
-        </custom-config-file>
         <config-file parent="NSPhotoLibraryAddUsageDescription" platform="ios" target="*-Info.plist">
             <string>Store photos of events and live feeds</string>
         </config-file>
@@ -121,12 +107,11 @@
     </platform>
     <platform name="android">
         <preference name="MixedContentMode" value="2" />
+        <preference name="AndroidPersistentFileLocation" value="Compatibility" />
         <config-file parent="/*" target="AndroidManifest.xml">
-            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
         </config-file>
         <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application" xmlns:android="http://schemas.android.com/apk/res/android">
             <application android:usesCleartextTraffic="true" />
-            <application android:requestLegacyExternalStorage="true" />
         </edit-config>
         <resource-file src="build-extras.gradle" target="build-extras.gradle" />
         <resource-file src="etc/android-notification-icons/ic_stat_notification.png" target="app/src/main/res/drawable/ic_stat_notification.png" />
@@ -156,44 +141,13 @@
     </platform>
     <icon src="resources/android/icon/drawable-xhdpi-icon.png" />
     <preference name="SplashShowOnlyFirstTime" value="false" />
-    <plugin name="cordova-plugin-customurlscheme" spec="^4.3.0">
-        <variable name="URL_SCHEME" value="zmninja" />
-        <variable name="ANDROID_SCHEME" value=" " />
-        <variable name="ANDROID_HOST" value=" " />
-        <variable name="ANDROID_PATHPREFIX" value="/" />
-    </plugin>
-    <plugin name="cordova-plugin-file-transfer" spec="^1.7.1" />
     <plugin name="cordova-plugin-globalization" spec="^1.11.0" />
     <plugin name="cordova-plugin-insomnia" spec="^4.3.0" />
     <plugin name="cordova-plugin-pin-dialog" spec="^0.1.3" />
-    <plugin name="cordova-plugin-splashscreen" spec="^4.1.0" />
     <plugin name="cordova-plugin-android-fingerprint-auth" spec="^1.5.0" />
-    <plugin name="cordova-plugin-network-information" spec="^2.0.1" />
-    <plugin name="cordova-plugin-device" spec="^2.0.2" />
     <plugin name="cordova-library-helper-pp-fork" spec="^1.0.1" />
     <plugin name="cordova-plugin-multi-window" spec="0.0.3" />
     <plugin name="cordova-plugin-ignore-lint-translation" spec="0.0.1" />
-    <plugin name="cordova-plugin-cloud-settings" spec="^1.0.4">
-        <variable name="ANDROID_BACKUP_SERVICE_KEY" value="AEdPqrEAAAAIqF-OaHdwIzZhx2L1WOfAGTagBxm5a1R4wBW_Uw" />
-    </plugin>
-    <plugin name="cordova-custom-config" spec="5.0.2" />
     <plugin name="cordova-plugin-advanced-websocket" spec="1.1.5" />
-    <plugin name="cordova-support-google-services" spec="1.3.2" />
-    <plugin name="cordova-plugin-x-socialsharing" spec="5.6.4">
-        <variable name="ANDROID_SUPPORT_V4_VERSION" value="24.1.1+" />
-        <variable name="PHOTO_LIBRARY_ADD_USAGE_DESCRIPTION" value="This app requires photo library access to function properly." />
-        <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value="This app requires photo library access to function properly." />
-    </plugin>
-    <plugin name="cordova-plugin-firebasex" spec="latest">
-        <variable name="FIREBASE_ANALYTICS_COLLECTION_ENABLED" value="false" />
-        <variable name="FIREBASE_PERFORMANCE_COLLECTION_ENABLED" value="false" />
-        <variable name="FIREBASE_CRASHLYTICS_COLLECTION_ENABLED" value="false" />
-    </plugin>
     <plugin name="cordova-plugin-ionic-keyboard" spec="2.2.0" />
-    <plugin name="cordova-plugin-touch-id" spec="3.4.0">
-        <variable name="FACEID_USAGE_DESCRIPTION" value="" />
-    </plugin>
-    <plugin name="cordova-plugin-android-permissions" spec="1.0.2" />
-    <plugin name="cordova-plugin-app-version" spec="0.1.9" />
-    <plugin name="cordova-plugin-whitelist" spec="^1.3.4" />
 </widget>

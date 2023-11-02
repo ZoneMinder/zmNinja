@@ -82,9 +82,6 @@ angular.module('zmApp.controllers')
       //-----------------------------------------------------------------------
       $scope.changeConfig = function (monitorName, monitorId, enabled, func, mon_forceMjpeg) {
         var checked = false;
-        var i;
-
-
         
         $scope.forceMjpeg = {
           value:false
@@ -97,10 +94,11 @@ angular.module('zmApp.controllers')
           // in all monitors, lets keep enabled on
           enabled = '1';
           
-          for (i = 0; i < $scope.monitors.length; i++) {
+          for (var i=0, len=$scope.monitors.length; i < len; i++) {
            // console.log ("HUH "+$scope.monitors[i].Monitor.forceMjpeg);
             monitorsIds[i] = $scope.monitors[i].Monitor.Id;
-            if (!$scope.monitors[i].Monitor.forceMjpeg) $scope.forceMjpeg.value = false; // if any is unset, global is unset
+            if (!$scope.monitors[i].Monitor.forceMjpeg)
+              $scope.forceMjpeg.value = false; // if any is unset, global is unset
           }
         }  else {
           monitorsIds[0] = monitorId;
@@ -112,31 +110,50 @@ angular.module('zmApp.controllers')
 
         //if monitorId is not specified, all monitors will be changed 
     
-        $scope.monFunctions = [{
-            text: $translate.instant('kMonModect'),
-            value: "Modect"
-          },
-          {
-            text: $translate.instant('kMonMocord'),
-            value: "Mocord"
-          },
-          {
-            text: $translate.instant('kMonRecord'),
-            value: "Record"
-          },
-          {
-            text: $translate.instant('kMonNodect'),
-            value: "Nodect"
-          },
-          {
-            text: $translate.instant('kMonMonitor'),
-            value: "Monitor"
-          },
-          {
-            text: $translate.instant('kMonNone'),
-            value: "None"
-          }
-        ];
+	if (NVR.versionCompare(currentVersion, '1.37.12') == 1) {
+	
+		$scope.monFunctions = [
+      {
+		    text: $translate.instant('kMonModect'),
+		    value: "Modect"
+		  },
+		  {
+		    text: $translate.instant('kMonMocord'),
+		    value: "Mocord"
+		  },
+		  {
+		    text: $translate.instant('kMonRecord'),
+		    value: "Record"
+		  },
+		  {
+		    text: $translate.instant('kMonNodect'),
+		    value: "Nodect"
+		  },
+		  {
+		    text: $translate.instant('kMonMonitor'),
+		    value: "Monitor"
+		  },
+		  {
+		    text: $translate.instant('kMonNone'),
+		    value: "None"
+		  }
+		];
+	} else {
+		$scope.monCapturingOptions = [
+      {
+        text: $translate.instant('kMonCapturingNone'),
+        value: 'None'
+      },
+      {
+        text: $translate.instant('kMonCapturingOnDemand'),
+        value: 'Ondemand'
+      },
+      {
+        text: $translate.instant('kMonCapturingAlways'),
+        value: 'Always'
+      }
+    ];
+  }  // end if >< 1.37.12
 
         $scope.monfunc = {
           mymonitorsIds: monitorsIds,
@@ -145,7 +162,6 @@ angular.module('zmApp.controllers')
           myfailedIds: [],
           mypromises: []
         };
-
 
         var oldValues = {
           myfunc: func,
