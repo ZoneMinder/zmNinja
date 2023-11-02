@@ -147,7 +147,7 @@ How to report errors
 - I (pliablepixels) am no longer providing support for zmNinja. The code has been moved to Zoneminder
   and it is upto the devs or the community to continue support 
 
--  In general, please try and localize the logs. It helps  pinpoint the issue. 
+-  In general, please try and localize the logs. It helps pinpoint the issue. 
    Let's assume you have an issue where montage always shows green dots instead of images.
    I'd recommend the following steps:
 
@@ -156,7 +156,8 @@ How to report errors
    - Kill the app
    - Load up zmNinja again and go to montage. I presume you are now looking at the error
    - Go to logs, and email them to me via the email button on top (envelope icon)
-   Specifically, **don't do  whole bunch of unrelated things and send me logs expecting me
+
+   Specifically, **don't do whole bunch of unrelated things and send me logs expecting me
    to sift through and find out what is going on**.
 
 -  I don't know why something is not working if you don't provide
@@ -655,9 +656,7 @@ well as set ``AUTH_RELAY`` to "hashed"
 I can't see list of  events in zmNinja
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- Make sure your APIs are working. An easy way to check is to try 
-``https://yourserver/zm/api/events.json`` in your browser after logging into ZM
-
+- Make sure your APIs are working. An easy way to check is to try ``https://yourserver/zm/api/events.json`` in your browser after logging into ZM
 - By default, zmNinja only displays events with at least 1 alarmed frame. To view 
   all events, tap on the vertical "..." icon on the top right of the event view, and select
   "View all events". If you don't see "View all events" turn off "Only detected objects" option.
