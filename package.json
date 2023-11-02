@@ -146,7 +146,7 @@
     "cordova-plugin-photo-library-zm": "^3.0.5",
     "cordova-plugin-x-socialsharing-android12": "^6.0.5",
     "dotenv": "^16.0.1",
-    "electron": "^20.0.1",
+    "electron": "^22.3.25",
     "electron-builder": "^23.3.3",
     "electron-cli": "^0.2.8",
     "electron-notarize": "^1.2.1",
