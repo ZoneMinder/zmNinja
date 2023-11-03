@@ -18,15 +18,13 @@ All screens have annotated descriptions now. They are maintained in a google doc
 Asking for refunds
 ------------------
 
-This is no longer valid if you are on zmNinja 1.6.009+ as the apps are free.
-
 For iOS: To get a refund, Apple wants you to contact them directly 
 using `this <https://support.apple.com/en-us/HT204084>`__ link. There used to be
 a time when I could process a refund myself, but it seems Apple doesn't provide
 that interface anymore.
 
 For Android: If you're not happy with zmNinja and have bought the app,
-please `send me an email <mailto:pliablepixels@gmail.com>`__ **with your
+please `send me an email <mailto:info@zoneminder.com>`__ **with your
 order id**.
 
 Note that depending on how long ago you made the order, I may not be
@@ -34,8 +32,7 @@ able to refund. Its not my policy - The app/play stores disable the
 refund option. For example, I could not refund an app a user purchased 2
 years ago.
 
-Also, please read `Things you should own up
-to <#things-you-should-own-up-to>`__
+Also, please read `Things you should own up to <#things-you-should-own-up-to>`__
 
 Asking for apks
 ----------------
@@ -102,31 +99,9 @@ zmNinja doesn't work. Actually, even ZoneMinder web console doesn't work. You sh
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Yeah, look - I understand zmNinja won't work if ZoneMinder web console
-doesn't work. That being said, I really don't have time to help you
-debug ZoneMinder issues. I only develop the app (zmNinja). If you can't
-set up ZoneMinder properly, please post your questions in the `ZM
-forum <https://forums.zoneminder.com>`__. You'll find more qualified
-people to help you. I don't develop nor control ZoneMinder. It's a
-different set of folks. Now, I'll help you, but only after you have
-spent sufficient time trying your best and provide sufficient logs of
-what you have done. Also remember, if you buy zmNinja, **I'm happy to
-refund it anytime - just send me an email.**
-
-In short, I don't have the time to support ZoneMinder install issues -
-sorry about that
-
-zmNinja doesn't work. Zoneminder works, but I have no idea why APIs don't work. You should fix this!
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-*Sigh*. I don't maintain ZoneMinder. I only develop the app. *You* need
-to make sure ZoneMinder APIs work. ZoneMinder web console doesn't use
-APIs. Neither does zmView. zmNinja does. It says so in the description
-of the app in the store. So feel free to fix your APIs, or ask me for a
-refund. Just don't whine to me, please, if your APIs are broken. I'm
-*not* going to fix them for you, especially if you act like its not your
-problem. `I'm perfectly fine if you choose not to use my
-app <https://medium.com/zmninja/no-soup-for-you-42ac0927952>`__, which
-is why I refund, anytime.
+doesn't work.  If you can't set up ZoneMinder properly, please post
+your questions in the `ZM forum <https://forums.zoneminder.com>`__.
+You'll find qualified people to help you.
 
 I can't compile zmNinja, help me!
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -157,7 +132,7 @@ How to report errors
    - Load up zmNinja again and go to montage. I presume you are now looking at the error
    - Go to logs, and email them to me via the email button on top (envelope icon)
 
-   Specifically, **don't do whole bunch of unrelated things and send me logs expecting me
+   Specifically, **don't do a whole bunch of unrelated things and send me logs expecting me
    to sift through and find out what is going on**.
 
 -  I don't know why something is not working if you don't provide
@@ -270,17 +245,16 @@ General tips
   - If you are NOT using authentication at all in ZM, that is ``OPT_USE_AUTH`` is disabled, then make sure you also disable authentication in zmNinja, otherwise it will keep waiting for auth keys.
   - I don't quite know why, but on some devices, connection issues are caused because ZoneMinder's CSRF code causes issues. See `this <https://forums.zoneminder.com/viewtopic.php?f=33&p=115422#p115422>`__ thread, for example. In this case, try turning off CSRF checks by going to  ``ZM->Options->System`` and disable "Enable CSRF magic". You will then have to delete zmNinja's API cache (``Menu->Clear API Cache``) and restart the app.
 
--  Disable server redirects like 302 and then try if using the mobile
-   app
+-  Disable server redirects like 302 and then try if using the mobile app
 -  To make sure there are no connection issues, launch your **phone
    browser** and try to reach ZoneMinder. If that doesn't work, neither
-   with zmNinja. Many users try to access ZoneMinder from a desktop
+   will zmNinja. Many users try to access ZoneMinder from a desktop
    browser and/or on the same server it is running and forget the phone
    is a different device!
 -  Some phones need the SSL certificate installed in the device
 -  Specific SSL settings can cause issues with Android or iOS
 -  Don't use funky/special characters in passwords - try changing it to
-   a complex password without funky characters and try
+   a complex password without funky characters and try again
 -  Use the wizard - I've seen many examples of typos when the user
    thinks they don't have a typo
 -  If you are using basic authentication, make sure your credentials are
@@ -437,7 +411,6 @@ In the above case my zmNinja cgi-bin setting is
 -  When trying to view live images, look at your *webserver* error logs
    - example Apache's ``error.log`` - see any image/jpg errors? That
    means you are missing libraries
-
 
 -  Look at zmNinja, ZoneMinder and web server error logs at the time of
    error - one of them should give more clues. Please send me *all* the
@@ -698,8 +671,8 @@ Event videos takes too long to play
       this fragmented feature. Note that if you turn it off, you may not get push notification
       animations in zmninja (if you have it enabled)
 
-Event videos  not playable
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Event videos not playable
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -  Your video may be using a codec that is not supported on mobile browsers.
    H265 is a good example. To work around this, use MJPEG for the monitor.
@@ -958,7 +931,7 @@ in Appstore/Playstore for a fee.
 Who are the developers behind this?
 -----------------------------------
 
-Me.
+Originally the fabulous pliablepixels. Now the ZoneMinder developers try to keep it going.
 
 The code needs improvement
 --------------------------
@@ -973,16 +946,12 @@ But hey, if you can improve it, please PR!
 Is zmNinja an official ZoneMinder product?
 ------------------------------------------
 
-No. But the ZM developers are amazing people who have been very helpful.
+Originally no, but since pliablepixels has generously provided it to the ZoneMinder devs, it pretty much now is.
 
 I want to donate money
 ----------------------
 
-You could either `donate to to
-Zoneminder <https://www.bountysource.com/teams/zoneminder>`__ or `donate
-to zmNinja <https://salt.bountysource.com/teams/zmninja>`__. Donations
-to ZoneMinder don't contribute to zmNinja, but the ZoneMinder devs will
-benefit from it, which is fine too.
+Please see our donation page at `<https://www.zoneminder.com/donate>`
 
 How does zmNinja use my personal data?
 --------------------------------------
