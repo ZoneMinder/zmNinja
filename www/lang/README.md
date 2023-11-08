@@ -1,10 +1,10 @@
 
-If you are familiar with using git, I'd prefer if you follow the Pull Request process [here](https://github.com/pliablepixels/zmNinja/blob/master/CONTRIBUTING.md#steps-for-code-contribution).
+If you are familiar with using git, I'd prefer if you follow the Pull Request process [here](https://github.com/ZoneMinder/zmNinja/blob/master/CONTRIBUTING.md#steps-for-code-contribution).
 
 #### Adding a new language
-* Languages translations are available [here](https://github.com/pliablepixels/zmNinja/tree/master/www/lang)
+* Languages translations are available [here](https://github.com/ZoneMinder/zmNinja/tree/master/www/lang)
 * To contribute a new language, add a new ``locale-xx.json`` (where `xx` is your language code).
-* Ideally, you should also provide a language translation for the zmNinja help file inside [lang/help](https://github.com/pliablepixels/zmNinja/tree/master/www/lang/help)
+* Ideally, you should also provide a language translation for the zmNinja help file inside [lang/help](https://github.com/ZoneMinder/zmNinja/tree/master/www/lang/help)
 
 The best way is to simply look at an existing language translation and follow the same model for yours. If any language translation keywords are missed, it will fallback to English.
 
