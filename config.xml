@@ -109,6 +109,7 @@
         <preference name="MixedContentMode" value="2" />
         <preference name="AndroidPersistentFileLocation" value="Compatibility" />
         <config-file parent="/*" target="AndroidManifest.xml">
+            <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
         </config-file>
         <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application" xmlns:android="http://schemas.android.com/apk/res/android">
             <application android:usesCleartextTraffic="true" />

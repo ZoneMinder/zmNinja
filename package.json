@@ -89,7 +89,7 @@
     "cordova-plugin-advanced-http": "3.3.1",
     "cordova-plugin-advanced-websocket": "^1.1.6",
     "cordova-plugin-android-fingerprint-auth": "^1.5.0",
-    "cordova-plugin-android-permissions": "^1.1.3",
+    "cordova-plugin-android-permissions": "^1.1.5",
     "cordova-plugin-androidx-adapter": "^1.1.3",
     "cordova-plugin-app-version": "^0.1.14",
     "cordova-plugin-customurlscheme": "^5.0.2",
