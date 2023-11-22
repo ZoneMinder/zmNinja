@@ -1135,6 +1135,26 @@ angular.module('zmApp', [
 
       NVR.log("You are running on " + $rootScope.platformOS);
 
+      if ($rootScope.platformOS == 'android') {
+        var permissions = cordova.plugins.permissions;
+        permissions.checkPermission(permissions.POST_NOTIFICATIONS, checkPermissionCallback, null);
+
+        function checkPermissionCallback(status) {
+          if (!status.checkPermission) {
+            NVR.log("No permission to post notifications");
+          }
+          permissions.requestPermission(permissions.POST_NOTIFICATIONS, succ, err);
+        }
+      }
+
+      function succ(s) {
+        NVR.log("Got permission to post notifications");
+      }
+
+      function err(e) {
+        NVR.log("Error in requestPermission");
+      }
+
       $rootScope.appName = "zmNinja";
       $rootScope.zmGlobalCookie = "";
       $rootScope.isEventFilterOn = false;
