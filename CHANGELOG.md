@@ -1,5 +1,13 @@
 # Changelog
 
+## [v1.7.002](https://github.com/ZoneMinder/zmNinja/tree/v1.7.002) (2023-11-28)
+
+[Full Changelog](https://github.com/ZoneMinder/zmNinja/compare/v1.6.009...v1.7.002)
+
+- Updates to build on modern Android and IOS
+- Refresh auth tokens early to reduce logging of expired tokens.
+- Add support for ZM 1.37
+
 ## [v1.6.009](https://github.com/ZoneMinder/zmNinja/tree/v1.6.009) (2021-07-14)
 
 [Full Changelog](https://github.com/ZoneMinder/zmNinja/compare/v1.6.008...v1.6.009)
