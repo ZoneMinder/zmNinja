@@ -1,5 +1,11 @@
 # Changelog
 
+## [v1.7.003](https://github.com/ZoneMinder/zmNinja/tree/v1.7.003) (2023-12-07)
+
+[Full Changelog](https://github.com/ZoneMinder/zmNinja/compare/v1.7.002...v1.7.003)
+
+- Fix Montage using snapshot mode instead of full streaming
+
 ## [v1.7.002](https://github.com/ZoneMinder/zmNinja/tree/v1.7.002) (2023-11-28)
 
 [Full Changelog](https://github.com/ZoneMinder/zmNinja/compare/v1.6.009...v1.7.002)
