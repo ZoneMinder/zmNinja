@@ -22,7 +22,7 @@ angular.module('zmApp.controllers')
         DO NOT TOUCH zmAppVersion
         It is changed by sync_version.sh
       */
-      var zmAppVersion = "1.7.002";
+      var zmAppVersion = "1.7.003";
 
       var isBackground = false;
       var justResumed = false;
@@ -378,7 +378,7 @@ angular.module('zmApp.controllers')
           $ionicPlatform.ready(function () {
             $fileLogger.debug(val);
           });
-          //console.log (val);
+          // console.log (val);
         }
       }
 
