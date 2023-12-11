@@ -333,7 +333,7 @@ angular.module('zmApp.controllers')
         $scope.areImagesLoading = false;
         currentStreamState = streamState.SNAPSHOT;
         if (simulStreaming) {
-          $timeout (function () {
+          $timeout(function () {
             NVR.debug("Switching mode to streaming as multi-port on...");
             //NVR.regenConnKeys();
             //randEachTime();
@@ -1971,8 +1971,14 @@ angular.module('zmApp.controllers')
     }
 
     $scope.processImageError = function(monitor) {
-      if (currentStreamState != streamState.ACTIVE) return;
-      if (monitor.Monitor.listDisplay == 'blank') return;
+      if (currentStreamState != streamState.ACTIVE) {
+        console.log('Not active');
+        return;
+      }
+      if (monitor.Monitor.listDisplay == 'blank') {
+        console.log('listDisplay is blank');
+        return;
+      }
       var mintimesec = 10;
       var nowt = moment();
       var thent = monitor.Monitor.regenTime || moment();
@@ -2167,57 +2173,51 @@ function matchMonitorsToPositions(positions, mon) {
 }
 
 function parsePositions(ps) {
-  //var ld = NVR.getLogin();
-  var positions;
-  //NVR.debug ('parsePositions: got '+JSON.stringify(ps));
   if (!ps) return [];
+  var positions;
   try {
     positions = JSON.parse(ps);
   } catch (e) {
-    NVR.debug ("error parsing profile");
+    NVR.debug("error parsing profile");
     return undefined;
   }
   return positions;
 }
 
 function loadStreamQueryStatus () {
-
   function checkValidConnkey(query, i) {
     $http.get(query)
       .then (function (succ) {
         //console.log ("SUCCESS="+JSON.stringify(succ.data));
         if (succ.data && succ.data.result && succ.data.result == "Error") {
           $scope.MontageMonitors[i].Monitor.streamState = 'bad';
-          NVR.log ("Montage View: Regenerating Connkey as Failed:"+query);
-          $scope.MontageMonitors[i].Monitor.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+          NVR.log("Montage View: Regenerating Connkey as Failed:"+query);
+          NVR.regenConnKeys($scope.MontageMonitors[i]);
         } else if (succ.data && succ.data.result && succ.data.result == "Ok"){
           $scope.MontageMonitors[i].Monitor.streamState = 'good';
           //console.log (JSON.stringify(succ));
         }
       },
         function (err) {
-          NVR.log ("Stream Query ERR="+JSON.stringify(err));
+          NVR.log("Stream Query ERR="+JSON.stringify(err));
         });
   }
   //console.log ("MONTAGE: "+currentStreamState);
   if (currentStreamState != streamState.ACTIVE || !simulStreaming) return;
 
-  NVR.debug ('Montage View: Stream Status check');
-  var ld = NVR.getLogin();
+  NVR.debug('Montage View: Stream Status check');
 
-  var query;
-  for (var i = 0; i < $scope.MontageMonitors.length; i++) {
+  for (var i=0; i < $scope.MontageMonitors.length; i++) {
     if (($scope.MontageMonitors[i].Monitor.Function == 'None') ||
       ($scope.MontageMonitors[i].Monitor.listDisplay == 'noshow')) {
       continue;
     }
-    query = $scope.MontageMonitors[i].Monitor.recordingURL+'/index.php?view=request&request=stream&command=99';
-    //query = ld.url+'/index.php?view=request&request=stream&command=99';
+    var query = $scope.MontageMonitors[i].Monitor.recordingURL+'/index.php?view=request&request=stream&command=99';
     query = query + $rootScope.authSession;
     query += appendConnKey($scope.MontageMonitors[i].Monitor.connKey);
     //if (query) query += NVR.insertSpecialTokens();
     //console.log ("QUERY="+query);
-    checkValidConnkey(query,i);
+    checkValidConnkey(query, i);
   }
 }
 
@@ -2225,8 +2225,8 @@ $scope.constructStream = function(monitor) {
   var stream;
   //console.log ('MID='+monitor.Monitor.Id+" listDisplay:"+monitor.Monitor.listDisplay);
   if (currentStreamState == streamState.STOPPED || monitor.Monitor.listDisplay == 'noshow' ) {
-    //console.log ("STREAM=empty and auth="+$rootScope.authSession);
-    //sconsole.log ('EMPTY STREAM');
+    //console.log("STREAM=empty and auth="+$rootScope.authSession);
+    //sconsole.log('EMPTY STREAM');
     return "";
   }
 
@@ -2241,27 +2241,25 @@ $scope.constructStream = function(monitor) {
       "&rand=" + randToAvoidCacheMem + monitor.Monitor.Id;
     // console.log(stream);
   } else {
+    mode = getMode();
     stream = monitor.Monitor.streamingURL +
-    "/nph-zms?mode=" + getMode() +
+    "/nph-zms?mode=" + mode +
     "&monitor=" + monitor.Monitor.Id +
     "&scale=" + $scope.LoginData.montageQuality +
     "&rand=" + randToAvoidCacheMem + monitor.Monitor.Id;
+    if (mode != 'single')
+      stream += appendConnKey(monitor.Monitor.connKey);
 
     var fps = NVR.getLogin().montageliveFPS;
     if (fps) {
       stream +='&maxfps='+fps;
     }
   }
+  //console.log(stream);
 
   stream += $rootScope.authSession;
-  stream += appendConnKey(monitor.Monitor.connKey);
 
   if (stream) stream += NVR.insertSpecialTokens();
-
-  //randEachTime();
-  //"&rand=" + randToAvoidCacheMem;
-  //"&rand="+$scope.randToAvoidCacheMem
-  //console.log("STREAM=" + stream);
   return stream;
 };
 

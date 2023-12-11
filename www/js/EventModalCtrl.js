@@ -179,7 +179,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     NVR.debug("EventModalCtrl: Re-login detected, resetting everything & re-generating connkey");
     // NVR.stopNetwork("Auth-Success inside EventModalCtrl");
-    $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+    $scope.connKey = NVR.genConnKey();
     //console.log ("********* OFFSET FROM AUTH SUCC");
     $timeout(function () {
       sendCommand('14', $scope.connKey, '&offset=' + $scope.currentProgress.progress);
@@ -200,9 +200,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     $scope.isPaused = !$scope.isPaused;
     NVR.debug("Paused is " + $scope.isPaused);
     sendCommand($scope.isPaused ? '1' : '2', $scope.connKey);
-
   };
-
 
   $scope.onPlayerState = function (state) {
     // parent scope
@@ -449,7 +447,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
           {
             NVR.debug("Hmm I found an error " + JSON.stringify(resp));
             //window.stop();
-            // $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+            // $scope.connKey = NVR.genConnKey();
 
             // console.log (JSON.stringify(resp));
             /*$timeout(function()
@@ -1222,7 +1220,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     currentEvent = $scope.currentEvent;
 
     //console.log("Current Event " + JSON.stringify(currentEvent));
-    $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+    $scope.connKey = NVR.genConnKey();
     NVR.debug("Generated Connkey:" + $scope.connKey);
 
     $scope.currentFrame = 1;
@@ -1502,7 +1500,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     NVR.debug("Regenerating connkey as gapless has changed");
     // console.log ("********* OFFSET FROM TOGGLE GAPLESS");
     $timeout(function () {
-      $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+      $scope.connKey = NVR.genConnKey();
       currentStreamState = streamState.ACTIVE;
 
       /* $timeout(function()
@@ -1933,7 +1931,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
           NVR.debug("Hmm jump  error " + JSON.stringify(error));
           NVR.stopNetwork("EventModalCtrl-jumptoEventZms error");
-          $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+          $scope.connKey = NVR.genConnKey();
           //  console.log ("********* OFFSET FROM JUMPTOEVENTZMS ERROR");
           $timeout(function () {
             sendCommand('14', $scope.connKey, '&offset=' + $scope.currentProgress.progress);

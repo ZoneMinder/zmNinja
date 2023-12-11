@@ -299,13 +299,11 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   //-------------------------------------------------------------
 
   var as = $scope.$on("auth-success", function () {
-
     NVR.debug("MonitorModalCtrl: Re-login detected, resetting everything & re-generating connkey");
     //NVR.stopNetwork("MonitorModal-auth success");
     $scope.isModalStreamPaused = false;
 
     $timeout(function () {
-
       if (0 && $rootScope.platformOS == 'ios') {
         NVR.debug("Webkit hack, hammering window.stop();");
         NVR.stopNetwork();
@@ -313,13 +311,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         NVR.killLiveStream($scope.connKey, $scope.controlURL);
       }
 
-
-
-      $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+      $scope.connKey = NVR.genConnKey();
     });
-
-
-
   });
 
   $scope.cast = function (mid, mon) {
@@ -526,10 +519,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
   $scope.toggleZoneEdit = function () {
     $scope.isZoneEdit = !$scope.isZoneEdit;
-
-
-    $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
-
+    $scope.connKey = NVR.genConnKey();
 
     if ($scope.isZoneEdit) {
       $ionicScrollDelegate.$getByHandle("imgscroll").zoomTo(1, true);
@@ -1041,7 +1031,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
       var ld = NVR.getLogin();
       carouselUtils.setStop(false);
-      $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString(); // get new key for new id
+      $scope.connKey = NVR.genConnKey();
       $scope.animationInProgress = false; // has to be AFTER new connkey
       NVR.log("<<<New image loaded in with ck:" + $scope.connKey);
     }
@@ -1471,8 +1461,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
         if (succ.data && succ.data.result && succ.data.result == "Error") {
 
-            NVR.log ("Single view: regenerating Connkey as Failed:"+query);
-            $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+            NVR.log("Single view: regenerating Connkey as Failed:"+query);
+            $scope.connKey = NVR.genConnKey();
             $scope.streamState = 'bad';
 
 
@@ -1912,16 +1902,14 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
       NVR.stopNetwork();
     }
 
-    $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+    $scope.connKey = NVR.genConnKey();
     $scope.monStatus = "";
     $scope.isToggleListMenu = true;
     //console.log (">>>>>>>>>>>>>>>>>>>STOOOP");
 
     if ($rootScope.platformOS != 'android') {
-
       document.addEventListener("pause", onPause, false);
       document.addEventListener("resume", onResume, false);
-
     } else {
       NVR.debug("MonitorModal: Android detected, using cordova-multiwindow plugin for onStop/onStart instead");
       window.MultiWindowPlugin.registerOnStop("monitormodal-pause", onPause);
