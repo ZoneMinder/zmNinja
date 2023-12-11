@@ -9,11 +9,8 @@
       ng-click="toggleSubMenuFunction();">&nbsp;
     </button>
 
-
     <button ng-if="$root.LoginData.isKiosk" class="button button-icon button-danger ion-locked" style="color:red !important">
     </button>
-
-
 
     <button data-badge="{{$root.alarmCount}}"
       class="animated infinite tada button button-icon button-clear ion-ios-bell notification-badge"
@@ -38,19 +35,14 @@
     overflow-scroll="false" padding="false" class="notch-ready">
 
     <div ng-if="areImagesLoading" class="screen-note">&nbsp;{{ 'kArrangingImages' | translate }}...&nbsp;</div>
-
-
     <div ng-if="!minimal && toggleSubMenu">
       <!-- this is header -->
       <br />
       <div id="flyoutmenu" style="float:left">
         <ul>
-          <!-- <li>
-                                <a href="" ng-click="killAllImages()"> <i class="ion-ionic"></i></a>
-          
-                              </li>-->
-
-
+          <!-- 
+            <li> <a href="" ng-click="killAllImages()"> <i class="ion-ionic"></i></a></li>
+          -->
           <li ng-if="zmGroups.length">
             <a  ng-click="selectZMGroup()">
               <i class="ion-folder"></i>
@@ -155,8 +147,10 @@
                   <img class="{{monitor.Monitor.selectStyle}}" id="img-{{$index}}"
                     image-spinner-src="{{constructStream(monitor)}}"
                     ng-click="!isDragabillyOn?openModal(monitor.Monitor.Id, monitor.Monitor.Controllable, monitor.Monitor.ControlId, monitor.Monitor.connKey,monitor):toggleSelectItem(monitor.Monitor.Id);"
-                    image-spinner-loader="lines" img-spinner-w="{{monitor.Monitor.Width}}"
-                    img-spinner-h="{{monitor.Monitor.Height}}" image-on-error="processImageError(monitor);" />
+                    image-spinner-loader="lines"
+                    img-spinner-w="{{monitor.Monitor.Width}}"
+                    img-spinner-h="{{monitor.Monitor.Height}}"
+                    image-on-error="processImageError(monitor);" />
                 </div>
 
                 <figcaption ng-if="!LoginData.montageHideFooter" id="slowpulse"
