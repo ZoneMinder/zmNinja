@@ -378,7 +378,7 @@ angular.module('zmApp.controllers')
           $ionicPlatform.ready(function () {
             $fileLogger.debug(val);
           });
-          console.log (val);
+          console.log(val);
         }
       }
 
@@ -1714,8 +1714,8 @@ angular.module('zmApp.controllers')
       function regenConnKeys(mon) {
         var nowt = moment();
         if (mon) {
-          newConnKey = genConnKey();
-          debug("NVR: Regenerating connkey for Monitor:"+mon.Monitor.Id + " at "+nowt+" old "+mon.Monitor.connKey + " new "+newConnKey);
+          var newConnKey = genConnKey();
+          debug("NVR: Regenerating connkey for Monitor:"+mon.Monitor.Id+" at "+nowt+" old "+mon.Monitor.connKey+" new "+newConnKey);
           mon.Monitor.connKey = newConnKey;
           mon.Monitor.regenTime = nowt;
           if (mon.Monitor.regenHandle) {
@@ -2822,30 +2822,24 @@ angular.module('zmApp.controllers')
         },
 
         killLiveStream: function (ck, url, name) {
-
           if (!url) url = loginData.url;
 
           var myauthtoken = $rootScope.authSession.replace("&auth=", "");
-          var req = url + '/index.php';
-          req = req + "?view=request&request=stream";
-          req = req + "&connkey=" + ck;
-          req = req + "&auth=" + myauthtoken;
-          // req = req + "&command=17";
+          var req = url + '/index.php?view=request&request=stream';
+          req += "&connkey=" + ck;
+          req += "&auth=" + myauthtoken;
+          req += "&command=17";
           if (name == undefined) name = "";
-          debug("NVR: killing " + name + " live stream ck:" + ck);
-          return $http.get(req + "&command=17")
+          debug("NVR: killing " + name + " live stream ck:" + ck + " using "+req);
+          return $http.get(req)
             .then(
-              function (s) {
-                //  debug ("kill success for ck:"+ck+" with:"+JSON.stringify(s));
-
-              },
-              function (e) { //debug ("kill success for ck:"+ck+" with:"+JSON.stringify(e));
-              }
+              function (s) { debug("kill success for ck:"+ck+" with:"+JSON.stringify(s)); },
+              function (e) { debug("kill fail for ck:"+ck+" with:"+JSON.stringify(e)); }
             );
         },
 
         regenConnKeys: function (mon) {
-          return regenConnKeys (mon);
+          return regenConnKeys(mon);
         },
 
         getMonitors: function (forceReload) {
@@ -2867,7 +2861,14 @@ angular.module('zmApp.controllers')
             log((forceReload == 1) ? "getMonitors:Force reloading all monitors" : "getMonitors:Loading all monitors");
             var apiurl = loginData.apiurl;
             var myurl = apiurl + "/monitors";
-            myurl += "/index/"+"Type !=:WebSite.json" + "?"+$rootScope.authSession;
+            myurl += "/index/"+"Type!=:WebSite";
+            if (versionCompare($rootScope.apiVersion, "1.37") > 0) {
+              myurl += '/Deleted=:0';
+              myurl += '/Capturing!=:None';
+            } else {
+              myurl += '/Function!=:None';
+            }
+            myurl += ".json?"+$rootScope.authSession;
 
             getZMState().then(function(data) {
               getZmsMultiPortSupport()
