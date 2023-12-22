@@ -26,9 +26,9 @@
       "cordova-plugin-ionic-keyboard": {},
       "cordova-plugin-add-swift-support": {},
       "cordova-plugin-firebasex": {
-        "FIREBASE_ANALYTICS_COLLECTION_ENABLED": "true",
-        "FIREBASE_PERFORMANCE_COLLECTION_ENABLED": "true",
-        "FIREBASE_CRASHLYTICS_COLLECTION_ENABLED": "true",
+        "FIREBASE_ANALYTICS_COLLECTION_ENABLED": "false",
+        "FIREBASE_PERFORMANCE_COLLECTION_ENABLED": "false",
+        "FIREBASE_CRASHLYTICS_COLLECTION_ENABLED": "false",
         "FIREBASE_FCM_AUTOINIT_ENABLED": "true",
         "ANDROID_ICON_ACCENT": "#FF00FFFF",
         "ANDROID_FIREBASE_PERFORMANCE_MONITORING": "false",
