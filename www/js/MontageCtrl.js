@@ -743,6 +743,7 @@ angular.module('zmApp.controllers')
 
     $scope.cancelReorder = function () {
       $scope.modal.remove();
+      var ld = NVR.getLogin();
       ld.packeryPositions = JSON.stringify(beforeReorderPositions);
       //ld.currentMontageProfile='';
       NVR.debug('Updating positions:'+JSON.stringify(ld.packeryPositions));
@@ -1972,11 +1973,11 @@ angular.module('zmApp.controllers')
 
     $scope.processImageError = function(monitor) {
       if (currentStreamState != streamState.ACTIVE) {
-        console.log('Not active');
+        console.log('Not active in processImageError for monitor '+monitor.Monitor.Id);
         return;
       }
       if (monitor.Monitor.listDisplay == 'blank') {
-        console.log('listDisplay is blank');
+        console.log('listDisplay is blank for monitor ' + monitor.Monitor.Id);
         return;
       }
       var mintimesec = 10;
@@ -2208,13 +2209,18 @@ function loadStreamQueryStatus () {
   NVR.debug('Montage View: Stream Status check');
 
   for (var i=0; i < $scope.MontageMonitors.length; i++) {
-    if (($scope.MontageMonitors[i].Monitor.Function == 'None') ||
-      ($scope.MontageMonitors[i].Monitor.listDisplay == 'noshow')) {
+    var monitor = $scope.MontageMonitors[i].Monitor;
+    if ((monitor.Function == 'None') || (monitor.listDisplay == 'noshow')) {
       continue;
     }
-    var query = $scope.MontageMonitors[i].Monitor.recordingURL+'/index.php?view=request&request=stream&command=99';
-    query = query + $rootScope.authSession;
-    query += appendConnKey($scope.MontageMonitors[i].Monitor.connKey);
+    var query = monitor.recordingURL+'/index.php?view=request&request=stream&command=99';
+    if (!monitor.connKey) {
+      console.log("No connKey for "+monitor.Id);
+      continue;
+    }
+
+    query += appendConnKey(monitor.connKey);
+    query += $rootScope.authSession;
     //if (query) query += NVR.insertSpecialTokens();
     //console.log ("QUERY="+query);
     checkValidConnkey(query, i);
