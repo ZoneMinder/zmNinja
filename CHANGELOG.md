@@ -1,5 +1,16 @@
 # Changelog
 
+## [v1.7.004](https://github.com/ZoneMinder/zmNinja/tree/v1.7.003) (2023-12-22)
+
+[Full Changelog](https://github.com/ZoneMinder/zmNinja/compare/v1.7.003...v1.7.004)
+
+- Implement 1.37 support for Deleted and Capturing monitor fields.
+- Fix error when closing montage profile edit
+- Prevent setting img src to undefined due to imageSpinnerSrc being undefined.
+- Add login credentials to API login?
+- Fix connKey becoming undefined due to use of regenConnKey instead of genConnKey
+
+
 ## [v1.7.003](https://github.com/ZoneMinder/zmNinja/tree/v1.7.003) (2023-12-07)
 
 [Full Changelog](https://github.com/ZoneMinder/zmNinja/compare/v1.7.002...v1.7.003)
