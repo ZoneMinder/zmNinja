@@ -1972,11 +1972,11 @@ angular.module('zmApp.controllers')
 
     $scope.processImageError = function(monitor) {
       if (currentStreamState != streamState.ACTIVE) {
-        console.log('Not active in processImageError for monitor '+monitor.Monitor.Id);
+        NVR.debug('Not active in processImageError for monitor '+monitor.Monitor.Id);
         return;
       }
       if (monitor.Monitor.listDisplay == 'blank') {
-        console.log('listDisplay is blank for monitor ' + monitor.Monitor.Id);
+        NVR.debug('listDisplay is blank for monitor ' + monitor.Monitor.Id);
         return;
       }
       var mintimesec = 10;
