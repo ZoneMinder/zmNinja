@@ -522,13 +522,9 @@ angular.module('zmApp', [
 
           // show an image-missing image 
           $element.bind('error', function () {
-           
             loader.remove();
 
-
             var url = 'img/noimage.png';
-
-
             var w = $attributes.imgSpinnerW;
             var h = $attributes.imgSpinnerH;
 
@@ -540,8 +536,7 @@ angular.module('zmApp', [
                  objectFit: 'fill'
              });*/
 
-
-            // console.log ("**********"+w+"X"+h);
+            console.log ("**********"+w+"X"+h);
             //  var hurl = "holder.js/2000x$2000?auto=yes&theme=sky&text=...";
 
             $attributes.$set('data-src', 'holder.js/' + w + 'x' + h + '?auto=yes&theme=industrial&text=...');
@@ -553,7 +548,6 @@ angular.module('zmApp', [
             // $element.prop ('width', w+'px');
             // $element.prop ('height', h+'px');
 
-
             // $element.css({backgroundImage: 'url("' + url + '")'});
             //$attributes.$set('src', url);
             // $element.prop('data-src', hurl);
@@ -564,8 +558,7 @@ angular.module('zmApp', [
               //console.log (">>>>  ERROR CBK");
               $scope.imageOnError();
              // fn($scope, {});
-            }
-            else {
+            } else {
               //console.log (">>>>>>>>>> NO ERROR CBK");
             }
               
@@ -577,7 +570,6 @@ angular.module('zmApp', [
                 imageLoadingDataShare.set(0);
                 //console.log ("IMAGE LOADED");
               });
-
           }
 
           function loadImage() {
@@ -587,7 +579,6 @@ angular.module('zmApp', [
                 loader.remove();
 
                 if ($attributes.imageonload) {
-                 
                   $scope.$apply($attributes.imageonload);
                  // fn($scope, {});
                 }
@@ -601,7 +592,6 @@ angular.module('zmApp', [
                   function () {
                     waitForFrame1();
                   });
-
               }
             });
 
@@ -613,7 +603,6 @@ angular.module('zmApp', [
                 }
                 // set style attribute on element (it will load image)
                 if (imageLoadingDataShare.get() != 1)
-
                   $element[0].style.backgroundImage = 'url(' + $attributes.imageSpinnerSrc + ')';
 
                 //$element[0].style.backgroundImage = 'url(' + 'img/noimage.png'+ ')';
@@ -623,16 +612,14 @@ angular.module('zmApp', [
               bgImg.src = $attributes.imageSpinnerSrc;
 
             } else {
-
               var ld = NVR.getLogin();
-              if (ld.isUseAuth && $rootScope.authSession=='' ) {
-                NVR.log ("waiting for authSession to have a value...");
-
-              } else {
+              if (ld.isUseAuth && ($rootScope.authSession=='')) {
+                NVR.log("waiting for authSession to have a value...");
+              } else if ($attributes.imageSpinnerSrc) {
                 $element[0].src = $attributes.imageSpinnerSrc; // set src 
+              } else {
+                NVR.log("No imageSpinnerSrc!");
               }
-          
-
             }
           }
 
