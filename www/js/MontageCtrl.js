@@ -877,10 +877,9 @@ angular.module('zmApp.controllers')
         NVR.stopNetwork("", true)
           .then(function (succ) {
             for (var i = 0; i < $scope.MontageMonitors.length; i++) {
-              if ($scope.MontageMonitors[i].Monitor.listDisplay == 'show')
-                NVR.killLiveStream(
-                  $scope.MontageMonitors[i].Monitor.connKey,
-                  $scope.MontageMonitors[i].Monitor.controlURL);
+              const monitor = $scope.MontageMonitors[i].Monitor;
+              if (monitor.listDisplay == 'show')
+                NVR.killLiveStream(monitor.connKey, monitor.controlURL);
             }
             // in context of timeout
 
@@ -1508,7 +1507,7 @@ angular.module('zmApp.controllers')
         currentStreamState = streamState.ACTIVE;
         NVR.debug('Regenerating connkeys so old kills wont affect');
         for (var i = 0; i < $scope.MontageMonitors.length; i++) {
-          $scope.MontageMonitors[i].Monitor.connKey = NVR.regenConnKeys($scope.MontageMonitors[i]);
+          $scope.MontageMonitors[i].Monitor.connKey = NVR.genConnKey();
         }
       }
     }
@@ -2167,7 +2166,7 @@ function matchMonitorsToPositions(positions, mon) {
       }*/
   } //mon
 
-  NVR.debug ('after matchMontageProfile, will packery re-init? '+ layouttype);
+  NVR.debug('after matchMontageProfile, will packery re-init? '+ layouttype);
   NVR.setMonitors(mon);
   $scope.monitors = mon;
   return layouttype;
@@ -2258,14 +2257,13 @@ $scope.constructStream = function(monitor) {
 
     var fps = NVR.getLogin().montageliveFPS;
     if (fps) {
-      stream +='&maxfps='+fps;
+      stream += '&maxfps=' + fps;
     }
   }
-  //console.log(stream);
 
   stream += $rootScope.authSession;
-
-  if (stream) stream += NVR.insertSpecialTokens();
+  stream += NVR.insertSpecialTokens();
+  //NVR.debug(stream);
   return stream;
 };
 
@@ -2297,8 +2295,8 @@ $scope.$on('$ionicView.beforeEnter', function () {
   $scope.zmGroups  = NVR.listOfZMGroups();
   $scope.currentZMGroupName = NVR.getLogin().currentZMGroupName;
 
-  $scope.$on ( "process-push", function () {
-    NVR.debug (">> MontageCtrl: push handler");
+  $scope.$on("process-push", function () {
+    NVR.debug(">> MontageCtrl: push handler");
     var s = NVR.evaluateTappedNotification();
     NVR.debug("tapped Notification evaluation:"+ JSON.stringify(s));
     $ionicHistory.nextViewOptions({
