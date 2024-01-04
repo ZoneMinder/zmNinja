@@ -965,7 +965,7 @@ angular.module('zmApp.controllers')
           (versionCompare(loginData.currentServerVersion, zm.versionWithLoginAPI) != -1 || loginData.loginAPISupported)
         ) {
 
-          const myurl = loginData.apiurl + '/host/login.json';
+          const myurl = loginData.apiurl + '/host/login.json?username='+loginData.username+'&password='+loginData.password;
           debug("Server version " + loginData.currentServerVersion + " > 1.31.41, so using login API:" + myurl);
           $http.get(myurl)
             .then(function (s) {
@@ -986,7 +986,7 @@ angular.module('zmApp.controllers')
                     // incase auth is turned off, but user said
                     // its on.
                     $rootScope.authSession="&nonauth=none";
-                    debug ('Your auth seems to be turned off, but you said yes');
+                    debug('Your auth seems to be turned off, but you said yes');
                   }
 
                   d.resolve($rootScope.authSession);
@@ -2822,6 +2822,11 @@ angular.module('zmApp.controllers')
         },
 
         killLiveStream: function (ck, url, name) {
+          if (ck === undefined) {
+            log("Cannot kill a live stream without a connkey", new Error().stack);
+            return;
+          }
+
           if (!url) url = loginData.url;
 
           var myauthtoken = $rootScope.authSession.replace("&auth=", "");
@@ -2829,8 +2834,8 @@ angular.module('zmApp.controllers')
           req += "&connkey=" + ck;
           req += "&auth=" + myauthtoken;
           req += "&command=17";
-          if (name == undefined) name = "";
-          debug("NVR: killing " + name + " live stream ck:" + ck + " using "+req);
+          if (name === undefined) name = "";
+          debug("NVR: killing " + name + " live stream connkey:" + ck + " using " + req);
           return $http.get(req)
             .then(
               function (s) { debug("kill success for ck:"+ck+" with:"+JSON.stringify(s)); },
