@@ -22,7 +22,7 @@ angular.module('zmApp.controllers')
         DO NOT TOUCH zmAppVersion
         It is changed by sync_version.sh
       */
-      var zmAppVersion = "1.7.003";
+      var zmAppVersion = "1.7.004";
 
       var isBackground = false;
       var justResumed = false;
@@ -2842,6 +2842,8 @@ angular.module('zmApp.controllers')
               function (e) { debug("kill fail for ck:"+ck+" with:"+JSON.stringify(e)); }
             );
         },
+
+        genConnKey: genConnKey,
 
         regenConnKeys: function (mon) {
           return regenConnKeys(mon);
