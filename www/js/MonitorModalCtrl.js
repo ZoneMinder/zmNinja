@@ -39,7 +39,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
       currentStreamState = streamState.ACTIVE;
       NVR.debug('Forcing stream to regular quality, imageLoaded() was never called');
     }
-  },10000);
+  }, 10000);
 
   $scope.csize = ($rootScope.platformOS == 'desktop') ? 10 : 20;
 
@@ -57,12 +57,10 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
   intervalModalHandle = $interval(function () {
     loadModalNotifications();
-    //  console.log ("Refreshing Image...");
   }.bind(this), zm.alarmStatusTime);
 
   intervalStreamQueryHandle = $interval(function () {
     loadStreamQuery();
-    //  console.log ("Refreshing Image...");
   }.bind(this), streamQueryTimer);
 
   if ($rootScope.platformOS == 'desktop') {
@@ -382,8 +380,6 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
       $interval.cancel(intervalStreamQueryHandle);
       $interval.cancel(cycleHandle);
 
-      var ld = NVR.getLogin();
-
       intervalModalHandle = $interval(function () {
         loadModalNotifications();
       }.bind(this), zm.alarmStatusTime);
@@ -393,6 +389,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         //  console.log ("Refreshing Image...");
       }.bind(this), streamQueryTimer);
 
+      var ld = NVR.getLogin();
       if (ld.cycleMonitors) {
         NVR.debug("Cycling enabled at " + ld.cycleMonitorsInterval);
 
@@ -402,13 +399,9 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
           moveToMonitor($scope.monitorId, 1);
           //  console.log ("Refreshing Image...");
         }.bind(this), ld.cycleMonitorsInterval * 1000);
-
       }
-
       $rootScope.modalRand = Math.floor((Math.random() * 100000) + 1);
-
     }
-
   }
 
   //-------------------------------------------------------------
@@ -537,19 +530,23 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   };
 
   $scope.imageError = function() {
-    console.log ("*** IMAGE LOAD ERROR ");
+    console.log("*** IMAGE LOAD ERROR ");
   };
 
   $scope.imageLoaded = function () {
-    NVR.debug ('single view image load complete');
+    NVR.debug('single view image load complete');
     //console.log ("**** SINGLE IMAGE LOADED");
     imageLoaded();
+  };
+
+  $scope.processImageError = function(monitorId) {
+	  console.log(monitorId);
+    NVR.debug("Image load error for: ");
   };
 
   $scope.checkZoom = function () {
     //var z = $ionicScrollDelegate.$getByHandle("imgscroll").getScrollPosition().zoom;
     //imageLoaded();
-
   };
 
   $scope.circleTouch = function (evt) {
@@ -558,7 +555,6 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
   //$scope.circleOnDrag = function (evt, ndx)
   function recomputePolygons(ax, ay, ndx, z) {
-
 
     // we get screen X/Y - need to translate
     // to SVG points
@@ -622,22 +618,16 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
       //console.log ("TOUCH");
       x = event.targetTouches[0].pageX;
       y = event.targetTouches[0].pageY;
-
     } else {
       //console.log ("MOUSE");
       x = event.clientX;
       y = event.clientY;
-
-
     }
-
 
     // console.log ("X="+x+" Y="+y + " sl="+document.body.scrollLeft+ " sy="+document.body.scrollTop);
     $timeout(function () {
       recomputePolygons(x, y, targetID, 1);
     });
-
-
   }
 
   function moveStop(event) {
@@ -664,12 +654,10 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
       //console.log(event.changedTouches[0], this, "t");
       x = event.touches[0].pageX;
       y = event.touches[0].pageY;
-
     } else {
       //console.log(event, this, "t");
       x = event.clientX;
       y = event.clientY;
-
     }
     //console.log ("X="+x+" Y="+y + " sl="+document.body.scrollLeft+ " sy="+document.body.scrollTop);
 
@@ -682,6 +670,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     currentStreamState = streamState.ACTIVE;
 
+    NVR.debug("imgeLoaded");
     if ($scope.animationInProgress) return;
     /*
     var img = document.getElementById("singlemonitor");
@@ -729,12 +718,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   }*/
 
     $scope.isModalStreamPaused = false;
-    //NVR.debug("Modal image loaded, switching to streaming");
-
-
-
-
-
+    NVR.debug("Modal image loaded, switching to streaming");
   }
 
 
@@ -838,15 +822,13 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
       transformRequest: function (obj) {
         var str = [];
         for (var p in obj)
-          str.push(encodeURIComponent(p) + "=" +
-            encodeURIComponent(obj[p]));
+          str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
         var foo = str.join("&");
         //console.log("****PTZ RETURNING " + foo);
         return foo;
       },
 
       data: ptzData
-
     });
 
     req.then(function (resp) {
@@ -870,7 +852,6 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   };
 
   $scope.onTap = function (m, d) {
-
     moveToMonitor(m, d);
   };
 
@@ -892,8 +873,6 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   };
 
   function moveToMonitor(m, d) {
-
-
     if ($scope.isZoneEdit) {
       NVR.log("Not cycling, as you are editing zones");
       return;
@@ -904,13 +883,10 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
       return;
     }
 
-
-
     $scope.animationInProgress = true;
     var curstate = $ionicHistory.currentStateName();
     var found = 0;
-    var mid;
-    mid = NVR.getNextMonitor(m, d);
+    var mid = NVR.getNextMonitor(m, d);
 
     $scope.showPTZ = false;
 
@@ -938,9 +914,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
             " Enabled=" + $scope.monitors[i].Monitor.Enabled);
         }
       }
-
-    }
-    while (found != 1);
+    } while (found != 1);
 
     // now kill stream and set up next
     NVR.debug("Killing stream before we move on to next monitor...");
@@ -953,9 +927,6 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
       NVR.killLiveStream($scope.connKey, $scope.controlURL);
 
       // we should now have a paused stream, time to animate out
-
-
-
       var dirn = d;
       if (dirn == 1) {
         slideout = "animated slideOutLeft";
@@ -965,21 +936,15 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         slidein = "animated slideInLeft";
       }
 
-
       element.addClass(slideout)
         .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', outWithOld);
     });
 
-
-
-
     function outWithOld() {
-
       NVR.log(">>>Old image out");
       // NVR.log("ModalCtrl:Stopping network pull...");
       //NVR.stopNetwork("MonitorModal-outwithOld");
       $scope.rand = Math.floor((Math.random() * 100000) + 1);
-
 
       $timeout(function () {
         element.removeClass(slideout);
@@ -998,11 +963,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     }
 
     function inWithNew() {
-
       element.removeClass(slidein);
-
       $scope.isModalStreamPaused = false;
-
 
       var ld = NVR.getLogin();
       carouselUtils.setStop(false);
@@ -1012,7 +974,6 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     }
 
     $ionicLoading.hide();
-
   }
 
   //-----------------------------------------------------------------------
@@ -1310,9 +1271,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     if (currentStreamState != streamState.SNAPSHOT_LOWQUALITY)
       stream += "&rand=" + $rootScope.modalRand;
 
-    //console.log ("STREAM="+stream);
-
     stream += NVR.insertSpecialTokens();
+    NVR.debug("STREAM="+stream);
     return stream;
   };
 
@@ -1382,14 +1342,11 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   });
 
   $scope.$on('modal.removed', function () {
-
-
     if ($rootScope.platformOS == 'android') {
       NVR.debug("Deregistering handlers for multi-window");
 
       window.MultiWindowPlugin.deregisterOnStop("monitormodal-pause");
       window.MultiWindowPlugin.deregisterOnStart("monitormodal-resume");
-
     }
 
     if ($rootScope.platformOS == 'desktop') {
@@ -1575,8 +1532,6 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   }
 
   $scope.toggleListMenu = function () {
-
-
     $scope.isToggleListMenu = !$scope.isToggleListMenu;
     //console.log ("isToggleListMenu:"+$scope.isToggleListMenu);
   };
@@ -1605,7 +1560,6 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     zl += val;
     NVR.debug("Zoom level is " + zl);
     $ionicScrollDelegate.$getByHandle("imgscroll").zoomTo(zl, true);
-
   };
 
   //-------------------------------------------------------------
