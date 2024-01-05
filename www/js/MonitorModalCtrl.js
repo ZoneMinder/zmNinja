@@ -1272,7 +1272,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
       stream += "&rand=" + $rootScope.modalRand;
 
     stream += NVR.insertSpecialTokens();
-    NVR.debug("STREAM="+stream);
+    //NVR.debug("STREAM="+stream);
     return stream;
   };
 
