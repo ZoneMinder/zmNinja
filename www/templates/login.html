@@ -42,13 +42,12 @@
         <ion-checkbox ng-model="loginData.isUseAuth">{{'kUseZmAuth' | translate }}</ion-checkbox>
         <div ng-if="loginData.isUseAuth">
           <label class="item item-input item-floating-label">
-            <span class="input-label">{{'kUserName'|translate}}</span>
-            <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="{{'kUserName' | translate}}"
-              ng-model="loginData.username">
+            <span class="input-label">{{'kUserName' | translate}}</span>
+            <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="{{'kUserName' | translate}}" ng-model="loginData.username"/>
           </label>
           <label class="item item-input item-floating-label">
             <span class="input-label">{{'kPassword' | translate}}</span>
-            <input type="password" placeholder="{{'kPassword' | translate}}" ng-model="loginData.password">
+            <input type="password" placeholder="{{'kPassword' | translate}}" ng-model="loginData.password"/>
           </label>
         </div>
       </div>
@@ -59,11 +58,11 @@
           <label class="item item-input item-floating-label">
             <span class="input-label">{{'kUserName'|translate}}</span>
             <input autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="{{'kUserName' | translate}}"
-              ng-model="loginData.basicAuthUser">
+              ng-model="loginData.basicAuthUser"/>
           </label>
           <label class="item item-input item-floating-label">
             <span class="input-label">{{'kPassword' | translate}}</span>
-            <input type="password" placeholder="{{'kPassword' | translate}}" ng-model="loginData.basicAuthPassword">
+            <input type="password" placeholder="{{'kPassword' | translate}}" ng-model="loginData.basicAuthPassword"/>
           </label>
         </div>
       </div>
@@ -73,20 +72,19 @@
       <label class="item item-input item-floating-label">
         <span class="input-label">{{'kPortalUrl' | translate}}</span>
         <input hidepassword autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="{{'kPortalUrlExample' | translate}}"
-          ng-model="loginData.url" ng-keyup="portalKeypress($event)">
+          ng-model="loginData.url" ng-keyup="portalKeypress($event)"/>
       </label>
-      <!--<button class="button button-small button-clear icon-left ion-wand" ng-click="detectCgi()">tap here to discover cgi-bin
-                </button>-->
+      <!--<button class="button button-small button-clear icon-left ion-wand" ng-click="detectCgi()">tap here to discover cgi-bin </button>-->
       <label class="item item-input item-floating-label">
         <!--<span style="float:right;margin-top:-7px;background-color:#6d0909;color:#fff;font-size:14px;opacity:0.7;width:90px;border-radius: 0px 0px 5px 5px;" on-tap="detectCgi();">&nbsp;&nbsp;&nbsp;<i class="ion-wand"></i>discover</span>-->
         <span class="input-label">{{'kPathToCgi' | translate}}</span>
         <input hidepassword autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="{{'kPathToCgiExample' | translate}}"
-          ng-model="loginData.streamingurl">
+          ng-model="loginData.streamingurl"/>
       </label>
       <label class="item item-input item-floating-label">
         <span class="input-label">{{'kApiUrl' | translate}}</span>
         <input hidepassword autocapitalize="none" autocomplete="off" autocorrect="off" type="text" placeholder="{{'kApiUrlExample' | translate}}"
-          ng-model="loginData.apiurl">
+          ng-model="loginData.apiurl"/>
       </label>
       <a class="item item-icon-right" href="" ng-click="selectFallback()">
         <i class="icon ion-ios-arrow-right">
@@ -98,16 +96,15 @@
         </i> {{'kEventServer' | translate}}
       </a>
       
-        <label>
-          <ion-toggle ng-model="loginData.usePin" ng-change="pinPrompt();" toggle-class="toggle-calm">
-            <span class="item-text-wrap">{{'kPassword' | translate}} {{'kProtect'|translate}}</span>
-          </ion-toggle>
+      <label>
+        <ion-toggle ng-model="loginData.usePin" ng-change="pinPrompt();" toggle-class="toggle-calm">
+          <span class="item-text-wrap">{{'kPassword' | translate}} {{'kProtect'|translate}}</span>
+        </ion-toggle>
 
-          <ion-toggle ng-model="loginData.isKiosk" toggle-class="toggle-calm" ng-change="kioskPinConfig();" >
-            <span class="item-text-wrap">{{'kKioskMode' | translate}} </span>
-          </ion-toggle>
-        </label>
-     
+        <ion-toggle ng-model="loginData.isKiosk" toggle-class="toggle-calm" ng-change="kioskPinConfig();" >
+          <span class="item-text-wrap">{{'kKioskMode' | translate}} </span>
+        </ion-toggle>
+      </label>
 
       <div ng-if="$root.platformOS != 'desktop'">
         <label>
