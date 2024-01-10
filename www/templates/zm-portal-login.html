@@ -5,7 +5,7 @@
         <br />
         <br />
         <div id="responsive-image">
-          <img src="img/authlogo.png">
+          <img src="img/authlogo.png"/>
         </div>
         <div ng-if="pinPrompt">
           <span style="color:white">{{'kEnterPin' | translate}}</span>
@@ -15,12 +15,12 @@
           <br />
           <span style="color:white">{{pindata.status}}</span>
           <br />
-          <button class="button  button-dark icon ion-unlocked" ng-click="unlock()"> Unlock
-          </button>
+          <button class="button button-dark icon ion-unlocked" ng-click="unlock()"> Unlock </button>
         </div>
         <div id="really-your-fault" class="animated fadeIn" style="color:white">{{'kPortalNotice' | translate}}
           <br />
-          <br />{{'kPortalNoticeSub' | translate}}</div>
+          <br />{{'kPortalNoticeSub' | translate}}
+        </div>
       </center>
     </div>
   </ion-content>
