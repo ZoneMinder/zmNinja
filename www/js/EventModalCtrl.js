@@ -123,11 +123,8 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
       //console.log(keyCode + " PRESSED");
 
       if (keyCode == keyCodes.ESC) {
-
         $scope.closeModal();
-
       } else if (keyCode == keyCodes.LEFT) {
-
         $scope.jumpToEvent($scope.prevId, -1);
       } else if (keyCode == keyCodes.RIGHT) {
         $scope.jumpToEvent($scope.nextId, 1);
@@ -146,8 +143,6 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
     });
   }
-
-
 
   //--------------------------------------------------------------------------------------
   // Handles bandwidth change, if required
@@ -1202,7 +1197,6 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
       showLive = false;
       NVR.debug("I was explictly asked not to show live, cross my fingers...");
     } else {
-
       NVR.debug("If recording is in progress, live feed will be shown");
     }
     $scope.isToggleListMenu = true;
@@ -1322,7 +1316,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
   }
 
   $scope.modalImageLoaded = function () {
-    // console.log ("MODAL IMAGE LOADED");
+    console.log("MODAL IMAGE LOADED");
     //  if (m.snapshot != 'enabled') currentStreamState = streamState.ACTIVE;
   };
 
@@ -2152,7 +2146,6 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     var myurl;
     if (loginData.retrieveFramesForEvents) {
       myurl = loginData.apiurl + '/events/' + eid + ".json?"+$rootScope.authSession;
-
     } else {
       myurl = loginData.apiurl + '/events/' + eid + ".json?noframes=true&"+$rootScope.authSession;
     }
@@ -2165,16 +2158,13 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     $http.get(myurl)
     .then(function (success) {
 
-        var event = success.data.event;
-        currentEvent = event;
-        $scope.event = event;
-        $scope.currentEvent = event;
+        var event = currentEvent = $scope.event = $scope.currentEvent = success.data.event;
 
         // console.log ("prepareModal DATA:"+JSON.stringify(success.data));
         computeAlarmFrames(success.data);
         $scope.eventWarning = '';
 
-        if (!event.Event.EndTime && showLive) {
+        if ((!event.Event.EndTime) && showLive) {
           $scope.eventWarning = $translate.instant('kEventStillRecording');
           // if this happens we get to live feed
           $scope.liveFeedMid = event.Event.MonitorId;
@@ -2183,9 +2173,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
         event.Event.BasePath = computeBasePath(event);
         event.Event.relativePath = computeRelativePath(event);
-
         event.Event.streamingURL = NVR.getStreamingURL(event.Event.MonitorId);
-
         event.Event.recordingURL = NVR.getRecordingURL(event.Event.MonitorId);
         event.Event.imageMode = NVR.getImageMode(event.Event.MonitorId);
 
@@ -2205,26 +2193,18 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
           event.Event.DefaultVideo = "";
         }
 
-
-
-
         var ld = NVR.getLogin();
-        if (ld.monitorSpecific[event.Event.MonitorId] &&
-            ld.monitorSpecific[event.Event.MonitorId].forceMjpeg) {
-              NVR.debug ('Monitor:'+event.Event.MonitorId+' has forced MJPEG playback');
-              $scope.defaultVideo ='';
+        if (ld.monitorSpecific[event.Event.MonitorId] && ld.monitorSpecific[event.Event.MonitorId].forceMjpeg) {
+          NVR.debug('Monitor:'+event.Event.MonitorId+' has forced MJPEG playback');
+          $scope.defaultVideo ='';
         } else {
-
           $scope.defaultVideo = event.Event.DefaultVideo;
         }
-
-
 
         $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
 
         if (currentStreamState != streamState.SNAPSHOT)
           currentStreamState = streamState.ACTIVE;
-
 
         //console.log("loginData is " + JSON.stringify($scope.loginData));
         //console.log("Event ID is " + $scope.eventId);
@@ -2243,9 +2223,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         $scope.prevId = "...";
 
         event.Event.video = {};
-        var videoURL;
-
-          videoURL = event.Event.recordingURL + "/index.php?view=view_video&mode=mpeg&format=h264&eid=" + event.Event.Id;
+        var videoURL = event.Event.recordingURL + "/index.php?view=view_video&mode=mpeg&format=h264&eid=" + event.Event.Id;
 
         if ($rootScope.authSession != 'undefined') videoURL += $rootScope.authSession;
         if ($rootScope.basicAuthToken) videoURL = videoURL + "&basicauth=" + $rootScope.basicAuthToken;
@@ -2259,7 +2237,6 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
         NVR.debug("Video url passed to player is: " + videoURL);
 
-
         $scope.videoObject = {
           config: {
             autoPlay: true,
@@ -2272,9 +2249,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                 src: $sce.trustAsResourceUrl(videoURL),
                 type: "video/mp4"
               }
-
             ],
-
             theme: "external/videogular2.2.1/videogular.min.css",
             cuepoints: {
               theme: {
@@ -2362,7 +2337,6 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         // lets
         framearray.datasets[0].data = [];
         for (i = 0; i < event.Frame.length; i++) {
-
           var ts = moment(event.Frame[i].TimeStamp).format(timeFormat);
 
           //console.log ("pushing s:" + event.Frame[i].Score+" t:"+ts);
@@ -2391,12 +2365,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         $scope.eventWarning = $translate.instant('kLiveView');
           // if this happens we get to live feed
           $scope.liveFeedMid = $scope.mid;
-
-
       });
-
-
-
   }
 
   if (typeof $scope.ionRange !== 'undefined') {
@@ -2454,5 +2423,10 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     //console.log ("PADTON: returning " + number);
     return number;
   }
+
+  $scope.processImageError = function(currentEvent) {
+    NVR.debug('Failed loading image for event ');
+    NVR.debug(currentEvent);
+  };
 
 }]);
