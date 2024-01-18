@@ -466,7 +466,7 @@
     "kWizNextStep3"              :"Go to the login screen with these findings auto filled in",
     "kWizPasswdNote"             :"note: if your password has special characters like #?@ or ampersand in it, the wizard may fail cgi detection. Its best if you temporarily change the password to a simple one, run the wizard and then change it back later",
     "kWizPortalAuth"             :"Portal Authentication",
-    "kWizPortalText"             :"Lets talk about how you have configured authentication If you have enabled authentication, toggle this button",
+    "kWizPortalText"             :"Lets talk about how you have configured authentication. If you have enabled authentication, toggle this button",
     "kWizPortalTip"              :"Confused? You can easily find out your portal URL by noting down the url you see on your browser when accessing the ZoneMinder Console.",
     "kWizPortalUrl"              :"What is your Zoneminder portal url?",
     "kWizResults"                :"Results of auto-detection",
