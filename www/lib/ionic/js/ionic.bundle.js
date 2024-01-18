@@ -5571,7 +5571,8 @@ ionic.views.Scroll = ionic.views.View.inherit({
       }
       if (width !== self.__indicatorX.size) {
         ionic.requestAnimationFrame(function(){
-          self.__indicatorX.indicator.style.width = width + 'px';
+          if (self.__indicatorX)
+            self.__indicatorX.indicator.style.width = width + 'px';
         });
       }
       self.__indicatorX.size = width;
