@@ -2186,8 +2186,6 @@ angular.module('zmApp.controllers')
         af = af + '/'+'Notes REGEXP:detected:';
       }
 
-     
-
       var apiurl = ld.apiurl + "/events/consoleEvents/1 hour" + af + ".json?"+$rootScope.authSession;
       //NVR.debug("consoleEvents API:" + apiurl);
 
@@ -2436,18 +2434,16 @@ angular.module('zmApp.controllers')
       }
 
       if (scrubOngoing) { 
-          NVR.debug ("making sure scrub is off");
-          scrubOngoing = false;
+        NVR.debug("making sure scrub is off");
+        scrubOngoing = false;
       }
 
       if (oldEvent && event != oldEvent) {
-
         NVR.debug("EventCtrl:Old event scrub will hide now");
         oldEvent.Event.ShowScrub = false;
         oldEvent.Event.rowHeight = getRowHeight(oldEvent);
         oldEvent = "";
       }
-      
 
       event.Event.ShowScrub = !event.Event.ShowScrub;
       var currentRowHeight = getRowHeight(event);
@@ -2460,19 +2456,14 @@ angular.module('zmApp.controllers')
         $ionicListDelegate.canSwipeItems(false);
         $ionicListDelegate.closeOptionButtons();
        // NVR.debug("disabling options swipe due to toggle");
-
       }
-
-
-
-
       //console.log ("SCRUBBING IS "+event.Event.ShowScrub);
       // $ionicScrollDelegate.resize();
 
       //console.log ("GROUP TYPE IS " + groupType);
 
-      if (event.Event.ShowScrub == true) // turn on display now
-      {
+      if (event.Event.ShowScrub == true) {
+        // turn on display now
 
         if (groupType == 'alarms') {
           // $ionicListDelegate.canSwipeItems(false);
@@ -2483,16 +2474,11 @@ angular.module('zmApp.controllers')
           NVR.log("API for event details" + myurl);
           $http.get(myurl)
             .then(function (data) {
-
-              
                 data = data.data;
-             
        
              //  var ndata = data.replace(/<pre class="cake-error">/,'');
-
            //    console.log ("NDATA:"+ndata);
                 //<pre class="cake-error">
-
 
                 $scope.FrameArray = data.event.Frame;
                 //  $scope.slider_options.scale=[];
