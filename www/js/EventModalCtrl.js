@@ -937,20 +937,13 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     NVR.debug("-->Going to try and download " + $scope.selectEventUrl);
     var url = $scope.selectEventUrl;
 
-
-    NVR.log(">>saveEvent: File path to grab is " + url);
-
     if ($rootScope.platformOS != 'desktop') {
-
       var album = 'zmNinja';
       NVR.debug("Trying to save image to album: " + album);
       cordova.plugins.photoLibrary.requestAuthorization(
         function () {
-          //url = "https://picsum.photos/200/300/?random";
-
           var fileTransfer = new FileTransfer();
           var urle = encodeURI(url);
-
 
           fileTransfer.onprogress = function (progressEvent) {
             if (progressEvent.lengthComputable) {
@@ -963,17 +956,13 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                   //duration: zm.httpTimeout
                 });
               });
-
-
             }
           };
 
           fileTransfer.download(urle, cordova.file.dataDirectory + fname,
             function (entry) {
-              NVR.debug("local download complete: " + entry.toURL());
-              NVR.debug("Now trying to move it to album");
+              NVR.debug("local download complete: " + entry.toURL() + '. Now trying to move it to album');
               var pluginName = ((fname.indexOf('.mp4') != -1) ? "saveVideo" : "saveImage");
-
 
               cordova.plugins.photoLibrary[pluginName](entry.toURL(), album,
                 function (cameraRollAssetId) {
@@ -987,27 +976,16 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
                         NVR.debug("could not delete temp file: " + JSON.stringify(e));
                       }
                     );
-
-
                 },
                 function (err) {
                   NVR.debug("Saving error:" + JSON.stringify(err));
                   SaveError();
-
                 });
-
-
-
-
             },
             function (err) {
               NVR.log("error downloading:" + JSON.stringify(err));
               SaveError();
             }, !loginData.enableStrictSSL, {});
-
-
-
-
           // User gave us permission to his library, retry reading it!
         },
         function (err) {
@@ -1638,7 +1616,6 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     });
 
   };
-
 
   $scope.deleteAndMoveNext = function (id) {
     NVR.debug("Delete and move next called with: " + id);
