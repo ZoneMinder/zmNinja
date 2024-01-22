@@ -110,6 +110,7 @@ angular.module('zmApp.controllers')
 
         //if monitorId is not specified, all monitors will be changed 
     
+        var currentVersion = NVR.getAppVersion();
 	if (NVR.versionCompare(currentVersion, '1.37.12') == 1) {
 	
 		$scope.monFunctions = [
