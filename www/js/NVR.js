@@ -2972,12 +2972,14 @@ angular.module('zmApp.controllers')
                               monitors[i].Monitor.rndKey = (Math.floor((Math.random() * 999999) + 1)).toString();
 
                               var serverFound = false;
-                              for (var j=0; j < multiservers.length; j++) {
-                                //console.log ("Comparing " + multiservers[j].Server.Id + " AND " + monitors[i].Monitor.ServerId);
-                                if (multiservers[j].Server.Id == monitors[i].Monitor.ServerId) {
-                                  //console.log ("Found match");
-                                  serverFound = true;
-                                  break;
+                              if (multiservers) {
+                                for (var j=0; j < multiservers.length; j++) {
+                                  //console.log ("Comparing " + multiservers[j].Server.Id + " AND " + monitors[i].Monitor.ServerId);
+                                  if (multiservers[j].Server.Id == monitors[i].Monitor.ServerId) {
+                                    //console.log ("Found match");
+                                    serverFound = true;
+                                    break;
+                                  }
                                 }
                               }
                               if (serverFound) {
