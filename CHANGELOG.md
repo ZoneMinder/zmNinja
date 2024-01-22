@@ -1,10 +1,18 @@
 # Changelog
 
+## [v1.7.006](https://github.com/ZoneMinder/zmNinja/tree/v1.7.006) (2024-01-22)
+
+[Full Changelog](https://github.com/ZoneMinder/zmNinja/compare/v1.7.005...v1.7.006)
+
+- Fix **EXCEPTION**ReferenceError: currentVersion is not defined caused by undefined when saving monitor config.
+
+
 ## [v1.7.005](https://github.com/ZoneMinder/zmNinja/tree/v1.7.005) (2024-01-04)
 
 [Full Changelog](https://github.com/ZoneMinder/zmNinja/compare/v1.7.004...v1.7.005)
 
 - fix NVR.genConnKey not being defined, causing lots of breakage.
+
 
 ## [v1.7.004](https://github.com/ZoneMinder/zmNinja/tree/v1.7.004) (2023-12-22)
 
