@@ -22,7 +22,7 @@ angular.module('zmApp.controllers')
         DO NOT TOUCH zmAppVersion
         It is changed by sync_version.sh
       */
-      var zmAppVersion = "1.7.004";
+      var zmAppVersion = "1.7.005";
 
       var isBackground = false;
       var justResumed = false;
@@ -2869,8 +2869,10 @@ angular.module('zmApp.controllers')
             var apiurl = loginData.apiurl;
             var myurl = apiurl + "/monitors";
             myurl += "/index/"+"Type!=:WebSite";
-            if (versionCompare($rootScope.apiVersion, "1.37") > 0) {
+            if (versionCompare($rootScope.apiVersion, "1.37.39") > 0) {
               myurl += '/Deleted=:0';
+            }
+            if (versionCompare($rootScope.apiVersion, "1.37.12") > 0) {
               myurl += '/Capturing!=:None';
             } else {
               myurl += '/Function!=:None';
