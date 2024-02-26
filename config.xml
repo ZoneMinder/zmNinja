@@ -7,7 +7,7 @@
     <author email="appsupport@zoneminder.com" href="https://zoneminder.com/">
 	Zoneminder Inc
   </author>
-    <content src="index.html" />
+    <content src="http://localhost/index.html" />
     <allow-navigation href="localhost://*" />
     <access launch-external="yes" origin="mailto:*" />
     <access origin="*" />
@@ -106,7 +106,6 @@
         <splash height="1125" src="resources/ios/splash/Default-Landscape-2436h.png" width="2436" />
     </platform>
     <platform name="android">
-        <preference name="MixedContentMode" value="2" />
         <preference name="AndroidPersistentFileLocation" value="Compatibility" />
         <config-file parent="/*" target="AndroidManifest.xml">
             <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
