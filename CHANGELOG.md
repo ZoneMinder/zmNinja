@@ -1,5 +1,13 @@
 # Changelog
 
+## [v1.7.007](https://github.com/ZoneMinder/zmNinja/tree/v1.7.007) (2024-03-03)
+
+[Full Changelog](https://github.com/ZoneMinder/zmNinja/compare/v1.7.006...v1.7.007)
+
+- Switch internal webview paths from https to http
+- This resolves issues on Android loading events and live views from non-https servers.
+
+
 ## [v1.7.006](https://github.com/ZoneMinder/zmNinja/tree/v1.7.006) (2024-01-22)
 
 [Full Changelog](https://github.com/ZoneMinder/zmNinja/compare/v1.7.005...v1.7.006)
