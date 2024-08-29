@@ -32,7 +32,7 @@ helps)
 -  Step 2: Log into ZM
 -  Step 3: Open another tab in the same browser (**IMPORTANT**: Has to
    be from the same browser you logged into ZM)
--  Step 4: Type in ``http://server/zm/api/monitors.json`` --> you
+-  Step 4: Type in ``http://server/zm/api/host/getVersion.json`` --> you
    should see a response like:
 
    .. code:: json
