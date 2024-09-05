@@ -20,7 +20,9 @@
                   image-spinner-src="{{constructSingleStream()}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}"
                   on-swipe-left="onSwipe(monitorId,1)" on-swipe-right="onSwipe(monitorId,-1)" on-double-tap="closeModal();"
                   on-tap="showHideControls();"
-                  imageonload="imageLoaded();"  />
+                  imageonload="imageLoaded();"
+		  image-on-error="processImageError(this);"
+		  />
 
               </div>
               <div ng-if="animationInProgress">
