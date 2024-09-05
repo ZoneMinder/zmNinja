@@ -8133,7 +8133,7 @@ input:checked + .checkbox-icon:after {
 .platform-android4_2 .toggle .track {
   -webkit-background-clip: padding-box; }
 
-/* the handle (circle) thats inside the toggle's track area */
+/* the handle (circle) that's inside the toggle's track area */
 /* also the handle's appearance when it is "off" */
 .toggle .handle {
   -webkit-transition: 0.3s cubic-bezier(0, 1.1, 1, 1.1);
