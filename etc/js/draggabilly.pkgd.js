@@ -903,7 +903,7 @@ proto._dragPointerDown = function( event, pointer ) {
   }
 };
 
-// overwriteable method so Flickity can prevent for scrolling
+// overwritable method so Flickity can prevent for scrolling
 proto.canPreventDefaultOnPointerDown = function( event ) {
   // prevent default, unless touchstart or <select>
   return event.target.nodeName != 'SELECT';

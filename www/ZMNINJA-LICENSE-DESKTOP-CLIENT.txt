@@ -4,7 +4,7 @@ The code is free for personal, non commercial use
 http://creativecommons.org/licenses/by-nc-sa/4.0/
 In summary: Share Alike, Adapt,Attribute, NonCommercial
 
-zmNinja source code is also open for commerical licensing and white-labeling.
+zmNinja source code is also open for commercial licensing and white-labeling.
 Please contact info@zoneminder.com
 
 For Desktop Clients Binaries: 

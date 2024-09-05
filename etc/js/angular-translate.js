@@ -913,7 +913,7 @@ function $translate($STORAGE_KEY, $windowProvider, $translateSanitizationProvide
    * @methodOf pascalprecht.translate.$translateProvider
    *
    * @description
-   * Tells the module which key must represent the choosed language by a user in the storage.
+   * Tells the module which key must represent the chosen language by a user in the storage.
    *
    * @param {string} key A key for the storage.
    */
@@ -1914,7 +1914,7 @@ function $translate($STORAGE_KEY, $windowProvider, $translateSanitizationProvide
             missingTranslationHandlerTranslation = translateByHandler(translationId, interpolateParams, defaultTranslationText);
           }
 
-          // since we couldn't translate the inital requested translation id,
+          // since we couldn't translate the initial requested translation id,
           // we try it now with one or more fallback languages, if fallback language(s) is
           // configured.
           if (uses && $fallbackLanguage && $fallbackLanguage.length) {
@@ -1972,7 +1972,7 @@ function $translate($STORAGE_KEY, $windowProvider, $translateSanitizationProvide
             missingTranslationHandlerTranslation = translateByHandler(translationId, interpolateParams);
           }
 
-          // since we couldn't translate the inital requested translation id,
+          // since we couldn't translate the initial requested translation id,
           // we try it now with one or more fallback languages, if fallback language(s) is
           // configured.
           if (uses && $fallbackLanguage && $fallbackLanguage.length) {
@@ -2187,7 +2187,7 @@ function $translate($STORAGE_KEY, $windowProvider, $translateSanitizationProvide
        * @description
        * Tells angular-translate which language to use by given language key. This method is
        * used to change language at runtime. It also takes care of storing the language
-       * key in a configured store to let your app remember the choosed language.
+       * key in a configured store to let your app remember the chosen language.
        *
        * When trying to 'use' a language which isn't available it tries to load it
        * asynchronously with registered loaders.
@@ -2752,7 +2752,7 @@ function $translateDefaultInterpolation ($interpolate, $translateSanitization) {
    * @methodOf pascalprecht.translate.$translateDefaultInterpolation
    *
    * @description
-   * Interpolates given value agains given interpolate params using angulars
+   * Interpolates given value against given interpolate params using angulars
    * `$interpolate` service.
    *
    * Since AngularJS 1.5, `value` must not be a string but can be anything input.
@@ -2772,7 +2772,7 @@ function $translateDefaultInterpolation ($interpolate, $translateSanitization) {
       interpolatedText = $interpolate(value)(interpolationParams);
       interpolatedText = $translateSanitization.sanitize(interpolatedText, 'text');
     } else {
-      // neither a number or a string, cant interpolate => empty string
+      // neither a number or a string, can't interpolate => empty string
       interpolatedText = '';
     }
 
@@ -2968,7 +2968,7 @@ function translateDirective($translate, $q, $interpolate, $compile, $parse, $roo
                 });
               }
             } else {
-              // do not assigne the translation id if it is empty.
+              // do not assign the translation id if it is empty.
               translationIds.translate = !iElementText ? undefined : iElementText;
             }
           } else {
