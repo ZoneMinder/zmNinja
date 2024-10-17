@@ -9,37 +9,25 @@
           <!--  -->
 
           <div id="monitorimage" style="height: 100vh;" class="main">
-            
               <div ng-if="!animationInProgress">
-
                 <!--<span style="color:white">{{currentStreamMode}}</span>-->
-                
-             
-
                 <img id="singlemonitor" style="width:100vw; height:100vh;" image-spinner-loader="lines"
                   image-spinner-src="{{constructSingleStream()}}" ng-class="{'object-fit_cover':imageFit==false, 'object-fit_contain':imageFit==true}"
                   on-swipe-left="onSwipe(monitorId,1)" on-swipe-right="onSwipe(monitorId,-1)" on-double-tap="closeModal();"
                   on-tap="showHideControls();"
                   imageonload="imageLoaded();"
-		  image-on-error="processImageError(this);"
-		  />
-
+                  image-on-error="processImageError(this);"
+                  />
               </div>
               <div ng-if="animationInProgress">
                 <img style="width:100vw; height:100vh" ng-src="img/noimage.png" class="object-fit_contain" />
               </div>
-           
-           
               <img id="singlemonitor" ng-src="img/noimage.png" style="width:100vw; height:100vh; display:block;"
                 class="object-fit_contain" width="{{((devWidth)/(7-monitorSize[$index]))}}px;" />
-           
           </div>
         </ion-scroll>
-
-
       </div>
     </ion-content>
-
 
     <div ng-show="isControllable=='1' && showPTZ">
       <div class="ptzcentered">
@@ -56,8 +44,6 @@
 
         <button ng-if="!ptzButtonsShown" class="button {{ptzPresets[0].icon}} button-small {{ptzPresets[0].style}}"
           style="float:left;margin-right:10px;margin-bottom:10px;" ng-click="controlPTZ(monitorId, ptzPresets[0].cmd);">{{ptzPresets[0].name}}</button>
-
-
       </div>
       <div class="ptzcenteredbotbutton">
         <div ng-if="canZoom">
