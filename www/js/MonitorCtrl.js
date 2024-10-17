@@ -9,7 +9,6 @@ angular.module('zmApp.controllers')
   .controller('zmApp.MonitorCtrl', ['$ionicPopup', 'zm', '$scope', 'NVR',  '$ionicSideMenuDelegate', '$ionicLoading', '$ionicModal', '$state', '$http', '$rootScope', '$timeout', '$ionicHistory', '$ionicPlatform', '$translate', '$q',
     function ($ionicPopup, zm, $scope, NVR, $ionicSideMenuDelegate, $ionicLoading, $ionicModal, $state, $http, $rootScope, $timeout, $ionicHistory, $ionicPlatform, $translate, $q) {
 
-
       var loginData;
       $scope.monitorLoadStatus = "...";
 
@@ -42,13 +41,11 @@ angular.module('zmApp.controllers')
         $ionicSideMenuDelegate.toggleLeft();
       };
 
-      
-
       //----------------------------------------------------------------
       // Alarm notification handling
       //----------------------------------------------------------------
       $scope.handleAlarms = function () {
-       
+
         //$rootScope.isAlarm = true;
         $rootScope.isAlarm = !$rootScope.isAlarm;
         if (!$rootScope.isAlarm) {
@@ -82,7 +79,7 @@ angular.module('zmApp.controllers')
       //-----------------------------------------------------------------------
       $scope.changeConfig = function (monitorName, monitorId, enabled, func, mon_forceMjpeg) {
         var checked = false;
-        
+
         $scope.forceMjpeg = {
           value:false
         };
@@ -93,9 +90,9 @@ angular.module('zmApp.controllers')
           monitorName = $translate.instant('kAll');
           // in all monitors, lets keep enabled on
           enabled = '1';
-          
+
           for (var i=0, len=$scope.monitors.length; i < len; i++) {
-           // console.log ("HUH "+$scope.monitors[i].Monitor.forceMjpeg);
+            // console.log ("HUH "+$scope.monitors[i].Monitor.forceMjpeg);
             monitorsIds[i] = $scope.monitors[i].Monitor.Id;
             if (!$scope.monitors[i].Monitor.forceMjpeg)
               $scope.forceMjpeg.value = false; // if any is unset, global is unset
@@ -109,52 +106,52 @@ angular.module('zmApp.controllers')
         if (enabled == '1') checked = true;
 
         //if monitorId is not specified, all monitors will be changed 
-    
+
         var currentVersion = NVR.getAppVersion();
-	if (NVR.versionCompare(currentVersion, '1.37.12') == 1) {
-	
-		$scope.monFunctions = [
-      {
-		    text: $translate.instant('kMonModect'),
-		    value: "Modect"
-		  },
-		  {
-		    text: $translate.instant('kMonMocord'),
-		    value: "Mocord"
-		  },
-		  {
-		    text: $translate.instant('kMonRecord'),
-		    value: "Record"
-		  },
-		  {
-		    text: $translate.instant('kMonNodect'),
-		    value: "Nodect"
-		  },
-		  {
-		    text: $translate.instant('kMonMonitor'),
-		    value: "Monitor"
-		  },
-		  {
-		    text: $translate.instant('kMonNone'),
-		    value: "None"
-		  }
-		];
-	} else {
-		$scope.monCapturingOptions = [
-      {
-        text: $translate.instant('kMonCapturingNone'),
-        value: 'None'
-      },
-      {
-        text: $translate.instant('kMonCapturingOnDemand'),
-        value: 'Ondemand'
-      },
-      {
-        text: $translate.instant('kMonCapturingAlways'),
-        value: 'Always'
-      }
-    ];
-  }  // end if >< 1.37.12
+        if (NVR.versionCompare(currentVersion, '1.37.12') == 1) {
+
+          $scope.monFunctions = [
+            {
+              text: $translate.instant('kMonModect'),
+              value: "Modect"
+            },
+            {
+              text: $translate.instant('kMonMocord'),
+              value: "Mocord"
+            },
+            {
+              text: $translate.instant('kMonRecord'),
+              value: "Record"
+            },
+            {
+              text: $translate.instant('kMonNodect'),
+              value: "Nodect"
+            },
+            {
+              text: $translate.instant('kMonMonitor'),
+              value: "Monitor"
+            },
+            {
+              text: $translate.instant('kMonNone'),
+              value: "None"
+            }
+          ];
+        } else {
+          $scope.monCapturingOptions = [
+            {
+              text: $translate.instant('kMonCapturingNone'),
+              value: 'None'
+            },
+            {
+              text: $translate.instant('kMonCapturingOnDemand'),
+              value: 'Ondemand'
+            },
+            {
+              text: $translate.instant('kMonCapturingAlways'),
+              value: 'Always'
+            }
+          ];
+        }  // end if >< 1.37.12
 
         $scope.monfunc = {
           mymonitorsIds: monitorsIds,
@@ -175,18 +172,18 @@ angular.module('zmApp.controllers')
           scope: $scope,
           cssClass:'widepopup',
           template: '<ion-toggle ng-model="monfunc.myenabled"   toggle-class="toggle-calm">'+
-                    $translate.instant('kMotionEnabled')+'</ion-toggle>'+
-                    '<ion-toggle ng-model="forceMjpeg.value"   toggle-class="toggle-calm">'+
-                    $translate.instant('kForceMjpeg')+'</ion-toggle>'+
-                    '<div class="item item-divider" style="background:#666666;color:white;">'+
-                    '</div><ion-radio-fix ng-repeat="item in monFunctions" ng-value="item.value" ng-model="monfunc.myfunc"> {{item.text}} </ion-radio-fix>',
+          $translate.instant('kMotionEnabled')+'</ion-toggle>'+
+          '<ion-toggle ng-model="forceMjpeg.value"   toggle-class="toggle-calm">'+
+          $translate.instant('kForceMjpeg')+'</ion-toggle>'+
+          '<div class="item item-divider" style="background:#666666;color:white;">'+
+          '</div><ion-radio-fix ng-repeat="item in monFunctions" ng-value="item.value" ng-model="monfunc.myfunc"> {{item.text}} </ion-radio-fix>',
 
           title: $translate.instant('kChangeSettingsFor') + ' ' + monitorName,
 
           buttons: [{
-              text: $translate.instant('kButtonCancel'),
+            text: $translate.instant('kButtonCancel'),
 
-            },
+          },
             {
               text: $translate.instant('kButtonSave'),
               onTap: function (e) {
@@ -196,70 +193,68 @@ angular.module('zmApp.controllers')
                 var loginData = NVR.getLogin();
 
                 $scope.monfunc.mymonitorsIds.forEach(function (item, index) {
-                if (!loginData.monitorSpecific[item]) loginData.monitorSpecific[item] = {};
-                loginData.monitorSpecific[item].forceMjpeg = $scope.forceMjpeg.value;
+                  if (!loginData.monitorSpecific[item]) loginData.monitorSpecific[item] = {};
+                  loginData.monitorSpecific[item].forceMjpeg = $scope.forceMjpeg.value;
 
-                for (var m=0; m < $scope.monitors.length; m++) {
-                  if ($scope.monitors[m].Monitor.Id == item) {
-                    $scope.monitors[m].Monitor.forceMjpeg = $scope.forceMjpeg.value;
-                    break;
+                  for (var m=0; m < $scope.monitors.length; m++) {
+                    if ($scope.monitors[m].Monitor.Id == item) {
+                      $scope.monitors[m].Monitor.forceMjpeg = $scope.forceMjpeg.value;
+                      break;
+                    }
                   }
-                }
 
+                  if (oldValues.myfunc != $scope.monfunc.myfunc || oldValues.myenabled != isEnabled) {
+                    // lets do HTTP requests only if stuff changes
+                    var apiMon = loginData.apiurl + "/monitors/" + item + ".json?"+$rootScope.authSession;
+                    NVR.debug("MonitorCtrl: URLs for changeConfig save:" + apiMon);
 
-               
-                if (oldValues.myfunc != $scope.monfunc.myfunc || oldValues.myenabled != isEnabled) {
-                  // lets do HTTP requests only if stuff changes
-                  var apiMon = loginData.apiurl + "/monitors/" + item + ".json?"+$rootScope.authSession;
-                  NVR.debug("MonitorCtrl: URLs for changeConfig save:" + apiMon);
-                 
-                  var data = {};
-                  if ($scope.monfunc.myfunc) data['Monitor[Function]'] = $scope.monfunc.myfunc;
-                  if (isEnabled) data['Monitor[Enabled]'] = isEnabled;
-  
+                    var data = {};
+                    if ($scope.monfunc.myfunc) data['Monitor[Function]'] = $scope.monfunc.myfunc;
+                    if (isEnabled) data['Monitor[Enabled]'] = isEnabled;
+
                     $ionicLoading.show({
                       template: $translate.instant('kApplyingChanges') + "...",
                       noBackdrop: true,
                       duration: zm.largeHttpTimeout,
                     });
-  
+
                     var httpPromise = $http({
-                        url: apiMon,
-                        method: 'post',
-                        headers: {
-                          'Content-Type': 'application/x-www-form-urlencoded',
-                          'Accept': '*/*',
-                        },
-                        transformRequest: function (obj) {
-                          var str = [];
-                          for (var p in obj)
-                            str.push(encodeURIComponent(p) + "=" +
-                              encodeURIComponent(obj[p]));
-                          var foo = str.join("&");
-                          NVR.debug("MonitorCtrl: parmeters constructed: " + foo);
-                          return foo;
-                        },
-                        data: data
-  
-                      })
+                      url: apiMon,
+                      method: 'post',
+                      headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Accept': '*/*',
+                      },
+                      transformRequest: function (obj) {
+                        var str = [];
+                        for (var p in obj)
+                          str.push(encodeURIComponent(p) + "=" +
+                            encodeURIComponent(obj[p]));
+                        var foo = str.join("&");
+                        NVR.debug("MonitorCtrl: parmeters constructed: " + foo);
+                        return foo;
+                      },
+                      data: data
+
+                    })
                       .then(function () {
-                          NVR.debug("MonitorCtrl: Not restarting ZM - Make sure you have the patch installed in MonitorsController.php or this won't work");
-                        },
+                        NVR.debug("MonitorCtrl: Not restarting ZM - Make sure you have the patch installed in MonitorsController.php or this won't work");
+                      },
                         function (data, status, headers, config) {
                           NVR.debug("MonitorCtrl: Error changing monitor " + JSON.stringify(data));
                           $scope.monfunc.myfailedIds.push(item);
                         });
-  
-                    $scope.monfunc.mypromises.push(httpPromise);
-                  
-                } else {
-                  NVR.debug ('Not invoing HTTP requests and no functional state changes detected');
-                }
 
-           
+                    $scope.monfunc.mypromises.push(httpPromise);
+
+                  } else {
+                    NVR.debug ('Not invoing HTTP requests and no functional state changes detected');
+                  }
+
+
                 }); //foreach
 
-               NVR.debug ('Updating forcedMjpeg status');
+                NVR.debug ('Updating forcedMjpeg status');
                 NVR.setLogin(loginData);
 
                 if ($scope.monfunc.mypromises.length) {
@@ -273,13 +268,13 @@ angular.module('zmApp.controllers')
                         duration: 3000,
                       });
                     } else {
-                   
-                        doRefresh();
-                   
-                     
+
+                      doRefresh();
+
+
                     }
                   })
-                  .catch (noop);
+                    .catch (noop);
 
                 }
 
@@ -309,7 +304,7 @@ angular.module('zmApp.controllers')
         ld.monitorSpecific[mid].forceMjpeg = value;
         console.log ("UPDATE array:"+JSON.stringify(ld.monitorSpecific));
         NVR.setLogin(ld);
-    
+
       };
 
       //-------------------------------------------------------------------------
@@ -335,7 +330,7 @@ angular.module('zmApp.controllers')
       });
       $scope.$on('$ionicView.enter', function () {
         // console.log("**VIEW ** Monitor Ctrl Entered");
-       
+
         NVR.setAwake(false);
         $ionicSideMenuDelegate.canDragContent(true);
         $scope.areImagesLoading = true;
@@ -347,11 +342,11 @@ angular.module('zmApp.controllers')
         NVR.debug ("Monitor Control afterEnter");
         $scope.monitors = [];
         $scope.monitorLoadStatus = $translate.instant ('kPleaseWait')+'...';
-   
+
 
         //console.log (">>>>>>>>>>>> MONITOR CTRL " + JSON.stringify($scope.monitors));
 
-       
+
 
         loginData = NVR.getLogin();
         monitorStateCheck();
@@ -368,36 +363,34 @@ angular.module('zmApp.controllers')
           var monitem;
 
           NVR.flushAPICache()
-          .then (function () {
-            NVR.getMonitors(1)
-          .then ( function (data) {
-            $scope.monitors = data;
-            for (var m = 0; m < $scope.monitors.length; m++) {
-              if ($scope.monitors[m].Monitor.Id == tm) {
-                monitem = $scope.monitors[m];
-                break;
-              }
-            }
-            openModal(monitem.Monitor.Id, monitem.Monitor.Controllable, monitem.Monitor.ControlId, monitem.Monitor.connKey, monitem);
-          });
-          });
-          
-          
+            .then (function () {
+              NVR.getMonitors(1)
+                .then ( function (data) {
+                  $scope.monitors = data;
+                  for (var m = 0; m < $scope.monitors.length; m++) {
+                    if ($scope.monitors[m].Monitor.Id == tm) {
+                      monitem = $scope.monitors[m];
+                      break;
+                    }
+                  }
+                  openModal(monitem.Monitor.Id, monitem.Monitor.Controllable, monitem.Monitor.ControlId, monitem.Monitor.connKey, monitem);
+                });
+            });
 
-          
+
+
+
         }
 
       });
 
-      
+
       $scope.$on('$ionicView.unloaded', function () {
         // console.log("**VIEW ** Monitor Ctrl Unloaded");
       });
 
       $scope.openModal = function (mid, controllable, controlid, connKey, monitor) {
-
         openModal(mid, controllable, controlid, connKey, monitor);
-
       };
 
       function openModal(mid, controllable, controlid, connKey, monitor) {
@@ -443,9 +436,9 @@ angular.module('zmApp.controllers')
         NVR.setAwake(NVR.getKeepAwake());
 
         $ionicModal.fromTemplateUrl('templates/monitors-modal.html', {
-            scope: $scope,
-            animation: 'slide-in-up'
-          })
+          scope: $scope,
+          animation: 'slide-in-up'
+        })
           .then(function (modal) {
             $scope.modal = modal;
             $scope.isModalActive = true;
@@ -479,44 +472,44 @@ angular.module('zmApp.controllers')
       //-----------------------------------------------------------------------
 
       function monitorStateCheck() {
-        
-       // console.log ("Checking monitors");
+
+        // console.log ("Checking monitors");
         var ld = NVR.getLogin();
         // force get for latest status of monitors if av.
-       NVR.getMonitors(1)
-        .then (function (data) {
-         
-          $scope.monitors = data;
+        NVR.getMonitors(1)
+          .then (function (data) {
 
-          if (!$scope.monitors.length) {
-            $scope.monitorLoadStatus = $translate.instant ('kNoMonitors');
-          } else {
-            var mid;
-            for (var i=0; i < $scope.monitors.length; i++) {
-              mid = $scope.monitors[i].Monitor.Id;
-              $scope.monitors[i].Monitor.forceMjpeg = (ld.monitorSpecific[mid] && ld.monitorSpecific[mid].forceMjpeg) ? true:false;
-             // console.log ('********** Monitor :'+mid+" MJPEG="+$scope.monitors[i].Monitor.forceMjpeg );
-            
+            $scope.monitors = data;
+
+            if (!$scope.monitors.length) {
+              $scope.monitorLoadStatus = $translate.instant ('kNoMonitors');
+            } else {
+              var mid;
+              for (var i=0; i < $scope.monitors.length; i++) {
+                mid = $scope.monitors[i].Monitor.Id;
+                $scope.monitors[i].Monitor.forceMjpeg = (ld.monitorSpecific[mid] && ld.monitorSpecific[mid].forceMjpeg) ? true:false;
+                // console.log ('********** Monitor :'+mid+" MJPEG="+$scope.monitors[i].Monitor.forceMjpeg );
+
+              }
             }
-          }
 
-          if (!$scope.monitors[0].Monitor_Status ) {
-            NVR.debug ("no Monitor_Status found reverting to daemonCheck...");
-            forceDaemonCheck();
-          }
-          else {
-            NVR.debug ("reporting status of monitors from multi-server API");
-            processMonitorStatus();
-           
-          }
+            if (!$scope.monitors[0].Monitor_Status ) {
+              NVR.debug ("no Monitor_Status found reverting to daemonCheck...");
+              forceDaemonCheck();
+            }
+            else {
+              NVR.debug ("reporting status of monitors from multi-server API");
+              processMonitorStatus();
 
-        },
-        function (err) {
-          NVR.debug ("Monitor fetch error, reverting to daemonCheck...");
-          $scope.monitorLoadStatus = $translate.instant ('kNoMonitors');
-          forceDaemonCheck();
-        });
-        
+            }
+
+          },
+            function (err) {
+              NVR.debug ("Monitor fetch error, reverting to daemonCheck...");
+              $scope.monitorLoadStatus = $translate.instant ('kNoMonitors');
+              forceDaemonCheck();
+            });
+
       }
 
       function processMonitorStatus () {
@@ -524,7 +517,7 @@ angular.module('zmApp.controllers')
         //array('Unknown','NotRunning','Running','NoSignal','Signal'),
 
 
-       // console.log (JSON.stringify($scope.monitors));
+        // console.log (JSON.stringify($scope.monitors));
         for (var j=0; j < $scope.monitors.length; j++) {
 
           if ($scope.monitors[j].Monitor_Status.Status == 'Connected') {
@@ -539,7 +532,7 @@ angular.module('zmApp.controllers')
             $scope.monitors[j].Monitor.char = "ion-close-circled";
             $scope.monitors[j].Monitor.isRunningText = $scope.monitors[j].Monitor_Status.Status;
           }
-          
+
         }
 
       }
@@ -554,45 +547,46 @@ angular.module('zmApp.controllers')
         var i;
         for (i = 0; i < $scope.monitors.length; i++) {
           (function (j) {
-            $scope.monitors[j].Monitor.isRunningText = "...";
-            $scope.monitors[j].Monitor.isRunning = "...";
-            $scope.monitors[j].Monitor.color = zm.monitorCheckingColor;
-            $scope.monitors[j].Monitor.char = "ion-help-circled";
-            apiMonCheck = $scope.loginData.apiurl + "/monitors/daemonStatus/id:" + $scope.monitors[j].Monitor.Id + "/daemon:zmc.json?"+$rootScope.authSession;
+            var monitor = $scope.monitors[j].Monitor;
+            monitor.isRunningText = "...";
+            monitor.isRunning = "...";
+            monitor.color = zm.monitorCheckingColor;
+            monitor.char = "ion-help-circled";
+            apiMonCheck = monitor.apiURL + "/monitors/daemonStatus/id:" + monitor.Id + "/daemon:zmc.json?"+$rootScope.authSession;
 
-           
+
             NVR.debug("MonitorCtrl:monitorStateCheck: " + apiMonCheck);
             //console.log("**** ZMC CHECK " + apiMonCheck);
             $http.get(apiMonCheck)
               .then(function (data) {
-                  data = data.data;
-                  NVR.debug("MonitorCtrl: monitor check state returned: " + JSON.stringify(data));
-                  if (data.statustext.indexOf("not running") > -1) {
-                    $scope.monitors[j].Monitor.isRunning = "false";
-                    $scope.monitors[j].Monitor.color = zm.monitorNotRunningColor;
-                    $scope.monitors[j].Monitor.char = "ion-close-circled";
-                  } else if (data.statustext.indexOf("pending") > -1) {
-                    $scope.monitors[j].Monitor.isRunning = "pending";
-                    $scope.monitors[j].Monitor.color = zm.monitorPendingColor;
-                  } else if (data.statustext.indexOf("running since") > -1) {
-                    $scope.monitors[j].Monitor.isRunning = "true";
-                    $scope.monitors[j].Monitor.color = zm.monitorRunningColor;
-                    $scope.monitors[j].Monitor.char = "ion-checkmark-circled";
-                  } else if (data.statustext.indexOf("Unable to connect") > -1) {
-                    $scope.monitors[j].Monitor.isRunning = "false";
-                    $scope.monitors[j].Monitor.color = zm.monitorNotRunningColor;
-                    $scope.monitors[j].Monitor.char = "ion-close-circled";
-                  }
+                data = data.data;
+                NVR.debug("MonitorCtrl: monitor check state returned: " + JSON.stringify(data));
+                if (data.statustext.indexOf("not running") > -1) {
+                  monitor.isRunning = "false";
+                  monitor.color = zm.monitorNotRunningColor;
+                  monitor.char = "ion-close-circled";
+                } else if (data.statustext.indexOf("pending") > -1) {
+                  monitor.isRunning = "pending";
+                  monitor.color = zm.monitorPendingColor;
+                } else if (data.statustext.indexOf("running since") > -1) {
+                  monitor.isRunning = "true";
+                  monitor.color = zm.monitorRunningColor;
+                  monitor.char = "ion-checkmark-circled";
+                } else if (data.statustext.indexOf("Unable to connect") > -1) {
+                  monitor.isRunning = "false";
+                  monitor.color = zm.monitorNotRunningColor;
+                  monitor.char = "ion-close-circled";
+                }
 
-                  $scope.monitors[j].Monitor.isRunningText = data.statustext;
-                },
+                monitor.isRunningText = data.statustext;
+              },
                 function (data) {
                   NVR.debug("MonitorCtrl: Error->monitor check state returned: " +
                     JSON.stringify(data));
                   NVR.displayBanner('error', [$translate.instant('kErrorRetrievingState'), $translate.instant('kPleaseTryAgain')]);
-                  $scope.monitors[j].Monitor.isRunning = "error";
-                  $scope.monitors[j].Monitor.color = zm.monitorErrorColor;
-                  $scope.monitors[j].Monitor.char = "ion-help-circled";
+                  monitor.isRunning = "error";
+                  monitor.color = zm.monitorErrorColor;
+                  monitor.char = "ion-help-circled";
                 });
 
           })(i);
@@ -601,18 +595,18 @@ angular.module('zmApp.controllers')
 
       function doRefresh() {
         NVR.flushAPICache()
-        .then (function () {
-          $scope.monitors = [];
+          .then (function () {
+            $scope.monitors = [];
 
-        var refresh = NVR.getMonitors(1);
+            var refresh = NVR.getMonitors(1);
 
-        refresh.then(function (data) {
-          $scope.monitors = data;
-          monitorStateCheck();
-          $scope.$broadcast('scroll.refreshComplete');
-        });
-        });
-        
+            refresh.then(function (data) {
+              $scope.monitors = data;
+              monitorStateCheck();
+              $scope.$broadcast('scroll.refreshComplete');
+            });
+          });
+
       }
 
       $scope.doRefresh = function () {
