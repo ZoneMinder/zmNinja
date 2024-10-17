@@ -83,7 +83,7 @@ angular.module('zmApp.controllers')
       NVR.displayBanner('net', [ds]);
       var ld = NVR.getLogin();
       refreshSec = (NVR.getBandwidth() == 'lowbw') ? ld.refreshSecLowBW : ld.refreshSec;
-      streamQueryTimer = (NVR.getBandwidth() == 'lowbw') ? zm.streamQueryStatusTimeLowBW: zm.streamQueryStatusTime;
+      streamQueryTimer = (NVR.getBandwidth() == 'lowbw') ? zm.streamQueryStatusTimeLowBW : zm.streamQueryStatusTime;
 
       $interval.cancel(intervalHandleMontage);
       $interval.cancel(intervalHandleMontageCycle);
@@ -335,7 +335,7 @@ angular.module('zmApp.controllers')
         if (simulStreaming) {
           $timeout(function () {
             NVR.debug("Switching mode to streaming as multi-port on...");
-            //NVR.regenConnKeys();
+            NVR.regenConnKeys();
             //randEachTime();
             currentStreamState = streamState.ACTIVE;
             d.resolve(true);
@@ -360,22 +360,24 @@ angular.module('zmApp.controllers')
           NVR.debug("Arranging as per packery grid");
 
           for (var i = 0; i < $scope.MontageMonitors.length; i++) {
+            var monitor = $scope.MontageMonitors[i].Monitor;
+
             for (var j = 0; j < positions.length; j++) {
-              if ($scope.MontageMonitors[i].Monitor.Id == positions[j].attr) {
+              if (monitor.Id == positions[j].attr) {
                 if (isNaN(positions[j].size) || (positions[j].size == 0))
                   positions[j].size = 20;
 
-                $scope.MontageMonitors[i].Monitor.gridScale = positions[j].size;
+                monitor.gridScale = positions[j].size;
 
                 if (!positions[j].display)
                   positions[j].display = 'show';
 
-                $scope.MontageMonitors[i].Monitor.listDisplay = positions[j].display;
+                monitor.listDisplay = positions[j].display;
                 // NVR.debug("Setting monitor ID: " + $scope.MontageMonitors[i].Monitor.Id + " to size: " + positions[j].size + " and display:" + positions[j].display);
               }
               //console.log ("Index:"+positions[j].attr+ " with size: " + positions[j].size);
-            }
-          }
+            } // end foreach position
+          } // end foreach monitor
 
           NVR.debug("All images loaded, doing image layout");
           $timeout(function () {
@@ -562,6 +564,8 @@ angular.module('zmApp.controllers')
         // now is server TZ time
         var now = ld.lastEventCheckTimes[monitor.Monitor.Id];
         apiurl += "/StartTime >:" + now;
+      } else {
+        console.log("Monitor not in lastEventCheckTimes", monitor.Monitor.Id, ld.lastEventCheckTimes);
       }
 
       if (ld.enableAlarmCount && ld.minAlarmCount)
@@ -719,7 +723,7 @@ angular.module('zmApp.controllers')
         $scope.timeNow = moment().tz(NVR.getTimeZoneNow()).format(NVR.getTimeFormatSec());
 
       if (simulStreaming) {
-         console.log ("Skipping timer as simulStreaming");
+        //console.log("Skipping timer as simulStreaming");
         return;
       }
 
@@ -829,7 +833,6 @@ angular.module('zmApp.controllers')
 
     $scope.reorderFrame = function(item) {
       var frame = item.Monitor.streamingURL + "/nph-zms?mode=single&scale=50&monitor=" + item.Monitor.Id;
-
       frame += $rootScope.authSession;
       frame += NVR.insertSpecialTokens();
       return frame;
@@ -2188,13 +2191,22 @@ function loadStreamQueryStatus () {
   function checkValidConnkey(query, i) {
     $http.get(query)
       .then (function (succ) {
-        //console.log ("SUCCESS="+JSON.stringify(succ.data));
+        var monitor = $scope.MontageMonitors[i];
+        console.log( monitor.Monitor.Id, JSON.stringify(succ.data));
         if (succ.data && succ.data.result && succ.data.result == "Error") {
-          $scope.MontageMonitors[i].Monitor.streamState = 'bad';
+          monitor.Monitor.streamState = 'bad';
           NVR.log("Montage View: Regenerating Connkey as Failed:"+query);
-          NVR.regenConnKeys($scope.MontageMonitors[i]);
+          NVR.regenConnKeys(monitor);
+          var img = document.getElementById('img-'+i);
+          if (img) {
+            console.log(img.src);
+            img.src = '';
+            img.src = $scope.constructStream(monitor);
+            console.log(img.src);
+          } else
+            console.log('Failed to find eleent for img-'+i);
         } else if (succ.data && succ.data.result && succ.data.result == "Ok"){
-          $scope.MontageMonitors[i].Monitor.streamState = 'good';
+          monitor.Monitor.streamState = 'good';
           //console.log (JSON.stringify(succ));
         }
       },
@@ -2209,12 +2221,13 @@ function loadStreamQueryStatus () {
 
   for (var i=0; i < $scope.MontageMonitors.length; i++) {
     var monitor = $scope.MontageMonitors[i].Monitor;
-    if ((monitor.Function == 'None') || (monitor.listDisplay == 'noshow')) {
+    if ((monitor.Function == 'None') || (monitor.Capturing == 'None') || (monitor.listDisplay == 'noshow')) {
       continue;
     }
     var query = monitor.recordingURL+'/index.php?view=request&request=stream&command=99';
     if (!monitor.connKey) {
       console.log("No connKey for "+monitor.Id);
+      NVR.regenConnKeys($scope.MontageMonitors[i]);
       continue;
     }
 
@@ -2426,9 +2439,8 @@ $scope.$on('$ionicView.afterEnter', function () {
   $ionicSideMenuDelegate.canDragContent($scope.minimal ? true : true);
 
   $scope.areImagesLoading = true;
-  var ld = NVR.getLogin();
 
-  refreshSec = (NVR.getBandwidth() == 'lowbw') ? ld.refreshSecLowBW : ld.refreshSec;
+  refreshSec = (NVR.getBandwidth() == 'lowbw') ? loginData.refreshSecLowBW : loginData.refreshSec;
 
   NVR.debug("bandwidth: " + NVR.getBandwidth() + " montage refresh set to: " + refreshSec);
 
@@ -2447,11 +2459,11 @@ $scope.$on('$ionicView.afterEnter', function () {
     //  console.log ("Refreshing Image...");
   }.bind(this), refreshSec * 1000);
 
-  NVR.debug("Setting up cycle interval of:" + NVR.getLogin().cycleMontageInterval * 1000);
+  NVR.debug("Setting up cycle interval of:" + loginData.cycleMontageInterval * 1000);
   intervalHandleMontageCycle = $interval(function () {
     cycleMontageProfiles();
     //  console.log ("Refreshing Image...");
-  }.bind(this), NVR.getLogin().cycleMontageInterval * 1000);
+  }.bind(this), loginData.cycleMontageInterval * 1000);
 
   intervalHandleAlarmStatus = $interval(function () {
     loadAlarmStatus();
@@ -2465,7 +2477,7 @@ $scope.$on('$ionicView.afterEnter', function () {
     }.bind(this), streamQueryTimer);
   }
 
-  loadEventStatus(ld.showMontageSidebars);
+  loadEventStatus(loginData.showMontageSidebars);
   intervalHandleEventStatus = $interval(function () {
     loadEventStatus();
     //  console.log ("Refreshing Image...");
