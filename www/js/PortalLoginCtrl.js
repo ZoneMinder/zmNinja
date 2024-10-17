@@ -95,17 +95,13 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
           NVR.setLogin(ld);
           unlock(true);
 
-        } 
-        
-        else if ($rootScope.platformOS == 'desktop' && loginData.usePin) {
-
+        } else if ($rootScope.platformOS == 'desktop' && loginData.usePin) {
             $scope.passwdData = {};
             var myPopup = $ionicPopup.show({
                 template: '<input type="password" ng-model="passwdData.pass">',
                 title: $translate.instant('kPinProtect'),
                 scope: $scope,
                 buttons: [
-                  
                   {
                     text: $translate.instant('kButtonOk'),
                     type: 'button-positive',
@@ -115,29 +111,23 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                         e.preventDefault();
                       } else {
                         if ($scope.passwdData.pass == loginData.pinCode) {
-                          NVR.log ("Pin code match");
+                          NVR.log("Pin code match");
                           unlock(true);
-                        }
-                        else {
-                              $ionicLoading.show({
-                                  template: $translate.instant('kBannerPinMismatch') + "...",
-                                  noBackdrop: true,
-                                  duration: 1500
-                              });
-                            NVR.log ("Pin code mistmatch match");
-                            e.preventDefault();
-                        }
-                        
-                      }
-                    }
+                        } else {
+                          $ionicLoading.show({
+                            template: $translate.instant('kBannerPinMismatch') + "...",
+                            noBackdrop: true,
+                            duration: 1500
+                          });
+                          NVR.log("Pin code mistmatch match");
+                          e.preventDefault();
+                        } // end if pincode match
+                      } // end if a pass is entered
+                    } // end function onTap
                   }
                 ]
-              });
-      
-
-
-        }
-        else if ($ionicPlatform.is('android') && loginData.usePin) {
+            });
+        } else if ($ionicPlatform.is('android') && loginData.usePin) {
 
           FingerprintAuth.isAvailable(function (result) {
               NVR.debug("FingerprintAuth available: " + JSON.stringify(result));
@@ -203,26 +193,24 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                {
                    NVR.log("TouchID not supported");
                });*/
-        } else // touch was not used
-        {
+        } else {
+          // touch was not used
           NVR.log("not checking for touchID");
         }
 
         if (loginData.usePin ) {
           // this shows the pin prompt on screen
           if ($rootScope.platformOS != 'desktop') {
-              $scope.pinPrompt = true;
+            $scope.pinPrompt = true;
           }
           // dont call unlock, let the user type in code
-
-        } else  // no PIN Code so go directly to auth
-        {
-
+        } else {
+          // no PIN Code so go directly to auth
           unlock(true);
         }
 
-      } else // login creds are not present
-      {
+      } else {
+        // login creds are not present
         NVR.debug("PortalLogin: Not logged in, so going to login");
         if (NVR.isFirstUse()) {
           NVR.debug("First use, showing warm and fuzzy...");
@@ -288,23 +276,17 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
                 $rootScope.apiVersion = data;
                 var ld = NVR.getLogin();
                 if (NVR.versionCompare(data, zm.minAppVersion) == -1 && data != "0.0.0") {
-
                   $rootScope.importantMessageHeader = $translate.instant('kImportant');
                   $rootScope.importantMessageSummary = $translate.instant('kVersionIncompatible', {currentVersion: data, minVersion: zm.minAppVersion});
-
-
                   $state.go('app.importantmessage');
                   return;
                 }
-
-           
 
                 var statetoGo = $rootScope.lastState ? $rootScope.lastState : 'app.montage';
                 if ($rootScope.LoginData.isKiosk) {
                   NVR.log ('>>> You are in kiosk mode');
                   statetoGo = 'app.montage';
                   $rootScope.lastStateParam='';
-
                 }
                 //NVR.debug ("logging state transition");
                 NVR.debug("2nd Auth: Transitioning state to: " +
@@ -331,8 +313,6 @@ angular.module('zmApp.controllers').controller('zmApp.PortalLoginCtrl', ['$ionic
 
     return (d.promise);
   }
-
-
   
   //broadcastHandles.push(pp);
 
