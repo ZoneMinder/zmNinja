@@ -34,7 +34,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   var currentStreamState = streamState.SNAPSHOT_LOWQUALITY;
 
   // incase imageload is never called
-  $timeout (function () {
+  $timeout(function () {
     if (currentStreamState != streamState.ACTIVE) {
       currentStreamState = streamState.ACTIVE;
       NVR.debug('Forcing stream to regular quality, imageLoaded() was never called');
@@ -102,10 +102,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
       //console.log(keyCode + " PRESSED");
 
       if (keyCode == keyCodes.ESC) {
-
         if ($rootScope.zmPopup) $rootScope.zmPopup.close();
         $scope.closeModal();
-
       } else if (keyCode == keyCodes.LEFT) {
         $scope.monStatus = "";
         moveToMonitor($scope.monitorId, -1);
@@ -323,7 +321,6 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
       NVR.log("cancelling cycle timer");
       $interval.cancel(cycleHandle);
     }
-
   };
 
   //-------------------------------------------------------------
@@ -331,13 +328,9 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   //-------------------------------------------------------------
 
   $scope.togglePTZ = function () {
-
-    //console.log("PTZ");
-
     if ($scope.isControllable == '1') {
       //console.log ("iscontrollable is true");
       $scope.showPTZ = !$scope.showPTZ;
-
     } else {
       $ionicLoading.show({
         template: $translate.instant('kPTZnotConfigured'),
@@ -345,7 +338,6 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         duration: 3000,
       });
     }
-
   };
 
   //-------------------------------------------------------------
@@ -424,12 +416,20 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     ];
     //console.log ("Inside Modal timer...");
     var apiurl = ld.apiurl;
+    for (var i=0; i< $scope.monitors.length; i++){
+      if ($scope.monitors[i].Monitor.Id == $scope.monitorId) {
+        if ($scope.monitors[i].Monitor.apiURL) {
+          apiurl = $scope.monitors[i].Monitor.apiURL;
+          break;
+        }
+      }
+    }
     var alarmurl = apiurl + "/monitors/alarm/id:" + $scope.monitorId + "/command:status.json?" + $rootScope.authSession;
     NVR.log("Invoking " + alarmurl);
 
     $http.get(alarmurl)
       .then(function (data) {
-          //  NVR.debug ("Success in monitor alarmed status " + JSON.stringify(data));
+          // NVR.debug ("Success in monitor alarmed status " + JSON.stringify(data));
           $scope.monStatus = status[parseInt(data.data.status)];
         },
         function (error) {
@@ -463,7 +463,6 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
   };
 
-
   $scope.saveZones = function () {
     var str = "";
     for (var i = 0; i < originalZones.length; i++) {
@@ -482,7 +481,6 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
   $scope.changeCircleSize = function () {
     $scope.csize = Math.max(($scope.csize + 5) % 31, 10);
-
   };
 
   $scope.toggleZoneEdit = function () {
@@ -502,12 +500,10 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
           //t.removeEventListener("mousemove",moveContinue);
           //t.removeEventListener("mouseup",moveStop);
 
-
           t.addEventListener("touchstart", moveStart);
           t.addEventListener("mousedown", moveStart);
           //t.addEventListener("mousemove",moveContinue);
           //t.addEventListener("mouseup",moveStop);
-
 
           //console.log ("Found circle-"+i);
         } else {
@@ -515,12 +511,10 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         }
 
       }
-    } else // get out of edit
-    {
-
+    } else {
+      // get out of edit
       $scope.imageZoomable = true;
     }
-
   };
 
   $scope.toggleZone = function () {
@@ -535,7 +529,6 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
   $scope.imageLoaded = function () {
     NVR.debug('single view image load complete');
-    //console.log ("**** SINGLE IMAGE LOADED");
     imageLoaded();
   };
 
@@ -582,7 +575,6 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     $scope.zoneArray[zi].coords = newPoints;
 
     //console.log ("INDEX="+ndx+" DRAG="+svgP.x+":"+svgP.y);
-
   }
 
   // credit: http://stackoverflow.com/questions/41411891/most-elegant-way-to-parse-scale-and-re-string-a-string-of-number-co-ordinates?noredirect=1#41411927
@@ -636,7 +628,6 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
   }
 
   function moveStart(event) {
-
     _moveStart = true;
     targetID = event.target.id.substring(7);
     // console.log ("START: target id="+targetID);
@@ -660,14 +651,12 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
       y = event.clientY;
     }
     //console.log ("X="+x+" Y="+y + " sl="+document.body.scrollLeft+ " sy="+document.body.scrollTop);
-
   }
 
 
   // called when the live monitor image loads
   // this is a good time to calculate scaled zone points
   function imageLoaded() {
-
     currentStreamState = streamState.ACTIVE;
 
     NVR.debug("imgeLoaded");
@@ -1030,6 +1019,14 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     function triggerAlarm(mid, mode) {
       var apiurl = NVR.getLogin().apiurl;
+      for (var i=0; i< $scope.monitors.length; i++){
+        if ($scope.monitors[i].Monitor.Id == mid) {
+          if ($scope.monitors[i].Monitor.apiURL) {
+            apiurl = $scope.monitors[i].Monitor.apiURL;
+            break;
+          }
+        }
+      }
       var c = mode == 'on' ? 'on' : 'off';
       var alarmurl = apiurl + "/monitors/alarm/id:" + mid + "/command:" + c + ".json?"+$rootScope.authSession;
       NVR.log("Invoking " + alarmurl);
@@ -1266,7 +1263,13 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     if (fps) {
       stream += '&maxfps='+fps;
     }
-    stream += $rootScope.authSession + appendSingleStreamConnKey();
+    stream += $rootScope.authSession;
+    if (!$scope.isModalStreamPaused) {
+      if (!$scope.monitor.Monitor.connKey)
+        NVR.regenConnKeys($scope.monitor);
+
+      stream += "&connkey=" + $scope.connKey;
+    }
 
     if (currentStreamState != streamState.SNAPSHOT_LOWQUALITY)
       stream += "&rand=" + $rootScope.modalRand;
@@ -1410,7 +1413,16 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     NVR.debug('Single view: stream status check');
 
     var ld = NVR.getLogin();
-    var query = ld.url+'/index.php?view=request&request=stream&command=99';
+    var url = ld.url;
+    for (var i=0; i< $scope.monitors.length; i++){
+      if ($scope.monitors[i].Monitor.Id == $scope.monitorId) {
+        if ($scope.monitors[i].Monitor.recordingURL) {
+          url = $scope.monitors[i].Monitor.recordingURL;
+          break;
+        }
+      }
+    }
+    var query = url+'/index.php?view=request&request=stream&command=99';
     query += $rootScope.authSession;
     query += appendConnKey($scope.connKey);
     checkValidConnkey(query);
@@ -1588,7 +1600,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
     NVR.debug("configurePTZ: called with mid=" + mid);
     var ld = NVR.getLogin();
-    var url = ld.apiurl + "/monitors/" + mid + ".json?"+$rootScope.authSession;
+    var apiurl = ld.apiurl;
+    var url = apiurl + "/monitors/" + mid + ".json?"+$rootScope.authSession;
     $http.get(url)
       .then(function (data) {
           data = data.data;
@@ -1600,8 +1613,15 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
           // $scope.isControllable = 1;
           $scope.controlid = data.monitor.Monitor.ControlId;
           if ($scope.isControllable == '1') {
-
             var apiurl = NVR.getLogin().apiurl;
+            for (var i=0; i< $scope.monitors.length; i++){
+              if ($scope.monitors[i].Monitor.Id == data.monitor.Monitor.Id) {
+                if ($scope.monitors[i].Monitor.apiURL) {
+                  apiurl = $scope.monitors[i].Monitor.apiURL;
+                  break;
+                }
+              }
+            }
             var myurl = apiurl + "/controls/" + $scope.controlid + ".json?"+$rootScope.authSession;
             NVR.debug("configurePTZ : getting controllable data " + myurl);
 
@@ -1616,12 +1636,8 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
                   data.control.Control.HasPresets = '1';
                   data.control.Control.HasHomePreset = '1';*/
                   // *** Only for testing - comment out - end //
-
-
                   //data.control.Control.HasPresets = '1';
                   //data.control.Control.HasHomePreset = '1'
-
-
                   $scope.ptzMoveCommand = "move"; // start with as move;
                   $scope.ptzStopCommand = "";
 
