@@ -1,7 +1,7 @@
 {
   "name": "zmninja",
   "description": "Home security mobile app for ZoneMinder",
-  "version":"1.7.007",
+  "version": "1.7.007",
   "displayName": "zmNinja",
   "author": "Zoneminder Inc, Pliable Pixels",
   "repository": {
@@ -11,8 +11,7 @@
   "license": "SEE LICENSE IN LICENSE.md",
   "cordova": {
     "platforms": [
-      "ios",
-      "android"
+      "ios"
     ],
     "plugins": {
       "cordova-plugin-globalization": {},
@@ -25,35 +24,7 @@
       "cordova-plugin-advanced-websocket": {},
       "cordova-plugin-ionic-keyboard": {},
       "cordova-plugin-add-swift-support": {},
-      "cordova-plugin-firebasex": {
-        "FIREBASE_ANALYTICS_COLLECTION_ENABLED": "false",
-        "FIREBASE_PERFORMANCE_COLLECTION_ENABLED": "false",
-        "FIREBASE_CRASHLYTICS_COLLECTION_ENABLED": "false",
-        "FIREBASE_FCM_AUTOINIT_ENABLED": "true",
-        "ANDROID_ICON_ACCENT": "#FF00FFFF",
-        "ANDROID_FIREBASE_PERFORMANCE_MONITORING": "false",
-        "ANDROID_PLAY_SERVICES_TAGMANAGER_VERSION": "18.0.1",
-        "ANDROID_PLAY_SERVICES_AUTH_VERSION": "20.2.0",
-        "ANDROID_FIREBASE_ANALYTICS_VERSION": "21.0.0",
-        "ANDROID_FIREBASE_MESSAGING_VERSION": "23.0.5",
-        "ANDROID_FIREBASE_CONFIG_VERSION": "21.1.0",
-        "ANDROID_FIREBASE_PERF_VERSION": "20.0.6",
-        "ANDROID_FIREBASE_AUTH_VERSION": "21.0.4",
-        "ANDROID_FIREBASE_INAPPMESSAGING_VERSION": "20.1.2",
-        "ANDROID_FIREBASE_FIRESTORE_VERSION": "24.1.2",
-        "ANDROID_FIREBASE_FUNCTIONS_VERSION": "20.1.0",
-        "ANDROID_FIREBASE_IID_VERSION": "21.1.0",
-        "ANDROID_FIREBASE_INSTALLATIONS_VERSION": "17.0.1",
-        "ANDROID_FIREBASE_CRASHLYTICS_VERSION": "18.2.10",
-        "ANDROID_FIREBASE_CRASHLYTICS_NDK_VERSION": "18.2.10",
-        "ANDROID_GSON_VERSION": "2.9.0",
-        "ANDROID_FIREBASE_PERF_GRADLE_PLUGIN_VERSION": "1.4.1",
-        "ANDROID_GRPC_OKHTTP": "1.46.0"
-      },
       "cordova-plugin-x-socialsharing-android12": {},
-      "cordova-plugin-file": {
-        "ANDROIDX_WEBKIT_VERSION": "1.4.0"
-      },
       "cordova-plugin-file-transfer": {},
       "cordova-plugin-advanced-http": {
         "ANDROIDBLACKLISTSECURESOCKETPROTOCOLS": "SSLv3,TLSv1"
@@ -76,36 +47,35 @@
       "cordova-plugin-statusbar": {},
       "cordova-plugin-photo-library-zm": {},
       "cordova-plugin-cloud-settings": {},
-      "cordova-plugin-certificates-pp-fork": {}
+      "cordova-plugin-file": {}
     }
   },
   "dependencies": {
     "async": "^3.2.2",
     "clivas": "^0.2.0",
     "compare-func": "^2.0.0",
-    "cordova": "^11.0.0",
-    "cordova-ios": "^6.2.0",
+    "cordova": "^12.0.0",
     "cordova-library-helper-pp-fork": "^1.0.1",
     "cordova-plugin-add-swift-support": "^2.0.2",
     "cordova-plugin-advanced-http": "3.3.1",
-    "cordova-plugin-advanced-websocket": "^1.1.6",
+    "cordova-plugin-advanced-websocket": "^1.1.8",
     "cordova-plugin-android-fingerprint-auth": "^1.5.0",
     "cordova-plugin-android-permissions": "^1.1.5",
     "cordova-plugin-androidx-adapter": "^1.1.3",
     "cordova-plugin-app-version": "^0.1.14",
     "cordova-plugin-customurlscheme": "^5.0.2",
-    "cordova-plugin-device": "^2.1.0",
+    "cordova-plugin-device": "^3.0.0",
     "cordova-plugin-globalization": "^1.11.0",
     "cordova-plugin-ignore-lint-translation": "0.0.1",
-    "cordova-plugin-inappbrowser": "^5.0.0",
+    "cordova-plugin-inappbrowser": "^6.0.0",
     "cordova-plugin-insomnia": "^4.3.0",
     "cordova-plugin-ionic-keyboard": "^2.2.0",
     "cordova-plugin-multi-window": "0.0.3",
     "cordova-plugin-network-information": "^3.0.0",
     "cordova-plugin-pin-dialog": "^0.1.3",
-    "cordova-plugin-statusbar": "^3.0.0",
+    "cordova-plugin-statusbar": "^4.0.0",
     "cordova-plugin-touch-id": "^3.4.0",
-    "cordova-sqlite-storage": "^6.0.0",
+    "cordova-sqlite-storage": "^6.1.0",
     "deep-equal": "^2.0.5",
     "define-properties": "^1.1.3",
     "dialog": "^0.3.1",
@@ -127,7 +97,7 @@
     "keypress": "^0.2.1",
     "latest": "^0.2.0",
     "menu": "^0.2.5",
-    "minimist": "^1.2.5",
+    "minimist": "1.2.6",
     "mkdirp": "^1.0.4",
     "object-is": "^1.1.4",
     "object-keys": "^1.1.1",
@@ -136,14 +106,14 @@
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
-    "@ionic/v1-toolkit": "^3.0.22",
+    "@ionic/v1-toolkit": "^3.2.20",
     "bower": "^1.8.13",
-    "cordova-android": "^12.0.1",
-    "cordova-plugin-certificates-pp-fork": "^0.9.1",
-    "cordova-plugin-cloud-settings": "^2.0.0",
-    "cordova-plugin-file": "^8.0.0",
+    "cordova-android": "^13.0.0",
+    "cordova-ios": "^7.1.1",
+    "cordova-plugin-cloud-settings": "^2.0.1",
+    "cordova-plugin-file": "^8.1.3",
     "cordova-plugin-file-transfer": "github:apache/cordova-plugin-file-transfer",
-    "cordova-plugin-firebasex": "^16.1.0",
+    "cordova-plugin-firebasex": "^18.0.5",
     "cordova-plugin-media": "^7.0.0",
     "cordova-plugin-photo-library-zm": "^3.0.5",
     "cordova-plugin-x-socialsharing-android12": "^6.0.5",
