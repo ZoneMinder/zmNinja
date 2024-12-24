@@ -442,7 +442,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                         }
 
                         function updateSlidesPosition(offset) {
-                            // manually apply transformation to carousel childrens
+                            // manually apply transformation to carousel children
                             // todo : optim : apply only to visible items
                             var x = scope.carouselBufferIndex * 100 + offset;
                             angular.forEach(getSlidesDOM(), function(child, index) {
@@ -809,7 +809,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                         scope.carouselBufferSize = options.bufferSize;
 
                         function updateBufferIndex() {
-                            // update and cap te buffer index
+                            // update and cap the buffer index
                             var bufferIndex = 0;
                             var bufferEdgeSize = (scope.carouselBufferSize - 1) / 2;
                             if (isBuffered) {
@@ -1654,7 +1654,7 @@ angular.module('angular-carousel.shifty', [])
     }
 
     // Fake a Tweenable and patch some internals.  This approach allows us to
-    // skip uneccessary processing and object recreation, cutting down on garbage
+    // skip unnecessary processing and object recreation, cutting down on garbage
     // collection pauses.
     var mockTweenable = new Tweenable();
     mockTweenable._filterArgs = [];

@@ -103,7 +103,7 @@
                         attachment = [UNNotificationAttachment attachmentWithIdentifier:@"" URL:localURL options:nil error:&attachmentError];
                         if (attachmentError) {
                       
-                            NSLog(@"unable to add attchment: %@", attachmentError.localizedDescription);
+                            NSLog(@"unable to add attachment: %@", attachmentError.localizedDescription);
                         
                         }
                     }

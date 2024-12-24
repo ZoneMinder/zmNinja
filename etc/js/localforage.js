@@ -974,7 +974,7 @@ function iterate(iterator, callback) {
                             }
                             var result = iterator(value, cursor.key, iterationNumber++);
 
-                            // when the iterator callback retuns any
+                            // when the iterator callback returns any
                             // (non-`undefined`) value, then we stop
                             // the iteration immediately
                             if (result !== void 0) {
@@ -1563,7 +1563,7 @@ function serialize(value, callback) {
 
         callback(marker + bufferToString(buffer));
     } else if (valueType === '[object Blob]') {
-        // Conver the blob to a binaryArray and then to a string.
+        // Convert the blob to a binaryArray and then to a string.
         var fileReader = new FileReader();
 
         fileReader.onload = function () {
