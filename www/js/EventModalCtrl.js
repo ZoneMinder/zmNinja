@@ -6,7 +6,6 @@
 
 angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$rootScope', 'zm', 'NVR', '$ionicSideMenuDelegate', '$timeout', '$interval', '$ionicModal', '$ionicLoading', '$http', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', '$q', '$sce', 'carouselUtils', '$ionicPopup', '$translate', '$filter', 'SecuredPopups', '$cordovaFile', function ($scope, $rootScope, zm, NVR, $ionicSideMenuDelegate, $timeout, $interval, $ionicModal, $ionicLoading, $http, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, $q, $sce, carouselUtils, $ionicPopup, $translate, $filter, SecuredPopups, $cordovaFile) {
 
-
   var videoPlaybarClicked = false;
 
   var playerReady = false;
@@ -15,7 +14,6 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     ACTIVE: 2, // using zms
     STOPPED: 3 // starts off in this mode
   };
-
 
   // from parent scope
   var currentEvent = $scope.currentEvent;
@@ -1168,7 +1166,9 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
       eventId = m.eventId;
       $scope.eventId = m.eventId;
 
-    } else currentStreamState = streamState.ACTIVE;
+    } else {
+      currentStreamState = streamState.ACTIVE;
+    }
 
 
     if (m.showLive == 'disabled') {
@@ -2132,50 +2132,49 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     $scope.mName = "...";
     $scope.liveFeedMid = $scope.mid;
 
-    $http.get(myurl)
-    .then(function (success) {
-
-        var event = currentEvent = $scope.event = $scope.currentEvent = success.data.event;
+    $http.get(myurl).then(function (success) {
+        currentEvent = $scope.event = $scope.currentEvent = success.data.event;
+	var event = currentEvent.Event;
 
         // console.log ("prepareModal DATA:"+JSON.stringify(success.data));
         computeAlarmFrames(success.data);
         $scope.eventWarning = '';
 
-        if ((!event.Event.EndTime) && showLive) {
+        if ((!event.EndTime) && showLive) {
           $scope.eventWarning = $translate.instant('kEventStillRecording');
           // if this happens we get to live feed
-          $scope.liveFeedMid = event.Event.MonitorId;
+          $scope.liveFeedMid = event.MonitorId;
           NVR.log("Event not ready, setting live view, with MID=" + $scope.liveFeedMid);
         }
 
-        event.Event.BasePath = computeBasePath(event);
-        event.Event.relativePath = computeRelativePath(event);
-        event.Event.streamingURL = NVR.getStreamingURL(event.Event.MonitorId);
-        event.Event.recordingURL = NVR.getRecordingURL(event.Event.MonitorId);
-        event.Event.imageMode = NVR.getImageMode(event.Event.MonitorId);
+        event.BasePath = computeBasePath(currentEvent);
+        event.relativePath = computeRelativePath(event);
+        event.streamingURL = NVR.getStreamingURL(event.MonitorId);
+        event.recordingURL = NVR.getRecordingURL(event.MonitorId);
+        event.imageMode = NVR.getImageMode(event.MonitorId);
 
         //console.log (JSON.stringify( success));
-        $scope.eventName = event.Event.Name;
-        $scope.eventId = event.Event.Id;
+        $scope.eventName = event.Name;
+        $scope.eventId = event.Id;
         $scope.d_eventId = $scope.eventId;
-        $scope.eFramesNum = event.Event.Frames;
-        $scope.eventDur = Math.round(event.Event.Length);
+        $scope.eFramesNum = event.Frames;
+        $scope.eventDur = Math.round(event.Length);
         $scope.loginData = NVR.getLogin();
-        $scope.humanizeTime = humanizeTime(event.Event.StartTime);
-        $scope.mName = NVR.getMonitorName(event.Event.MonitorId);
+        $scope.humanizeTime = humanizeTime(event.StartTime);
+        $scope.mName = NVR.getMonitorName(event.MonitorId);
         //console.log (">>>>>>>>HUMANIZE " + $scope.humanizeTime);
 
         // console.log("**** VIDEO STATE IS " + event.Event.DefaultVideo);
-        if (typeof event.Event.DefaultVideo === 'undefined' || event.Event.DefaultVideo == '') {
-          event.Event.DefaultVideo = "";
+        if (typeof event.DefaultVideo === 'undefined' || event.DefaultVideo == '') {
+          event.DefaultVideo = "";
         }
 
         var ld = NVR.getLogin();
-        if (ld.monitorSpecific[event.Event.MonitorId] && ld.monitorSpecific[event.Event.MonitorId].forceMjpeg) {
-          NVR.debug('Monitor:'+event.Event.MonitorId+' has forced MJPEG playback');
+        if (ld.monitorSpecific[event.MonitorId] && ld.monitorSpecific[event.MonitorId].forceMjpeg) {
+          NVR.debug('Monitor:'+event.MonitorId+' has forced MJPEG playback');
           $scope.defaultVideo ='';
         } else {
-          $scope.defaultVideo = event.Event.DefaultVideo;
+          $scope.defaultVideo = event.DefaultVideo;
         }
 
         $scope.connKey = (Math.floor((Math.random() * 999999) + 1)).toString();
@@ -2187,7 +2186,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         //console.log("Event ID is " + $scope.eventId);
         //console.log("video is " + $scope.defaultVideo);
 
-        neighborEvents(event.Event.Id)
+        neighborEvents(event.Id)
           .then(function (success) {
               $scope.nextId = success.next;
               $scope.prevId = success.prev;
@@ -2200,7 +2199,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         $scope.prevId = "...";
 
         event.Event.video = {};
-        var videoURL = event.Event.recordingURL + "/index.php?view=view_video&mode=mpeg&format=h264&eid=" + event.Event.Id;
+        var videoURL = event.recordingURL + "/index.php?view=view_video&mode=mpeg&format=h264&eid=" + event.Id;
 
         if ($rootScope.authSession != 'undefined') videoURL += $rootScope.authSession;
         if ($rootScope.basicAuthToken) videoURL = videoURL + "&basicauth=" + $rootScope.basicAuthToken;
@@ -2248,13 +2247,13 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
             $scope.playbackURL = zm.desktopUrl;
         } */
 
-        $scope.eventBasePath = event.Event.BasePath;
-        $scope.relativePath = event.Event.relativePath;
+        $scope.eventBasePath = event.BasePath;
+        $scope.relativePath = event.relativePath;
         $rootScope.rand = Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111;
 
         $scope.slider_modal_options = {
           from: 1,
-          to: event.Event.Frames,
+          to: event.Frames,
           realtime: true,
           step: 1,
           className: "mySliderClass",
@@ -2291,12 +2290,12 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
         $scope.mycarousel.index = 0;
         $scope.ionRange.index = 1;
-        $scope.eventSpeed = $scope.event.Event.Length / $scope.event.Event.Frames;
+        $scope.eventSpeed = event.Length / event.Frames;
 
         //console.log("**Resetting range");
         $scope.slides = [];
         var i;
-        for (i = 1; i <= event.Event.Frames; i++) {
+        for (i = 1; i <= event.Frames; i++) {
           var fname = padToN(i, eventImageDigits) + "-capture.jpg";
           // console.log ("Building " + fname);
           $scope.slides.push({
@@ -2313,19 +2312,19 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
 
         // lets
         framearray.datasets[0].data = [];
-        for (i = 0; i < event.Frame.length; i++) {
-          var ts = moment(event.Frame[i].TimeStamp).format(timeFormat);
+        for (i = 0; i < currentEvent.Frame.length; i++) {
+          var ts = moment(currentEvent.Frame[i].TimeStamp).format(timeFormat);
 
           //console.log ("pushing s:" + event.Frame[i].Score+" t:"+ts);
 
           framearray.datasets[0].data.push({
             x: ts,
-            y: event.Frame[i].Score
+            y: currentEvent.Frame[i].Score
           });
           framearray.labels.push("");
 
         }
-        $scope.totalEventTime = Math.round(parseFloat(event.Event.Length)) - 1;
+        $scope.totalEventTime = Math.round(parseFloat(event.Length)) - 1;
         $scope.currentEventTime = 0;
 
         // video mode doesn't need this graph - it won't really work
