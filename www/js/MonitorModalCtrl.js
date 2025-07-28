@@ -69,7 +69,6 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
 
   // Keyboard handler for desktop versions
   function keyboardHandler(evt) {
-    var handled = false;
     var keyCodes = {
 
       //monitors
@@ -156,7 +155,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
         }
       } // keyCode
 
-      return handled = true;
+      return true;
     });
   }
 
