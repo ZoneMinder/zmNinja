@@ -1124,14 +1124,13 @@ angular.module('zmApp', [
 
       if ($rootScope.platformOS == 'android') {
         var permissions = cordova.plugins.permissions;
-        permissions.checkPermission(permissions.POST_NOTIFICATIONS, checkPermissionCallback, null);
-
-        function checkPermissionCallback(status) {
+        permissions.checkPermission(permissions.POST_NOTIFICATIONS, function(status) {
           if (!status.checkPermission) {
             NVR.log("No permission to post notifications");
           }
           permissions.requestPermission(permissions.POST_NOTIFICATIONS, succ, err);
         }
+	, null);
       }
 
       function succ(s) {
