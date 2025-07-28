@@ -18,7 +18,6 @@
         <div ng-if="monitor.Monitor.Enabled == '1'">
           <div class='item'>
             <span class="item-icon-left">
-
               <div class="icon">
                 <span class="ion-ios-videocam-outline"></span> &nbsp;
                 <span ng-class="{'ion-eye':monitor.Monitor.listDisplay=='show','ion-eye-disabled':monitor.Monitor.listDisplay!='show'}">
@@ -40,10 +39,19 @@
             <i class="icon {{monitor.Monitor.char}}" style="color:grey;"></i>
           </span>
         </div>
-      
-    
+        <p>
+        {{hasFunction}}<br/>
+        {{monitor.Monitor.Function}}<br/>
+        {{monitor.Monitor.Capturing}}<br/>
 
-        <p>{{'kMode' | translate}} :{{monitor.Monitor.Function}}
+        <div ng-if="hasFunction">
+          {{'kCapturing' | translate}} :{{monitor.Monitor.Capturing}}
+          {{'kAnalysing' | translate}} :{{monitor.Monitor.Analysing}}
+          {{'kRecording' | translate}} :{{monitor.Monitor.Recording}}
+        </div>
+        <div ng-if="!hasFunction">
+          {{'kMode' | translate}} :{{monitor.Monitor.Function}}
+        </div>
           <br /> {{'kForceMjpeg' | translate}}: {{monitor.Monitor.forceMjpeg}}
           <br /> {{'kResolution' | translate}}: {{monitor.Monitor.Width}}*{{monitor.Monitor.Height}}
           <br /> {{'kMaxFPS' | translate}}: {{monitor.Monitor.MaxFPS}}

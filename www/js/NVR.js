@@ -371,8 +371,8 @@ angular.module('zmApp.controllers')
             //console.log ("VAL IS " + val);
             val = val.replace(regex1, "<password removed>");
             val = val.replace(regex2, "<password removed>");
-            val = val.replace (regex3, "&token=<removed>");
-            val = val.replace (regex4, "&auth=<removed>");
+            val = val.replace(regex3, "&token=<removed>");
+            val = val.replace(regex4, "&auth=<removed>");
           }
 
           $ionicPlatform.ready(function () {
@@ -573,24 +573,25 @@ angular.module('zmApp.controllers')
                for (var k = 0; k < monitors.length; k++) {
                 // console.log(k);
                  if (monitors[k].Monitor.Id == data.groups[i].Monitor[j].Id) {
-                  monitors[k].Monitor.Group.push({'id':data.groups[i].Group.Id, 'name':data.groups[i].Group.Name});
+                   if (!monitors[k].Monitor.Group) monitors[k].Monitor.Group = [];
+                   monitors[k].Monitor.Group.push({'id':data.groups[i].Group.Id, 'name':data.groups[i].Group.Name});
 
-                  var parent = data.groups[i].Group.ParentId;
-                  while (parent) {
-                    var parentFound = false;
-                    var x;
-                    for (x = 0; x < data.groups.length; x++) {
-                      if (data.groups[x].Group.Id == parent) {
-                        parentFound = true;
-                        break;
-                      }
-                    }
-                    if (parentFound) {
-                      monitors[k].Monitor.Group.push({'id':data.groups[x].Group.Id, 'name':data.groups[x].Group.Name});
-                    //  console.log (data.groups[x].Group.Id+ " is parent of "+data.groups[i].Group.Id);
-                      parent = data.groups[x].Group.ParentId;
-                    }
-                  }
+                   var parent = data.groups[i].Group.ParentId;
+                   while (parent) {
+                     var parentFound = false;
+                     var x;
+                     for (x = 0; x < data.groups.length; x++) {
+                       if (data.groups[x].Group.Id == parent) {
+                         parentFound = true;
+                         break;
+                       }
+                     }
+                     if (parentFound) {
+                       monitors[k].Monitor.Group.push({'id':data.groups[x].Group.Id, 'name':data.groups[x].Group.Name});
+                       //  console.log (data.groups[x].Group.Id+ " is parent of "+data.groups[i].Group.Id);
+                       parent = data.groups[x].Group.ParentId;
+                     }
+                   }
 
                 //  console.log ('DONE HIERARCHY');
                  // console.log ('Monitor: '+ monitors[k].Monitor.Name+" belongs to Group:"+data.groups[i].Group.Name);
@@ -1735,7 +1736,7 @@ angular.module('zmApp.controllers')
             }
           }
         }
-      }
+      } // end function regenConnKeys
 
       //--------------------------------------------------------------------------
       // Banner display of messages
@@ -2872,6 +2873,7 @@ angular.module('zmApp.controllers')
             if (versionCompare($rootScope.apiVersion, "1.37.39") > 0) {
               myurl += '/Deleted=:0';
             }
+            log("versionCompare"+$rootScope.apiVersion+'='+versionCompare($rootScope.apiVersion, "1.37.12"));
             if (versionCompare($rootScope.apiVersion, "1.37.12") > 0) {
               myurl += '/Capturing!=:None';
             } else {
@@ -2950,46 +2952,45 @@ angular.module('zmApp.controllers')
                             debug("default multi-server protocol will be:" + multiserver_scheme);
 
                             for (var i=0; i < monitors.length; i++) {
+                              monitor = monitors[i].Monitor;
                               // zm 1.33.15 prefixes 'ROTATE_' to orientation
-                              monitors[i].Monitor.Orientation  = monitors[i].Monitor.Orientation.replace('ROTATE_', '');
+                              monitor.Orientation  = monitor.Orientation.replace('ROTATE_', '');
 
                               var recordingType = '';
-                              if (monitors[i].Monitor.SaveJPEGs > 0) {
+                              if (monitor.SaveJPEGs > 0) {
                                 recordingType = $translate.instant('kImages');
                               }
-                              if (monitors[i].Monitor.VideoWriter > 0) {
+                              if (monitor.VideoWriter > 0) {
                                 if (recordingType.length) recordingType += " + ";
                                 recordingType = recordingType + $translate.instant('kVideo') + " (";
-                                recordingType = recordingType + (monitors[i].Monitor.VideoWriter == 1 ? $translate.instant('kMonitorVideoEncode') : $translate.instant('kMonitorVideoPassThru')) + ")";
+                                recordingType = recordingType + (monitor.VideoWriter == 1 ? $translate.instant('kMonitorVideoEncode') : $translate.instant('kMonitorVideoPassThru')) + ")";
                               }
 
                               // in 1.30.4 these fields did not exist
 
-                              monitors[i].Monitor.recordingType = recordingType ? recordingType : $translate.instant('kImages');
-                              //monitors[i].Monitor.listDisplay = 'show';
-                              monitors[i].Monitor.isAlarmed = false;
-                              monitors[i].Monitor.connKey = genConnKey();
-                              monitors[i].Monitor.rndKey = (Math.floor((Math.random() * 999999) + 1)).toString();
+                              monitor.recordingType = recordingType ? recordingType : $translate.instant('kImages');
+                              //monitor.listDisplay = 'show';
+                              monitor.isAlarmed = false;
+                              monitor.connKey = genConnKey();
+                              monitor.rndKey = (Math.floor((Math.random() * 999999) + 1)).toString();
 
-                              var serverFound = false;
                               if (multiservers) {
                                 for (var j=0; j < multiservers.length; j++) {
                                   //console.log ("Comparing " + multiservers[j].Server.Id + " AND " + monitors[i].Monitor.ServerId);
-                                  if (multiservers[j].Server.Id == monitors[i].Monitor.ServerId) {
+                                  if (multiservers[j].Server.Id == monitor.ServerId) {
+                                    monitor.Server = multiservers[j].Server;
                                     //console.log ("Found match");
-                                    serverFound = true;
                                     break;
                                   }
                                 }
                               }
-                              if (serverFound) {
+                              if (monitor.Server) {
                                 // we found a monitor using a multi-server
-                                if (!/^https?:\/\//i.test(multiservers[j].Server.Hostname)) {
-                                  if (multiservers[j].Server.Protocol) {
-                                    multiservers[j].Server.Hostname = multiservers[j].Server.Protocol +
-                                      "://" + multiservers[j].Server.Hostname;
+                                if (!/^https?:\/\//i.test(monitor.Server.Hostname)) {
+                                  if (monitor.Server.Protocol) {
+                                    monitor.Server.Hostname = monitor.Server.Protocol + "://" + monitor.Server.Hostname;
                                   } else {
-                                    multiservers[j].Server.Hostname = multiserver_scheme + multiservers[j].Server.Hostname;
+                                    monitor.Server.Hostname = multiserver_scheme + monitor.Server.Hostname;
                                   }
                                 }
 
@@ -2998,7 +2999,7 @@ angular.module('zmApp.controllers')
                                 // and slap on the host protocol and path. Meh.
 
                                 var s = URI.parse(loginData.streamingurl);
-                                var m = URI.parse(multiservers[j].Server.Hostname);
+                                var m = URI.parse(monitor.Server.Hostname);
                                 var portal_url = URI.parse(loginData.url);
 
                                 debug("recording server reported is " + JSON.stringify(m));
@@ -3021,10 +3022,10 @@ angular.module('zmApp.controllers')
                                 st += m.host;
 
                                 if (zmsPort <= 0 || loginData.disableSimulStreaming) {
-                                  debug("No port in serverId:" + multiservers[j].Server.Id);
-                                  if (multiservers[j].Server.Port) {
-                                    debug("Found port inside multiserver: " + multiservers[j].Server.Id + ", using: " + multiservers[j].Server.Port);
-                                    st += ":" + multiservers[j].Server.Port;
+                                  debug("No port in serverId:" + monitor.Server.Id);
+                                  if (monitor.Server.Port) {
+                                    debug("Found port inside multiserver: " + monitor.Server.Id + ", using: " + monitor.Server.Port);
+                                    st += ":" + monitor.Server.Port;
                                   } else {
                                     // no multiport so take from portal or multiserver if there
                                     if (portal_url.port || m.port) {
@@ -3034,8 +3035,7 @@ angular.module('zmApp.controllers')
                                   }
                                 } else {
                                   // we have multiserver, use multiport for control as well as streaming
-                                  var sport = parseInt(zmsPort) + parseInt(monitors[i].Monitor.Id);
-                                  st = st + ':' + sport;
+                                  st = st + ':' + (parseInt(zmsPort) + parseInt(monitor.Id));
                                 } // end if multiport
 
                                 baseurl = st;
@@ -3046,15 +3046,16 @@ angular.module('zmApp.controllers')
                                 //console.log ("STEP 3: ST="+st);
                                 //console.log ("----------STREAMING URL PARSED AS " + st);
 
-                                monitors[i].Monitor.streamingURL = streamingurl;
-                                monitors[i].Monitor.baseURL = baseurl;
-                                monitors[i].Monitor.controlURL = controlURL;
-                                monitors[i].Monitor.recordingURL = controlURL;
+                                monitor.streamingURL = streamingurl;
+                                monitor.baseURL = baseurl;
+                                monitor.apiURL = baseurl+monitor.Server.PathToApi;
+                                monitor.controlURL = controlURL;
+                                monitor.recordingURL = controlURL;
 
                                 debug("Storing baseurl=" + baseurl + " streamingURL=" + streamingurl + " recordingURL=" + controlURL);
                                 //console.log ("** Streaming="+st+" **base="+baseurl);
                                 // starting 1.30 we have fid=xxx mode to return images
-                                monitors[i].Monitor.imageMode = (versionCompare($rootScope.apiVersion, "1.30") == -1) ? "path" : "fid";
+                                monitor.imageMode = (versionCompare($rootScope.apiVersion, "1.30") == -1) ? "path" : "fid";
                                 //  debug("API " + $rootScope.apiVersion + ": Monitor " + monitors[i].Monitor.Id + " will use " + monitors[i].Monitor.imageMode + " for direct image access");
 
                                 //debug ("Streaming URL for Monitor " + monitors[i].Monitor.Id  + " is " + monitors[i].Monitor.streamingURL );
@@ -3064,9 +3065,6 @@ angular.module('zmApp.controllers')
                                 // Non multiserver case
                                 //monitors[i].Monitor.listDisplay = 'show';
                                 debug("No servers matched, filling defaults...");
-                                monitors[i].Monitor.isAlarmed = false;
-                                monitors[i].Monitor.connKey = genConnKey();
-                                monitors[i].Monitor.rndKey = (Math.floor((Math.random() * 999999) + 1)).toString();
 
                                 var st2 = loginData.streamingurl;
                                 controlURL = loginData.url;
@@ -3082,7 +3080,7 @@ angular.module('zmApp.controllers')
                                     p2.path = undefined;
                                   }
                                   st2 += p2.host;
-                                  var sport2 = parseInt(zmsPort) + parseInt(monitors[i].Monitor.Id);
+                                  var sport2 = parseInt(zmsPort) + parseInt(monitor.Id);
                                   st2 = st2 + ':' + sport2;
 
                                   controlURL = st2;
@@ -3093,13 +3091,14 @@ angular.module('zmApp.controllers')
 
                                 debug("Storing streaming=" + st2 + " recording=" + controlURL);
 
-                                monitors[i].Monitor.streamingURL = st2;
-                                monitors[i].Monitor.controlURL = controlURL;
-                                monitors[i].Monitor.recordingURL = controlURL;
+                                monitor.streamingURL = st2;
+                                monitor.controlURL = controlURL;
+                                monitor.recordingURL = controlURL;
                                 //debug ("Streaming URL for Monitor " + monitors[i].Monitor.Id  + " is " + monitors[i].Monitor.streamingURL );
                                 //console.log ("NO SERVER MATCH CONSTRUCTED STREAMING PATH="+st2);
-                                monitors[i].Monitor.baseURL = loginData.url;
-                                monitors[i].Monitor.imageMode = (versionCompare($rootScope.apiVersion, "1.30") == -1) ? "path" : "fid";
+                                monitor.baseURL = loginData.url;
+                                monitor.apiURL = loginData.apiurl;
+                                monitor.imageMode = (versionCompare($rootScope.apiVersion, "1.30") == -1) ? "path" : "fid";
                               } // non multiserver end
                             } // end foreach monitor
 
@@ -3527,9 +3526,6 @@ angular.module('zmApp.controllers')
           //console.log("********** INSIDE EVENTS PAGES ");
 
           var d = $q.defer();
-
-
-
           var apiurl = loginData.apiurl;
 
           var myurl = apiurl + "/events/index";
@@ -3547,8 +3543,6 @@ angular.module('zmApp.controllers')
           if (loginData.objectDetectionFilter && !noObjectFilter) {
             myurl = myurl +'/'+ 'Notes REGEXP:detected:';
           }
-
-
           myurl = myurl + ".json?" + $rootScope.authSession;
           //console.log (">>>>>Constructed URL " + myurl);
 
