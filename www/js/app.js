@@ -1129,8 +1129,7 @@ angular.module('zmApp', [
             NVR.log("No permission to post notifications");
           }
           permissions.requestPermission(permissions.POST_NOTIFICATIONS, succ, err);
-        }
-	, null);
+        }, null);
       }
 
       function succ(s) {
