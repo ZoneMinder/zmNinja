@@ -28,8 +28,8 @@
     <preference name="SplashMaintainAspectRatio" value="true" />
     <preference name="FadeSplashScreen" value="false" />
     <preference name="BackgroundColor" value="#444444" />
-    <preference name="android-targetSdkVersion" value="33" />
-    <preference name="android-compileSdkVersion" value="33" />
+    <preference name="android-targetSdkVersion" value="34" />
+    <preference name="android-compileSdkVersion" value="34" />
     <preference name="android-minSdkVersion" value="22" />
     <preference name="SplashScreenBackgroundColor" value="#ababab" />
     <preference name="StatusBarOverlaysWebView" value="false" />
