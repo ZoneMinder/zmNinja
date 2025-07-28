@@ -11,6 +11,12 @@ angular.module('zmApp.controllers')
 
       var loginData;
       $scope.monitorLoadStatus = "...";
+        var currentVersion = NVR.getAppVersion();
+        if (NVR.versionCompare(currentVersion, '1.37.12')>0) {
+          $scope.hasFunction = true;
+        } else {
+          $scope.hasFunction = false;
+        }
 
       // --------------------------------------------------------
       // Handling of back button in case modal is open should
@@ -97,7 +103,7 @@ angular.module('zmApp.controllers')
             if (!$scope.monitors[i].Monitor.forceMjpeg)
               $scope.forceMjpeg.value = false; // if any is unset, global is unset
           }
-        }  else {
+        } else {
           monitorsIds[0] = monitorId;
           $scope.forceMjpeg.value = mon_forceMjpeg;
         }
@@ -109,6 +115,7 @@ angular.module('zmApp.controllers')
 
         var currentVersion = NVR.getAppVersion();
         if (NVR.versionCompare(currentVersion, '1.37.12') == 1) {
+          $scope.hasFunction = true;
 
           $scope.monFunctions = [
             {
@@ -137,6 +144,7 @@ angular.module('zmApp.controllers')
             }
           ];
         } else {
+          $scope.hasFunction = false;
           $scope.monCapturingOptions = [
             {
               text: $translate.instant('kMonCapturingNone'),
@@ -171,9 +179,9 @@ angular.module('zmApp.controllers')
         $rootScope.zmPopup = $ionicPopup.show({
           scope: $scope,
           cssClass:'widepopup',
-          template: '<ion-toggle ng-model="monfunc.myenabled"   toggle-class="toggle-calm">'+
+          template: '<ion-toggle ng-model="monfunc.myenabled" toggle-class="toggle-calm">'+
           $translate.instant('kMotionEnabled')+'</ion-toggle>'+
-          '<ion-toggle ng-model="forceMjpeg.value"   toggle-class="toggle-calm">'+
+          '<ion-toggle ng-model="forceMjpeg.value" toggle-class="toggle-calm">'+
           $translate.instant('kForceMjpeg')+'</ion-toggle>'+
           '<div class="item item-divider" style="background:#666666;color:white;">'+
           '</div><ion-radio-fix ng-repeat="item in monFunctions" ng-value="item.value" ng-model="monfunc.myfunc"> {{item.text}} </ion-radio-fix>',
@@ -182,7 +190,6 @@ angular.module('zmApp.controllers')
 
           buttons: [{
             text: $translate.instant('kButtonCancel'),
-
           },
             {
               text: $translate.instant('kButtonSave'),
