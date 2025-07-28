@@ -573,24 +573,25 @@ angular.module('zmApp.controllers')
                for (var k = 0; k < monitors.length; k++) {
                 // console.log(k);
                  if (monitors[k].Monitor.Id == data.groups[i].Monitor[j].Id) {
-                  monitors[k].Monitor.Group.push({'id':data.groups[i].Group.Id, 'name':data.groups[i].Group.Name});
+                   if (!monitors[k].Monitor.Group) monitors[k].Monitor.Group = [];
+                   monitors[k].Monitor.Group.push({'id':data.groups[i].Group.Id, 'name':data.groups[i].Group.Name});
 
-                  var parent = data.groups[i].Group.ParentId;
-                  while (parent) {
-                    var parentFound = false;
-                    var x;
-                    for (x = 0; x < data.groups.length; x++) {
-                      if (data.groups[x].Group.Id == parent) {
-                        parentFound = true;
-                        break;
-                      }
-                    }
-                    if (parentFound) {
-                      monitors[k].Monitor.Group.push({'id':data.groups[x].Group.Id, 'name':data.groups[x].Group.Name});
-                    //  console.log (data.groups[x].Group.Id+ " is parent of "+data.groups[i].Group.Id);
-                      parent = data.groups[x].Group.ParentId;
-                    }
-                  }
+                   var parent = data.groups[i].Group.ParentId;
+                   while (parent) {
+                     var parentFound = false;
+                     var x;
+                     for (x = 0; x < data.groups.length; x++) {
+                       if (data.groups[x].Group.Id == parent) {
+                         parentFound = true;
+                         break;
+                       }
+                     }
+                     if (parentFound) {
+                       monitors[k].Monitor.Group.push({'id':data.groups[x].Group.Id, 'name':data.groups[x].Group.Name});
+                       //  console.log (data.groups[x].Group.Id+ " is parent of "+data.groups[i].Group.Id);
+                       parent = data.groups[x].Group.ParentId;
+                     }
+                   }
 
                 //  console.log ('DONE HIERARCHY');
                  // console.log ('Monitor: '+ monitors[k].Monitor.Name+" belongs to Group:"+data.groups[i].Group.Name);
@@ -2872,6 +2873,7 @@ angular.module('zmApp.controllers')
             if (versionCompare($rootScope.apiVersion, "1.37.39") > 0) {
               myurl += '/Deleted=:0';
             }
+            log("versionCompare"+$rootScope.apiVersion+'='+versionCompare($rootScope.apiVersion, "1.37.12"));
             if (versionCompare($rootScope.apiVersion, "1.37.12") > 0) {
               myurl += '/Capturing!=:None';
             } else {
@@ -3524,9 +3526,6 @@ angular.module('zmApp.controllers')
           //console.log("********** INSIDE EVENTS PAGES ");
 
           var d = $q.defer();
-
-
-
           var apiurl = loginData.apiurl;
 
           var myurl = apiurl + "/events/index";
@@ -3544,8 +3543,6 @@ angular.module('zmApp.controllers')
           if (loginData.objectDetectionFilter && !noObjectFilter) {
             myurl = myurl +'/'+ 'Notes REGEXP:detected:';
           }
-
-
           myurl = myurl + ".json?" + $rootScope.authSession;
           //console.log (">>>>>Constructed URL " + myurl);
 
