@@ -13,6 +13,6 @@ fi
 echo "-- building --"
 #ionic cordova build ios --release --buildConfig="./build-auto.json"
 cordova prepare
-ionic cordova build ios --buildConfig="./build.json"
+cordova build ios --buildConfig="./build.json"
 echo "********* Done *************"
 
