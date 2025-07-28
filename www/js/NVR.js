@@ -2986,7 +2986,7 @@ angular.module('zmApp.controllers')
                               }
                               if (monitor.Server) {
                                 // we found a monitor using a multi-server
-                                if (!/^https?:\/\//i.test(multiservers[j].Server.Hostname)) {
+                                if (!/^https?:\/\//i.test(monitor.Server.Hostname)) {
                                   if (monitor.Server.Protocol) {
                                     monitor.Server.Hostname = monitor.Server.Protocol + "://" + monitor.Server.Hostname;
                                   } else {
