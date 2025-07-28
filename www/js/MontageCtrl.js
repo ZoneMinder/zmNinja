@@ -1310,7 +1310,7 @@ angular.module('zmApp.controllers')
       $scope.isDragabillyOn = !$scope.isDragabillyOn;
       //currentStreamState  = $scope.isDragabillyOn? streamState.STOPPED:streamState.ACTIVE;
 
-      for (var i = 0; i < $scope.MontageMonitors.length; i++) {
+      for (let i = 0; i < $scope.MontageMonitors.length; i++) {
         $scope.MontageMonitors[i].Monitor.isStamp = false;
       }
 
@@ -1333,11 +1333,11 @@ angular.module('zmApp.controllers')
       } else {
         $scope.dragBorder = "";
         NVR.debug("Disabling drag for " + draggies.length + " items");
-        for (var i = 0; i < draggies.length; i++) {
+        for (let i = 0; i < draggies.length; i++) {
           draggies[i].disable();
           draggies[i].unbindHandles();
         }
-        for (var i = 0; i < $scope.MontageMonitors.length; i++) {
+        for (let i = 0; i < $scope.MontageMonitors.length; i++) {
           $scope.MontageMonitors[i].Monitor.selectStyle = "";
         }
         // reflow and reload as some may be hidden
