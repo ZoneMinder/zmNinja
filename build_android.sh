@@ -1,5 +1,5 @@
 #!/bin/bash
-SDK_VERSION='34.0.3'
+SDK_VERSION='35.0.0'
 
 
 build_debug() {
@@ -46,9 +46,10 @@ build_release() {
             cordova build android --release --  --versionCode=${ver}
 
             # copy build to release folder and sign
-            cp platforms/android/app/build/outputs/bundle/release/app-release.aab release_files/zmNinja.aab
-            echo "Signing bundle"
-            jarsigner -sigalg SHA256withRSA -digestalg SHA-256 -keystore platforms/android/zmNinja.keystore release_files/zmNinja.aab zmNinja
+            cp platforms/android/app/build/outputs/bundle/release/app-release.aab release_files/zmNinja_${ver}.aab
+            echo "Signing bundle with: jarsigner -sigalg SHA256withRSA -digestalg SHA-256 -keystore platforms/android/zmNinja.keystore release_files/zmNinja_${ver}.aab zmNinja"
+
+            jarsigner -sigalg SHA256withRSA -digestalg SHA-256 -keystore platforms/android/zmNinja.keystore release_files/zmNinja_${ver}.aab zmNinja
             echo "Signed aab in release_files"
 
             # Build apk from bundle for verification if bundletool is available
@@ -125,6 +126,8 @@ cordova plugin remove cordova-plugin-ionic-webview > /dev/null 2>&1
 
 echo "Adding cordova-plugin-certificates-pp-fork..."
 cordova plugin add cordova-plugin-certificates-pp-fork > /dev/null 2>&1
+
+set -e
 
 
 if [ "${MODE}" = "debug" ]; then
