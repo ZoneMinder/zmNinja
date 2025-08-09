@@ -1,4 +1,15 @@
 # Changelog
+## [v1.7.008](https://github.com/ZoneMinder/zmNinja/tree/v1.7.008) (2025-08-09)
+
+[Full Changelog](https://github.com/ZoneMinder/zmNinja/compare/v1.7.007...v1.7.008)
+
+- Target android 34
+- Don't show Function on ZoneMinder instances that do not have it. Instead show Capturing/Analysing/Recording options.
+- Bug fixes to Monitor Groups
+- Add Lithuanian translation
+- Bump versions of various dependencies
+- fix lack of connKey after selecting visible monitors.  Add monitor.Capturing case.  Use monitor specific API and stream status urls
+- Updated FAQ entries
 
 ## [v1.7.007](https://github.com/ZoneMinder/zmNinja/tree/v1.7.007) (2024-03-03)
 
