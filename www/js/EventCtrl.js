@@ -2782,13 +2782,27 @@ angular.module('zmApp.controllers')
       $rootScope.isAlarm = 0;
 
       // reset badge count
-      if (window.FirebasePlugin && $rootScope.platformOS != 'desktop') {
+      if ($rootScope.platformOS != 'desktop') {
         NVR.debug ('Clearing app badge count');
-        window.FirebasePlugin.setBadgeNumber(0);
+        if (window.Capacitor && window.Capacitor.isNativePlatform()) {
+          import('@capacitor/app').then(function(App) {
+            App.App.setBadgeCount({ count: 0 });
+            NVR.debug('Capacitor: Badge count cleared');
+          }).catch(function(error) {
+            NVR.debug('Capacitor: setBadgeCount failed: ' + JSON.stringify(error));
+            fallbackToFirebaseBadge();
+          });
+        } else {
+          fallbackToFirebaseBadge();
+        }
 
+        function fallbackToFirebaseBadge() {
+          if (window.FirebasePlugin) {
+            window.FirebasePlugin.setBadgeNumber(0);
+            NVR.debug('Firebase: Badge count cleared');
+          }
+        }
       }
-    
-    
     });
 
     $scope.$on('$ionicView.leave', function () {

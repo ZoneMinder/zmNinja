@@ -1114,13 +1114,36 @@ angular.module('zmApp', [
       //console.log ("*************** PLATFORM IS: "+ionic.Platform.platform());
       var ua = navigator.userAgent.toLowerCase();
       NVR.debug ("UA is "+ua);
-      // var ld = NVR.getLogin();
-      if (($ionicPlatform.is('ios') || ionic.Platform.platform() == 'macintel') && ua.indexOf("electron") == -1)
-        $rootScope.platformOS = "ios";
-      if ($ionicPlatform.is('android'))
-        $rootScope.platformOS = "android";
+      
+      if (window.Capacitor && window.Capacitor.isNativePlatform()) {
+        NVR.log("Capacitor platform detected, getting device info...");
+        import('@capacitor/device').then(function(Device) {
+          Device.Device.getInfo().then(function(info) {
+            $rootScope.deviceInfo = info;
+            $rootScope.platformOS = info.platform;
+            NVR.log("Capacitor device info: " + JSON.stringify(info));
+            NVR.log("You are running on " + $rootScope.platformOS + " (via Capacitor)");
+          }).catch(function(error) {
+            NVR.log("Capacitor device detection failed: " + JSON.stringify(error));
+            fallbackToCordovaDetection();
+          });
+        }).catch(function(error) {
+          NVR.log("Capacitor device import failed: " + JSON.stringify(error));
+          fallbackToCordovaDetection();
+        });
+      } else {
+        fallbackToCordovaDetection();
+      }
+      
+      function fallbackToCordovaDetection() {
+        // var ld = NVR.getLogin();
+        if (($ionicPlatform.is('ios') || ionic.Platform.platform() == 'macintel') && ua.indexOf("electron") == -1)
+          $rootScope.platformOS = "ios";
+        if ($ionicPlatform.is('android'))
+          $rootScope.platformOS = "android";
 
-      NVR.log("You are running on " + $rootScope.platformOS);
+        NVR.log("You are running on " + $rootScope.platformOS + " (via Cordova fallback)");
+      }
 
       if ($rootScope.platformOS == 'android') {
         var permissions = cordova.plugins.permissions;
@@ -1695,13 +1718,27 @@ angular.module('zmApp', [
           
           //window.cordova.plugins.Keyboard.disableScroll(true);
         }
-        if (window.StatusBar) {
+        if (window.Capacitor && window.Capacitor.isNativePlatform()) {
+          NVR.log("Capacitor StatusBar: Updating statusbar");
+          import('@capacitor/status-bar').then(function(StatusBar) {
+            StatusBar.StatusBar.setStyle({ style: 'DARK' });
+            StatusBar.StatusBar.setBackgroundColor({ color: '#2980b9' });
+            StatusBar.StatusBar.setOverlaysWebView({ overlay: false });
+            NVR.log("Capacitor StatusBar configured");
+          }).catch(function(error) {
+            NVR.log("Capacitor StatusBar failed: " + JSON.stringify(error));
+            fallbackToCordovaStatusBar();
+          });
+        }
+        else if (window.StatusBar) {
+          fallbackToCordovaStatusBar();
+        }
+        
+        function fallbackToCordovaStatusBar() {
           // org.apache.cordova.statusbar required
           //  console.log("statusbar");
-          NVR.log("Updating statusbar");
+          NVR.log("Cordova StatusBar: Updating statusbar");
           StatusBar.styleDefault();
-         
-
           StatusBar.backgroundColorByHexString("#2980b9");
         }
 

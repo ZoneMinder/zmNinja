@@ -241,37 +241,73 @@ angular.module('zmApp.controllers')
       };
 
       /**
-       * Allows/Disallows self signed certs
+       * Allows/Disallows self signed certs for both Capacitor and Cordova
        *
        * @returns
        */
       function setCordovaHttpOptions() {
-        /*debug ("Cordova HTTP: Setting JSON serializer");
-        cordova.plugin.http.setDataSerializer('utf8');*/
-        if (loginData.isUseBasicAuth) {
-          debug("Cordova HTTP: configuring basic auth");
-          cordova.plugin.http.useBasicAuth(loginData.basicAuthUser, loginData.basicAuthPassword);
+        if (window.Capacitor && window.Capacitor.isNativePlatform()) {
+          debug("Capacitor HTTP: Configuring HTTP options");
+          
+          if (loginData.isUseBasicAuth) {
+            debug("Capacitor HTTP: Basic auth will be configured per-request");
+            $rootScope.capacitorBasicAuth = {
+              username: loginData.basicAuthUser,
+              password: loginData.basicAuthPassword
+            };
+          }
+          
+          var cid = loginData.zmNinjaCustomId.replace('%APPVER%', zmAppVersion);
+          debug("Setting Capacitor header X-ZmNinja to " + cid);
+          
+          $rootScope.capacitorHeaders = {
+            'X-ZmNinja': cid
+          };
+
+          if (!loginData.enableStrictSSL) {
+            log(">>>> Capacitor HTTP: Disabling strict SSL checking (turn off in Dev Options if you can't connect)");
+            $rootScope.capacitorSSLConfig = {
+              rejectUnauthorized: false
+            };
+            debug('--> Capacitor SSL is permissive, will allow any certs. Use at your own risk.');
+          } else {
+            log(">>>> Capacitor HTTP: Enabling strict SSL checking");
+            $rootScope.capacitorSSLConfig = {
+              rejectUnauthorized: true
+            };
+          }
         }
-        var cid = loginData.zmNinjaCustomId.replace('%APPVER%',zmAppVersion);
-        debug("Setting cordova header X-ZmNinja to "+cid);
-        // setup custom header
-        cordova.plugin.http.setHeader('*', 'X-ZmNinja', cid);
+        else if (window.cordova && cordova.plugin && cordova.plugin.http) {
+          debug("Cordova HTTP: Configuring HTTP options");
+          /*debug ("Cordova HTTP: Setting JSON serializer");
+          cordova.plugin.http.setDataSerializer('utf8');*/
+          if (loginData.isUseBasicAuth) {
+            debug("Cordova HTTP: configuring basic auth");
+            cordova.plugin.http.useBasicAuth(loginData.basicAuthUser, loginData.basicAuthPassword);
+          }
+          var cid = loginData.zmNinjaCustomId.replace('%APPVER%',zmAppVersion);
+          debug("Setting cordova header X-ZmNinja to "+cid);
+          // setup custom header
+          cordova.plugin.http.setHeader('*', 'X-ZmNinja', cid);
 
-        if (!loginData.enableStrictSSL) {
-          //alert("Enabling insecure SSL");
-          log(">>>> Disabling strict SSL checking (turn off  in Dev Options if you can't connect)");
-          cordova.plugin.http.setServerTrustMode('nocheck', function () {
-            debug('--> SSL is permissive, will allow any certs. Use at your own risk.');
-          }, function () {
-            NVR.log('-->Error setting SSL permissive');
-          });
+          if (!loginData.enableStrictSSL) {
+            //alert("Enabling insecure SSL");
+            log(">>>> Disabling strict SSL checking (turn off  in Dev Options if you can't connect)");
+            cordova.plugin.http.setServerTrustMode('nocheck', function () {
+              debug('--> SSL is permissive, will allow any certs. Use at your own risk.');
+            }, function () {
+              NVR.log('-->Error setting SSL permissive');
+            });
 
-          if ($rootScope.platformOS == 'android') {
-            log(">>> Android: enabling inline image view for self signed certs");
-            cordova.plugins.certificates.trustUnsecureCerts(true);
+            if ($rootScope.platformOS == 'android') {
+              log(">>> Android: enabling inline image view for self signed certs");
+              cordova.plugins.certificates.trustUnsecureCerts(true);
+            }
+          } else {
+            log(">>>> Enabling strict SSL checking (turn off  in Dev Options if you can't connect)");
           }
         } else {
-          log(">>>> Enabling strict SSL checking (turn off  in Dev Options if you can't connect)");
+          debug("Neither Capacitor nor Cordova HTTP available, using standard browser HTTP");
         }
       }
 
@@ -344,14 +380,41 @@ angular.module('zmApp.controllers')
           return "highbw";
         }
         // else return real state
-
-        switch (navigator.connection.type) {
-          case Connection.WIFI:
-            return "highbw";
-          case Connection.ETHERNET:
-            return "highbw";
-          default:
-            return "lowbw";
+        
+        if (window.Capacitor && window.Capacitor.isNativePlatform()) {
+          import('@capacitor/network').then(function(Network) {
+            Network.Network.getStatus().then(function(status) {
+              debug("Capacitor network status: " + JSON.stringify(status));
+              if (status.connectionType === 'wifi' || status.connectionType === 'ethernet') {
+                return "highbw";
+              } else {
+                return "lowbw";
+              }
+            }).catch(function(error) {
+              debug("Capacitor network status failed: " + JSON.stringify(error));
+              return "highbw"; // default fallback
+            });
+          }).catch(function(error) {
+            debug("Capacitor network import failed: " + JSON.stringify(error));
+            return fallbackToCordovaNetwork();
+          });
+        }
+        else {
+          return fallbackToCordovaNetwork();
+        }
+        
+        function fallbackToCordovaNetwork() {
+          if (navigator.connection) {
+            switch (navigator.connection.type) {
+              case Connection.WIFI:
+                return "highbw";
+              case Connection.ETHERNET:
+                return "highbw";
+              default:
+                return "lowbw";
+            }
+          }
+          return "highbw"; // default
         }
       }
 
