@@ -17,7 +17,6 @@ zmNinja.sublime-project
 zmNinja.sublime-workspace
 .vscode/
 typings/
-package-lock.json
 dist/
 .gradle/
 **/docgen/
