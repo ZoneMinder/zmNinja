@@ -1,5 +1,5 @@
 #!/bin/sh
-SDK_VERSION='29.0.3'
+SDK_VERSION='35.0.0'
 if [ -z "$1" ]; then
 	FILE="platforms/android/build/outputs/apk/android-debug.apk"
 else
