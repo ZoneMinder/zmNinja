@@ -1,5 +1,6 @@
 #!/bin/bash
 SDK_VERSION='35.0.0'
+export PATH=~/bin:$PATH
 
 
 build_debug() {
@@ -8,7 +9,7 @@ build_debug() {
         mkdir debug_files
         cordova build android
         # adding back wkwebview clears platform debug directory later
-        cp platforms/android/app/build/outputs/apk/debug/app-debug.apk  debug_files
+        cp platforms/android/app/build/outputs/apk/debug/app-debug.apk  debug_files/zmNinja-${ver}.apk
         echo "*** Your debug file has been moved to  debug_files/app-debug.apk"
 }
 
@@ -29,10 +30,9 @@ build_release() {
         fi
 
 
-       BUILD_MODE="native"
+        BUILD_MODE="native"
         rm -rf release_files 2>/dev/null
         mkdir release_files
-
 
         ############ Native web view build ###############################
 
@@ -54,14 +54,14 @@ build_release() {
 
             # Build apk from bundle for verification if bundletool is available
             if command -v bundletool >/dev/null 2>&1; then
-                bundletool build-apks --bundle=release_files/zmNinja.aab --output=release_files/zmNinja.apks --mode=universal
-                unzip -d release_files release_files/zmNinja.apks universal.apk
+                bundletool build-apks --bundle=release_files/zmNinja_${ver}.aab --output=release_files/zmNinja_${ver}.apks --mode=universal
+                unzip -d release_files release_files/zmNinja_${ver}.apks universal.apk
 
                 cd release_files/
-                $ANDROID_SDK_ROOT/build-tools/${SDK_VERSION}/zipalign -v 4 universal.apk zmNinja.apk
+                $ANDROID_SDK_ROOT/build-tools/${SDK_VERSION}/zipalign -v 4 universal.apk zmNinja_${ver}.apk
                 rm -f zmNinja.apks universal.apk
                 echo "Signing apk"
-                $ANDROID_SDK_ROOT/build-tools/${SDK_VERSION}/apksigner sign --ks-key-alias zmNinja --ks ../platforms/android/zmNinja.keystore zmNinja.apk
+                $ANDROID_SDK_ROOT/build-tools/${SDK_VERSION}/apksigner sign --ks-key-alias zmNinja --ks ../platforms/android/zmNinja.keystore zmNinja_${ver}.apk
                 ret=$?
                 if [ $ret -ne 0 ]; then
                     echo "Unable to sign jar, please fix the error(s) above"
@@ -73,9 +73,9 @@ build_release() {
                 cd ..
 
                 # Do a phone perm check
-                ./checkperms.sh release_files/zmNinja.apk
+                ./checkperms.sh release_files/zmNinja_${ver}.apk
                 echo "*** Phone State Check:"
-                ./checkperms.sh release_files/zmNinja.apk | grep PHONE_STATE
+                ./checkperms.sh release_files/zmNinja_${ver}.apk | grep PHONE_STATE
 
                 echo "***VERSION CODE CHECKS:"
                 for f in release_files/*.apk; do
@@ -83,6 +83,8 @@ build_release() {
                     `echo $ANDROID_SDK_ROOT`/build-tools/${SDK_VERSION}/aapt dump badging $f | grep versionCode
                     `echo $ANDROID_SDK_ROOT`/build-tools/${SDK_VERSION}/aapt dump badging $f | grep native-code
                 done
+              else
+                echo "bundletool failed.  It should be in ~/bin and needs to be executable."
 	    fi
 
   }
