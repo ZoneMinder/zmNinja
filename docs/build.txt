@@ -24,14 +24,16 @@ mkdir -p ~/bin
 cd ~/bin
 - Download latest bundletool jar from https://github.com/google/bundletool/releases to ~/bin
 - Create ~/bin/bundletool wrapper script like (change to match downloaded version):
+
+cat > ~/bin/bundletool <<EOF
 #!/bin/sh
 exec java -jar "$HOME/bin/bundletool-all-1.15.5.jar" "$@"
-
+EOF
+chmod +x ~/bin/bundletool
 
 Create keystore if needed (this path is hardcoded in the build script)
 mkdir -p ~/personal/zmninja_keys
 keytool -genkey -v -keystore ~/personal/zmninja_keys/zmNinja.keystore -alias zmNinja -keyalg RSA -keysize 2048 -validity 10000
-
 
 In Repo
 git clone https://github.com/webgeek1234/zmNinja
