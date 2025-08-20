@@ -352,7 +352,7 @@ $scope.toggleServer = function() {
           //console.log(JSON.stringify(success));
           // load returns 3 params - one in the middle is avg.
           NVR.debug("StateCtrl/getLoadStatus: success");
-          $scope.zmLoad = success.data.load[1];
+          $scope.zmLoad = Math.round(success.data.load[1]*10)/10;
 
           // console.log("X"+success.data.result+"X");
         },
