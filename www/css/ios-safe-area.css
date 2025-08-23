@@ -1,0 +1,19 @@
+/* iOS devices with a home indicator: push MFB inside the safe area */
+.mfb-component--bl,
+.mfb-component--br {
+    /* default gap + safe-area */
+    bottom: calc(16px + env(safe-area-inset-bottom)) !important;
+}
+
+.mfb-component--bl {
+    left: calc(16px + env(safe-area-inset-left)) !important;
+}
+
+.mfb-component--br {
+    right: calc(16px + env(safe-area-inset-right)) !important;
+}
+
+/* ensure it renders above toolbars if any */
+.mfb-component {
+    z-index: 10000 !important;
+}
