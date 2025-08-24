@@ -58,6 +58,7 @@ jobs:
           node-version: '20'
           cache: 'npm'
       - run: npm ci
+      - run: sudo xcodebuild -downloadPlatform "iOS Simulator 18.6"
       - run: npm install -g cordova@12.0.0
       - run: cordova platform add ios
       - run: cordova build ios --debug
