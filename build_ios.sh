@@ -13,6 +13,6 @@ fi
 echo "-- building --"
 #ionic cordova build ios --release --buildConfig="./build-auto.json"
 cordova prepare
-cordova build ios --debug --emulator --target="iPhone-16-Pro, 18.6" --buildConfig="./build.json"
+cordova build ios --release --device --buildConfig="./build.json"
 echo "********* Done *************"
 
