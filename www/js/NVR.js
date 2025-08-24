@@ -385,10 +385,8 @@ angular.module('zmApp.controllers')
       function object_to_query_string(obj) {
         var str = [];
         for (var p in obj)
-          str.push(encodeURIComponent(p) + "=" +
-            encodeURIComponent(obj[p]));
-        var params = str.join("&");
-        return params;
+          str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+        return str.join("&");
       }
 
       // custom caching function as native http doesn't cache
@@ -3885,6 +3883,8 @@ angular.module('zmApp.controllers')
         getCurrentZMState: function() {
           return loginData.currentZMState;
         },
+
+        object_to_query_string: object_to_query_string,
 
         getRecordingURL: function (id) {
           var idnum = parseInt(id);

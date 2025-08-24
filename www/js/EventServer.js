@@ -489,7 +489,7 @@ angular.module('zmApp.controllers')
       }
      
       // get permission if we need it
-      FirebasePlugin.hasPermission(function(hasPermission){
+      window.FirebasePlugin.hasPermission(function(hasPermission){
         if (!hasPermission) {
           window.FirebasePlugin.grantPermission(function(hasPermission){
             if (hasPermission) {
@@ -549,7 +549,7 @@ angular.module('zmApp.controllers')
         };
 
         // Create the channel
-        FirebasePlugin.createChannel(channel,
+        window.FirebasePlugin.createChannel(channel,
         function(){
           NVR.debug('push: Channel created: ' + channel.id);
         },
