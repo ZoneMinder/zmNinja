@@ -1,5 +1,5 @@
 #!/bin/bash
-SDK_VERSION='35.0.0'
+SDK_VERSION='34.0.0'
 export PATH=~/bin:$PATH
 
 
