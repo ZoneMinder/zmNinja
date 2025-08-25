@@ -44,7 +44,6 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - run: npm install
-      - run: npm run build
       - run: npm ci
       - run: npm install -g cordova@12.0.0
       - run: cordova platform add android
