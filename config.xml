@@ -7,7 +7,7 @@
     <author email="appsupport@zoneminder.com" href="https://zoneminder.com/">
 	Zoneminder Inc
   </author>
-    <content src="index.html" />
+    <content src="http://localhost/index.html" />
     <allow-navigation href="localhost://*" />
     <access launch-external="yes" origin="mailto:*" />
     <access origin="*" />
