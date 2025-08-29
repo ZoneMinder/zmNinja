@@ -1,7 +1,7 @@
 {
   "name": "zmninja",
   "description": "Home security mobile app for ZoneMinder",
-  "version":"1.7.010",
+  "version": "1.7.013",
   "displayName": "zmNinja",
   "author": "Zoneminder Inc, Pliable Pixels",
   "repository": {
@@ -51,8 +51,7 @@
         "PHOTO_LIBRARY_USAGE_DESCRIPTION": " "
       },
       "cordova-plugin-x-socialsharing": {},
-      "cordova-plugin-certificates-pp-fork": {},
-      "cordova-plugin-ionic-webview": {}
+      "cordova-plugin-certificates-pp-fork": {}
     }
   },
   "dependencies": {
@@ -82,7 +81,7 @@
     "clivas": "^0.2.0",
     "compare-func": "^2.0.0",
     "cordova": "^12.0.0",
-    "cordova-android": "^14.0.1",
+    "cordova-android": "^13.0.0",
     "cordova-ios": "^7.1.1",
     "cordova-library-helper-pp-fork": "^1.0.1",
     "cordova-plugin-add-swift-support": "^2.0.2",
@@ -104,7 +103,6 @@
     "cordova-plugin-inappbrowser": "^6.0.0",
     "cordova-plugin-insomnia": "^4.3.0",
     "cordova-plugin-ionic-keyboard": "^2.2.0",
-    "cordova-plugin-ionic-webview": "^5.0.1",
     "cordova-plugin-media": "^7.0.0",
     "cordova-plugin-multi-window": "^0.0.3",
     "cordova-plugin-network-information": "^3.0.0",
@@ -147,7 +145,6 @@
     "productName": "zmninja",
     "compression": "normal",
     "asar": true,
-
     "directories": {
       "buildResources": "electron_js/icons"
     },
