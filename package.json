@@ -1,7 +1,7 @@
 {
   "name": "zmninja",
   "description": "Home security mobile app for ZoneMinder",
-  "version":"1.7.010",
+  "version": "1.7.010",
   "displayName": "zmNinja",
   "author": "Zoneminder Inc, Pliable Pixels",
   "repository": {
@@ -147,7 +147,6 @@
     "productName": "zmninja",
     "compression": "normal",
     "asar": true,
-
     "directories": {
       "buildResources": "electron_js/icons"
     },
