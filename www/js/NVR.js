@@ -362,24 +362,28 @@ angular.module('zmApp.controllers')
       // separate out a debug so we don't do this if comparison for normal logs
       function debug(val) {
         if (loginData.enableDebug && loginData.enableLogs) {
-          if (val !== undefined) {
-            var regex1 = /"password":".*?"/g;
-            var regex2 = /&pass=.*?(?=["&]|$)/g;
-            var regex3 = /&token=([^&]*)/g;
-            var regex4 = /&auth=([^&]*)/g;
-
-            //console.log ("VAL IS " + val);
-            val = val.replace(regex1, "<password removed>");
-            val = val.replace(regex2, "<password removed>");
-            val = val.replace(regex3, "&token=<removed>");
-            val = val.replace(regex4, "&auth=<removed>");
-          }
-
+          val = auth_sanitize(val);
           $ionicPlatform.ready(function () {
             $fileLogger.debug(val);
           });
           console.log(val);
         }
+      }
+
+      function auth_sanitize(val) {
+        if (!val) return '';
+        val = String(val);
+        var regex1 = /"password":".*?"/g;
+        var regex2 = /&pass=.*?(?=["&]|$)/g;
+        var regex3 = /&token=([^&]*)/g;
+        var regex4 = /&auth=([^&]*)/g;
+
+        console.log ("VAL IS " + val);
+        val = val.replace(regex1, "<password removed>");
+        val = val.replace(regex2, "<password removed>");
+        val = val.replace(regex3, "&token=<removed>");
+        val = val.replace(regex4, "&auth=<removed>");
+        return val;
       }
 
       function object_to_query_string(obj) {
@@ -1059,21 +1063,7 @@ angular.module('zmApp.controllers')
 
       function log(val, logtype) {
         if (loginData.enableLogs) {
-          if (val !== undefined) {
-            var regex1 = /"password":".*?"/g;
-            var regex2 = /&pass=.*?(?=["&]|$)/g;
-            var regex3 = /&token=([^&]*)/g;
-            var regex4 = /&auth=([^&]*)/g;
-
-            //console.log ("VAL IS " + val);
-            val = val.replace(regex1, "<password removed>");
-            val = val.replace(regex2, "<password removed>");
-            val = val.replace (regex3, "&token=<removed>");
-            val = val.replace (regex4, "&auth=<removed>");
-          }
-          // make sure password is removed
-          //"username":"zmninja","password":"xyz",
-          //val = val.replace(/\"password:\",
+          val = auth_sanitize(val);
           $ionicPlatform.ready(function () {
             $fileLogger.log(logtype, val);
           });
