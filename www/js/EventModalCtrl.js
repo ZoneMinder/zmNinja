@@ -1948,14 +1948,14 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
   function computeRelativePath(event) {
     var relativePath = "";
     var loginData = NVR.getLogin();
-    var str = event.Event.StartTime;
+    var str = event.StartTime;
     var yy = moment(str).locale('en').format('YY');
     var mm = moment(str).locale('en').format('MM');
     var dd = moment(str).locale('en').format('DD');
     var hh = moment(str).locale('en').format('HH');
     var min = moment(str).locale('en').format('mm');
     var sec = moment(str).locale('en').format('ss');
-    relativePath = event.Event.MonitorId + "/" +
+    relativePath = event.MonitorId + "/" +
       yy + "/" +
       mm + "/" +
       dd + "/" +
@@ -1973,7 +1973,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
   function computeBasePath(event) {
     var basePath = "";
     var loginData = NVR.getLogin();
-    var str = event.Event.StartTime;
+    var str = event.StartTime;
     var yy = moment(str).locale('en').format('YY');
     var mm = moment(str).locale('en').format('MM');
     var dd = moment(str).locale('en').format('DD');
@@ -1982,7 +1982,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     var sec = moment(str).locale('en').format('ss');
 
     basePath = loginData.url + "/events/" +
-      event.Event.MonitorId + "/" +
+      event.MonitorId + "/" +
       yy + "/" +
       mm + "/" +
       dd + "/" +
@@ -2133,8 +2133,9 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
     $scope.liveFeedMid = $scope.mid;
 
     $http.get(myurl).then(function (success) {
-        currentEvent = $scope.event = $scope.currentEvent = success.data.event;
-	var event = currentEvent.Event;
+      currentEvent = $scope.event = $scope.currentEvent = success.data.event;
+      NVR.log(currentEvent);
+      var event = currentEvent.Event;
 
         // console.log ("prepareModal DATA:"+JSON.stringify(success.data));
         computeAlarmFrames(success.data);
@@ -2147,7 +2148,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
           NVR.log("Event not ready, setting live view, with MID=" + $scope.liveFeedMid);
         }
 
-        event.BasePath = computeBasePath(currentEvent);
+        event.BasePath = computeBasePath(event);
         event.relativePath = computeRelativePath(event);
         event.streamingURL = NVR.getStreamingURL(event.MonitorId);
         event.recordingURL = NVR.getRecordingURL(event.MonitorId);
@@ -2198,7 +2199,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         $scope.nextId = "...";
         $scope.prevId = "...";
 
-        event.Event.video = {};
+        event.video = {};
         var videoURL = event.recordingURL + "/index.php?view=view_video&mode=mpeg&format=h264&eid=" + event.Id;
 
         if ($rootScope.authSession != 'undefined') videoURL += $rootScope.authSession;
