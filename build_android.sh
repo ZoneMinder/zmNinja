@@ -121,7 +121,6 @@ ver=${APPVER//.}9
 
 echo "About to build version: $APPVER [$ver] ($MODE)"
 echo $ver
-read -p "Press any key..."
 
 echo "Removing wkwebview..."
 cordova plugin remove cordova-plugin-ionic-webview > /dev/null 2>&1
