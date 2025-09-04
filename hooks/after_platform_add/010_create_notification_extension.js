@@ -76,6 +76,7 @@ module.exports = function(context) {
         if (cfg.buildSettings.PRODUCT_NAME === `"${extName}"`) {
           cfg.buildSettings.PRODUCT_BUNDLE_IDENTIFIER = desiredExtBundleId;
           cfg.buildSettings.INFOPLIST_FILE = `"${extName}/${extName}-Info.plist"`;
+          cfg.buildSettings.DEVELOPMENT_TEAM = 'P97TSUFFDX';
 
           // sensible defaults for extensions
           cfg.buildSettings.SDKROOT = 'iphoneos';

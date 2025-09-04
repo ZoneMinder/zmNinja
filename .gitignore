@@ -21,6 +21,7 @@ dist/
 .gradle/
 **/docgen/
 .env
+.idea/
 
 
 www/templates/zmNinja.code-workspace
