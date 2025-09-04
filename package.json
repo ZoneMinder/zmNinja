@@ -113,7 +113,7 @@
     "cordova-plugin-x-socialsharing": "github:SteveGilvarry/Cordova-plugin-socialsharing-zm",
     "cordova-sqlite-storage": "^6.1.0",
     "dotenv": "^16.4.7",
-    "electron": "^33.2.1",
+    "electron": "^35.7.5",
     "electron-builder": "^25.1.8",
     "electron-osx-sign": "^0.6.0",
     "gulp": "^5.0.0",
