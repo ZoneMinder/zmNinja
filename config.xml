@@ -102,6 +102,7 @@
         <splash height="1125" src="resources/ios/splash/Default-Landscape-2436h.png" width="2436" />
     </platform>
     <platform name="android">
+      <preference name="AndroidEdgeToEdge" value="false" />
         <preference name="AndroidPersistentFileLocation" value="Compatibility" />
         <config-file parent="/*" target="AndroidManifest.xml">
             <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
