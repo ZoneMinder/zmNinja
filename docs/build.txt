@@ -1,33 +1,42 @@
 Host Setup (Fedora 38+?)
+
 https://tecadmin.net/install-ionic-framework-on-fedora/
 dnf install npm
 sudo npm install -g @ionic/cli
 sudo npm install -g cordova
 
+#Ubuntu
+sudo apt install default-jre-headless
+sudo apt install npm
+sudo npm install -g @ionic/cli
+sudo npm install -g cordova
+
 
 User Setup (Installing android-sdk and gradle)
-mkdir -p ~/android/android-sdk/cmdline-tools
-cd ~/android/android-sdk/cmdline-tools
+mkdir -p ~/android/android-sdk/
+cd ~/android/android-sdk/
 wget https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip
 unzip commandlinetools-linux-10406996_latest.zip
-mv cmdline-tools latest
+./cmdline-tools/bin/sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
 cd ..
-./cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
-cd ..
-mkdir gradle
+
 - Download latest gradle release from https://gradle.org/releases/ and extract into ~/android/gradle
 example: wget https://services.gradle.org/distributions/gradle-9.0.0-bin.zip
+unzip gradle-9.0.0-bin.zip
+ln -sf gradle-9.0.0 gradle
 
 
 Install bundletool (Optional, for generating a release apk for verification testing)
 mkdir -p ~/bin
 cd ~/bin
 - Download latest bundletool jar from https://github.com/google/bundletool/releases to ~/bin
+wget https://github.com/google/bundletool/releases/download/1.18.1/bundletool-all-1.18.1.jar
+
 - Create ~/bin/bundletool wrapper script like (change to match downloaded version):
 
 cat > ~/bin/bundletool <<EOF
 #!/bin/sh
-exec java -jar "$HOME/bin/bundletool-all-1.15.5.jar" "$@"
+exec java -jar "$HOME/bin/bundletool-all-1.18.1.jar" "$@"
 EOF
 chmod +x ~/bin/bundletool
 
@@ -35,11 +44,16 @@ Create keystore if needed (this path is hardcoded in the build script)
 mkdir -p ~/personal/zmninja_keys
 keytool -genkey -v -keystore ~/personal/zmninja_keys/zmNinja.keystore -alias zmNinja -keyalg RSA -keysize 2048 -validity 10000
 
+# add to ~/.bashrc
+export ANDROID_SDK_HOME=${HOME}/android/android-sdk
+export PATH=${HOME}/android/gradle/bin:${PATH}
+export ANDROID_SDK_ROOT=${HOME}/android/android-sdk
+export ANDROID_HOME=${HOME}/android/android-sdk
+export JAVA_HOME=/usr/lib/jvm/default-java
+
 In Repo
 git clone https://github.com/webgeek1234/zmNinja
 cd zmNinja
 cordova platform add android
 cordova plugin add cordova-plugin-cloud-settings --force
-PATH=${HOME}/android/gradle/gradle-8.4/bin:${PATH} ANDROID_SDK_ROOT=${HOME}/android/android-sdk ANDROID_HOME=${HOME}/android/android-sdk JAVA_HOME=/usr/lib/jvm/java-17 ./build_android.sh
-PATH=${HOME}/android/gradle/bin:${PATH} ANDROID_SDK_ROOT=${HOME}/android/android-sdk ANDROID_HOME=${HOME}/android/android-sdk JAVA_HOME=/usr/lib/jvm/default-jre ./build_android.sh
-
+./build_android.sh
