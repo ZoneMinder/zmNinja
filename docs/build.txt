@@ -6,7 +6,7 @@ sudo npm install -g @ionic/cli
 sudo npm install -g cordova
 
 #Ubuntu
-sudo apt install default-jre-headless
+sudo apt install default-jre  # NOT headless
 sudo apt install npm
 sudo npm install -g @ionic/cli
 sudo npm install -g cordova
