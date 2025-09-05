@@ -484,10 +484,14 @@ angular.module('zmApp.controllers')
       var plat = $rootScope.platformOS;
 
       if ($rootScope.platformOS == 'desktop') {
-       NVR.log ('push: Not setting up push as this is desktop.');
+        NVR.log('push: Not setting up push as this is desktop.');
         return;
       }
      
+      if (!window.FirebasePlugin) {
+        NVR.log('ERROR: Firebase is not included.');
+        return;
+      }
       // get permission if we need it
       window.FirebasePlugin.hasPermission(function(hasPermission){
         if (!hasPermission) {
@@ -549,12 +553,11 @@ angular.module('zmApp.controllers')
         };
 
         // Create the channel
-        window.FirebasePlugin.createChannel(channel,
-        function(){
+        window.FirebasePlugin.createChannel(channel, function(){
           NVR.debug('push: Channel created: ' + channel.id);
         },
         function(error){
-        NVR.debug('push: Create channel error: ' + error);
+          NVR.debug('push: Create channel error: ' + error);
         });
       }
 
