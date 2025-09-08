@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.zoneminder.zmNinja" version="1.7.015" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.zoneminder.zmNinja" version="1.7.016" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>zmNinja</name>
     <description>
 	High performance ZoneMinder client
@@ -27,8 +27,8 @@
     <preference name="SplashMaintainAspectRatio" value="true" />
     <preference name="FadeSplashScreen" value="false" />
     <preference name="BackgroundColor" value="#444444" />
-    <preference name="android-targetSdkVersion" value="34" />
-    <preference name="android-compileSdkVersion" value="34" />
+    <preference name="android-targetSdkVersion" value="35" />
+    <preference name="android-compileSdkVersion" value="35" />
     <preference name="android-minSdkVersion" value="23" />
     <preference name="SplashScreenBackgroundColor" value="#ababab" />
     <preference name="StatusBarOverlaysWebView" value="false" />
@@ -102,7 +102,7 @@
         <splash height="1125" src="resources/ios/splash/Default-Landscape-2436h.png" width="2436" />
     </platform>
     <platform name="android">
-    <preference name="windowOptOutEdgeToEdgeEnforcement" value="true" />
+      <preference name="AndroidEdgeToEdge" value="false" />
         <preference name="AndroidPersistentFileLocation" value="Compatibility" />
         <config-file parent="/*" target="AndroidManifest.xml">
             <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
