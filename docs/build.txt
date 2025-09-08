@@ -52,7 +52,7 @@ export ANDROID_HOME=${HOME}/android/android-sdk
 export JAVA_HOME=/usr/lib/jvm/default-java
 
 In Repo
-git clone https://github.com/webgeek1234/zmNinja
+git clone https://github.com/ZoneMinder/zmNinja
 cd zmNinja
 cordova platform add android
 cordova plugin add cordova-plugin-cloud-settings --force
