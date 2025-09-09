@@ -1,4 +1,14 @@
 # Changelog
+## [v1.8.000](https://github.com/ZoneMinder/zmNinja/tree/v1.8.000) (2025-09-08)
+
+[Full Changelog](https://github.com/ZoneMinder/zmNinja/compare/v1.7.008...v1.8.000)
+
+- Fixes to event viewing
+- Fix EdgeToEdge mode on android 15
+- Fix blank streams when streams not https
+- Fix Event Server integration not working due to missing Firebase plugin
+- Format load to 1 decimal place
+
 ## [v1.7.008](https://github.com/ZoneMinder/zmNinja/tree/v1.7.008) (2025-08-09)
 
 [Full Changelog](https://github.com/ZoneMinder/zmNinja/compare/v1.7.007...v1.7.008)
