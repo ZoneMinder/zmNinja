@@ -300,25 +300,6 @@ angular.module('zmApp', [
   ])
 
 //------------------------------------------------------------------
-// switch between collection repeat or ng-repeat
-//-------------------------------------------------------------------
-  .directive('repeatsmart', function ($compile, $rootScope) {
-    return {
-      restrict: 'A',
-      priority: 2000,
-      terminal: true,
-      link: function (scope, element) {
-        var repeatDirective = ($rootScope.platformOS == 'desktop') ? 'ng-repeat' : 'collection-repeat';
-        //console.log("*********** REPEAT SCROLL IS " + repeatDirective);
-
-        element.attr(repeatDirective, element.attr('repeatsmart'));
-        element.removeAttr('repeatsmart');
-        $compile(element)(scope);
-      }
-    };
-  })
-
-//------------------------------------------------------------------
 // I use this factory to share data between carousel and lazy load
 // carousel will not progress autoslide till imageLoading is 0 or -1
 //-------------------------------------------------------------------
