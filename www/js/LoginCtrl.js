@@ -682,9 +682,23 @@ $scope.portalKeypress = function (evt) {
         NVR.debug("writing data to cloud");
 
         var serverGroupList = NVR.getServerGroups();
-        serverGroupList[$scope.loginData.serverName] = angular.copy($scope.loginData);
+        var safeServerGroupList = {};
+        Object.keys(serverGroupList).forEach(function (k) {
+          // deep copy to avoid mutating in-memory runtime objects
+          safeServerGroupList[k] = angular.copy(serverGroupList[k]);
+          if (safeServerGroupList[k]) {
+            // remove kiosk unlock secret so it is not stored in cloud/backups
+            if (safeServerGroupList[k].hasOwnProperty('kioskPassword')) {
+              delete safeServerGroupList[k].kioskPassword;
+            }
+            // optionally remove other PIN-like fields if present
+            if (safeServerGroupList[k].hasOwnProperty('pinCode')) {
+              delete safeServerGroupList[k].pinCode;
+            }
+          }
+        });
 
-        var ct = NVR.encrypt(serverGroupList);
+        var ct = NVR.encrypt(safeServerGroupList);
         window.cordova.plugin.cloudsettings.save({
             'serverGroupList': ct,
             'defaultServerName': $scope.loginData.serverName
