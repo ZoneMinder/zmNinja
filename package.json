@@ -86,6 +86,10 @@
       }
     }
   },
+  "overrides": {
+    "glob": "^10.3.10",
+    "inflight": "npm:noop-package@^1.0.0"
+  },
   "dependencies": {
     "async": "^3.2.6",
     "deep-equal": "^2.2.3",
