@@ -426,7 +426,8 @@ angular.module('zmApp', [
         restrict: 'A',
         scope: {
           imageSpinnerBackgroundImage: "@imageSpinnerBackgroundImage",
-          imageOnError: '&'
+          imageOnError: '&',
+          imageOnLoad: '&'
         },
         link: function ($scope, $element, $attributes) {
 
@@ -511,6 +512,9 @@ angular.module('zmApp', [
                 if ($attributes.imageonload) {
                   $scope.$apply($attributes.imageonload);
                   // fn($scope, {});
+                }
+                if ($attributes.imageOnLoad) {
+                  $scope.imageOnLoad();
                 }
                 //imageLoadingDataShare.set(0);
                 //console.log ("rendered");

@@ -1895,20 +1895,35 @@ angular.module('zmApp.controllers')
         NVR.debug('listDisplay is blank for monitor ' + monitor.Monitor.Id);
         return;
       }
-      var mintimesec = 10;
-      var nowt = moment();
-      var thent = monitor.Monitor.regenTime || moment();
-      if (nowt.diff(thent, 'seconds') >= mintimesec) {
-        console.log('IMAGE ERROR CALLING REGEN');
+
+      // Cancel any pending retry timeout for this monitor
+      if (monitor.Monitor.regenHandle) {
+        $timeout.cancel(monitor.Monitor.regenHandle);
+        monitor.Monitor.regenHandle = null;
+      }
+
+      // Initialize or increment retry count for exponential backoff
+      monitor.Monitor.imageRetryCount = (monitor.Monitor.imageRetryCount || 0) + 1;
+
+      // Exponential backoff: 10s, 20s, 40s, 60s (capped)
+      var baseDelaySec = 10;
+      var maxDelaySec = 60;
+      var delaySec = Math.min(baseDelaySec * Math.pow(2, monitor.Monitor.imageRetryCount - 1), maxDelaySec);
+
+      NVR.debug("Image load error for Monitor: "+monitor.Monitor.Id+" (retry #"+monitor.Monitor.imageRetryCount+"), scheduling connkey regen in "+delaySec+"s");
+
+      monitor.Monitor.regenHandle = $timeout(function() {
+        NVR.debug('Deferred image error, calling regen for monitor '+monitor.Monitor.Id);
+        monitor.Monitor.regenHandle = null;
         NVR.regenConnKeys(monitor);
-        NVR.debug("Image load error for: "+monitor.Monitor.Id+" regenerated connKey is:"+monitor.Monitor.connKey);
-      } else {
-        var dur = mintimesec - nowt.diff(thent, 'seconds');
-        NVR.debug("Image load error for Monitor: "+monitor.Monitor.Id+" scheduling for connkey regen in "+dur+"s");
-        monitor.Monitor.regenHandle = $timeout ( function() {
-          NVR.debug('deferred image error, calling regen');
-          //console.log ('DEFERRED IMAGE ERROR CALLING REGEN');
-          NVR.regenConnKeys(monitor);}, dur*1000 );
+      }, delaySec * 1000);
+    };
+
+    // Reset image retry count when image loads successfully
+    $scope.resetImageRetryCount = function(monitor) {
+      if (monitor.Monitor.imageRetryCount > 0) {
+        NVR.debug('Image loaded successfully for monitor '+monitor.Monitor.Id+', resetting retry count');
+        monitor.Monitor.imageRetryCount = 0;
       }
     };
 
@@ -2154,9 +2169,9 @@ function loadStreamQueryStatus () {
 
 $scope.constructStream = function(monitor) {
   var stream;
-  console.log ('MID='+monitor.Monitor.Id+" listDisplay:"+monitor.Monitor.listDisplay);
+  //console.log ('MID='+monitor.Monitor.Id+" listDisplay:"+monitor.Monitor.listDisplay);
   if (currentStreamState == streamState.STOPPED || monitor.Monitor.listDisplay == 'noshow' ) {
-    console.log("STREAM=empty and auth="+$rootScope.authSession);
+    //console.log("STREAM=empty and auth="+$rootScope.authSession);
     //sconsole.log('EMPTY STREAM');
     return "";
   }

@@ -150,7 +150,8 @@
                     image-spinner-loader="lines"
                     img-spinner-w="{{monitor.Monitor.Width}}"
                     img-spinner-h="{{monitor.Monitor.Height}}"
-                    image-on-error="processImageError(monitor);" />
+                    image-on-error="processImageError(monitor);"
+                    image-on-load="resetImageRetryCount(monitor);" />
                 </div>
 
                 <figcaption ng-if="!LoginData.montageHideFooter" id="slowpulse"
@@ -170,10 +171,11 @@
               style="background:rgba(10, 61, 98,0.3)">
               <!--sidebar details-->
 
-              <img class="img-fluid" 
+              <img class="img-fluid"
                 image-spinner-src="{{constructEventThumbnail(monitor) }}" image-spinner-loader="lines"
                 img-spinner-w="{{monitor.Monitor.Width}}" img-spinner-h="{{monitor.Monitor.Height}}"
-                image-on-error="processImageError(monitor);" ng-click="showEvent(monitor)" />
+                image-on-error="processImageError(monitor);"
+                image-on-load="resetImageRetryCount(monitor);" ng-click="showEvent(monitor)" />
 
 
 
