@@ -336,7 +336,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                 }
                 
                 $scope.MontageMonitors[j].Monitor.eventType = eType;
-                $scope.MontageMonitors[j].Monitor.eventUrl = $scope.MontageMonitors[j].Monitor.streamingURL + "/nph-zms?source=event&mode=jpeg&event=" + eid + "&replay=gapless&rate=" + $scope.sliderVal.realRate + "&connkey=" + $scope.MontageMonitors[j].Monitor.connKey + "&scale=" + bw + $rootScope.authSession;
+                $scope.MontageMonitors[j].Monitor.eventUrl = $scope.MontageMonitors[j].Monitor.streamingURL + NVR.getZmsBinary() + "?source=event&mode=jpeg&event=" + eid + "&replay=gapless&rate=" + $scope.sliderVal.realRate + "&connkey=" + $scope.MontageMonitors[j].Monitor.connKey + "&scale=" + bw + $rootScope.authSession;
                 //console.log ("Setting event URL to " +$scope.MontageMonitors[j].Monitor.eventUrl);
                 //   console.log ("SWITCHING TO " + $scope.MontageMonitors[j].eventUrl);
                 $scope.MontageMonitors[j].Monitor.eventUrlTime = stime;
@@ -460,7 +460,7 @@ angular.module('zmApp.controllers').controller('zmApp.MontageHistoryCtrl', ['$sc
                   };
                 }
                 $scope.MontageMonitors[i].Monitor.eventType = eType;
-                $scope.MontageMonitors[i].Monitor.eventUrl = $scope.MontageMonitors[i].Monitor.streamingURL + "/nph-zms?source=event&mode=jpeg&event=" + data.events[0].Event.Id + "&frame=1&replay=gapless&rate=" + $scope.sliderVal.realRate + "&connkey=" + $scope.MontageMonitors[i].Monitor.connKey + "&scale=" + bw + $rootScope.authSession;
+                $scope.MontageMonitors[i].Monitor.eventUrl = $scope.MontageMonitors[i].Monitor.streamingURL + NVR.getZmsBinary() + "?source=event&mode=jpeg&event=" + data.events[0].Event.Id + "&frame=1&replay=gapless&rate=" + $scope.sliderVal.realRate + "&connkey=" + $scope.MontageMonitors[i].Monitor.connKey + "&scale=" + bw + $rootScope.authSession;
                 //console.log ("SWITCHING TO " + $scope.MontageMonitors[i].eventUrl);
                 $scope.MontageMonitors[i].Monitor.eventUrlTime = data.events[0].Event.StartTime;
                 $scope.MontageMonitors[i].Monitor.eid = data.events[0].Event.Id;

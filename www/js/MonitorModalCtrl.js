@@ -1139,7 +1139,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     var canvas, context, imageDataUrl, imageData;
     var loginData = NVR.getLogin();
     var url = loginData.streamingurl +
-      '/zms?mode=single&monitor=' + mid;
+      NVR.getZmsBinary() + '?mode=single&monitor=' + mid;
       url += $rootScope.authSession;
 
 
@@ -1255,7 +1255,7 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     var scale = (currentStreamState == streamState.SNAPSHOT_LOWQUALITY) ? '10' : $scope.quality;
     var fps = ld.singleliveFPS;
     var stream = $scope.monitor.Monitor.streamingURL +
-      "/nph-zms?mode=" + getSingleStreamMode() +
+      NVR.getZmsBinary() + "?mode=" + getSingleStreamMode() +
       "&monitor=" + $scope.monitorId +
       "&scale=" + scale;
 

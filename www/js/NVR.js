@@ -657,6 +657,26 @@ angular.module('zmApp.controllers')
         return (d.promise);
       }
 
+      function getPathZms() {
+        var d = $q.defer();
+        var apiurl = loginData.apiurl;
+        var myurl = apiurl + '/configs/viewByName/ZM_PATH_ZMS.json?' + $rootScope.authSession;
+        debug("Config URL for ZMS PATH is:" + myurl);
+        $http.get(myurl)
+          .then(function (data) {
+              data = data.data;
+              configParams.ZM_PATH_ZMS = data.config.Value;
+              d.resolve(configParams.ZM_PATH_ZMS);
+              return (d.promise);
+            },
+            function (error) {
+              log("Can't retrieving ZM_PATH_ZMS: " + JSON.stringify(error));
+              d.resolve("");
+              return (d.promise);
+            });
+        return (d.promise);
+      }
+
       function proceedWithFreshLogin(noBroadcast) {
         // recompute rand anyway so even if you don't have auth
         // your stream should not get frozen
@@ -2643,6 +2663,10 @@ angular.module('zmApp.controllers')
           configParams.ZM_MIN_STREAMING_PORT = -1;
         },
 
+        clearPathZms: function () {
+          configParams.ZM_PATH_ZMS = '';
+        },
+
         getZmsMultiPortSupport: function () {
           // 0 => not supported
           // >=1 => supported
@@ -2705,26 +2729,14 @@ angular.module('zmApp.controllers')
         // the setting in the app, they can check their logs
         //--------------------------------------------------------------------------
         getPathZms: function () {
-          var d = $q.defer();
-
-          var apiurl = loginData.apiurl;
-          var myurl = apiurl + '/configs/viewByName/ZM_PATH_ZMS.json?' + $rootScope.authSession;
-          debug("Config URL for ZMS PATH is:" + myurl);
-          $http.get(myurl)
-            .then(function (data) {
-                data = data.data;
-                //console.log (">>>> GOT: "+JSON.stringify(data));
-                configParams.ZM_PATH_ZMS = data.config.Value;
-                d.resolve(configParams.ZM_PATH_ZMS);
-                return (d.promise);
-              },
-              function (error) {
-                log("Can't retrieving ZM_PATH_ZMS: " + JSON.stringify(error));
-                d.resolve("");
-                return (d.promise);
-              });
-          return (d.promise);
+          return getPathZms();
         },
+        getZmsBinary: function () {
+          if (!configParams.ZM_PATH_ZMS) return '/nph-zms';
+          var idx = configParams.ZM_PATH_ZMS.lastIndexOf('/');
+          return (idx >= 0) ? configParams.ZM_PATH_ZMS.substring(idx) : '/nph-zms';
+        },
+
         //--------------------------------------------------------------------------
         // returns high or low BW mode
         //--------------------------------------------------------------------------
@@ -2870,6 +2882,7 @@ angular.module('zmApp.controllers')
             myurl += ".json?"+$rootScope.authSession;
 
             getZMState().then(function(data) {
+              getPathZms().then(function() {
               getZmsMultiPortSupport()
               .then(function(zmsPort) {
 
@@ -3156,6 +3169,7 @@ angular.module('zmApp.controllers')
                       return d.promise;
                     });
                 $rootScope.$broadcast('monitors-hard-reload');
+              });
               });
             });
 

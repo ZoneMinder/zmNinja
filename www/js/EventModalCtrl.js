@@ -1075,7 +1075,7 @@ angular.module('zmApp.controllers').controller('EventModalCtrl', ['$scope', '$ro
         $rootScope.authSession;
     } else if (currentStreamState == streamState.ACTIVE) {
       stream = currentEvent.Event.streamingURL +
-        "/nph-zms?source=event&mode=jpeg" +
+        NVR.getZmsBinary() + "?source=event&mode=jpeg" +
         "&event=" + $scope.eventId + "&frame=1" +
         "&replay=" + $scope.currentStreamMode +
         "&rate=100" +

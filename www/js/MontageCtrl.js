@@ -745,7 +745,7 @@ angular.module('zmApp.controllers')
 
     $scope.reorderFrame = function(item) {
       // FIXME, replace hard coded nph-zms, scale, etc.
-      var frame = item.Monitor.streamingURL + "/nph-zms?mode=single&scale=50&monitor=" + item.Monitor.Id;
+      var frame = item.Monitor.streamingURL + NVR.getZmsBinary() + "?mode=single&scale=50&monitor=" + item.Monitor.Id;
       frame += $rootScope.authSession;
       frame += NVR.insertSpecialTokens();
       return frame;
@@ -2183,13 +2183,13 @@ $scope.constructStream = function(monitor) {
 
   if (currentStreamState == streamState.SNAPSHOT_LOWQUALITY) {
     stream = monitor.Monitor.streamingURL +
-      "/nph-zms?mode=single&scale=10&monitor="+ monitor.Monitor.Id +
+      NVR.getZmsBinary() + "?mode=single&scale=10&monitor="+ monitor.Monitor.Id +
       "&rand=" + randToAvoidCacheMem + monitor.Monitor.Id;
     console.log(stream);
   } else {
     mode = getMode();
     stream = monitor.Monitor.streamingURL +
-      "/nph-zms?mode=" + mode +
+      NVR.getZmsBinary() + "?mode=" + mode +
       "&monitor=" + monitor.Monitor.Id +
       "&scale=" + $scope.LoginData.montageQuality +
       "&rand=" + randToAvoidCacheMem + monitor.Monitor.Id;

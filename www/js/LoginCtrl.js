@@ -828,6 +828,7 @@ $scope.portalKeypress = function (evt) {
   $scope.saveItems = function () {
     NVR.debug("User tapped save, calling SaveItems");
     NVR.clearZmsMultiPortSupport();
+    NVR.clearPathZms();
     if (!$scope.loginData.serverName) {
       $rootScope.zmPopup = $ionicPopup.alert({
           title: $translate.instant('kError'),

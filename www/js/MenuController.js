@@ -116,6 +116,7 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
     NVR.debug("**Switching to new server...");
     
     NVR.clearZmsMultiPortSupport();
+    NVR.clearPathZms();
     var zmServers = NVR.getServerGroups();
     var loginData = zmServers[s];
     NVR.debug("Retrieved state for this profile:" + JSON.stringify(loginData));
@@ -223,7 +224,7 @@ angular.module('zmApp.controllers').controller('MenuController', ['$scope', '$io
                   var user_cgi = (ld.streamingurl).toLowerCase();
                   NVR.log("ZM relative cgi-path: " + zm_cgi + ", you entered: " + user_cgi);
 
-                  $http.get(ld.streamingurl + "/zms")
+                  $http.get(ld.streamingurl + NVR.getZmsBinary())
                     .then(function (data) {
                         data = data.data;
                         NVR.debug("Urk! cgi-path returned  success, but it should not have come here");

@@ -164,6 +164,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
     var d = $q.defer();
     var c = URI.parse($scope.wizard.loginURL);
     var p1, p2;
+    var zmsBinaryName = '/nph-zms';
     p1 = "";
     p2 = "";
 
@@ -188,11 +189,14 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
     $http.get($scope.wizard.apiURL + "/configs/viewByName/ZM_PATH_ZMS.json?"+$rootScope.authSession)
     //NVR.getPathZms() // what does ZM have stored in PATH_ZMS?
       .then(function (data) {
-        // remove zms or nph-zms
+        // extract the cgi-bin path by removing the binary name (last component)
         var str = data.data.config.Value;
         var path = str.trim();
-        path = path.replace("/nph-zms", "");
-        path = path.replace("/zms", "");
+        var idx = path.lastIndexOf('/');
+        if (idx >= 0) {
+          zmsBinaryName = path.substring(idx);
+          path = path.substring(0, idx);
+        }
         urls.push(baseUri.trim() + path);
         NVR.log("zmWizard: getPathZMS succeeded, adding " + baseUri + path + " to things to try");
         continueCgi(urls);
@@ -212,7 +216,7 @@ angular.module('zmApp.controllers').controller('zmApp.WizardCtrl', ['$scope', '$
       getFirstMonitor()
         .then(function (success) {
           $ionicLoading.hide();
-          var tail = "/nph-zms?mode=single&monitor=" + success;//+ $rootScope.authSession;
+          var tail = zmsBinaryName + "?mode=single&monitor=" + success;//+ $rootScope.authSession;
           if ($scope.wizard.useauth && $scope.wizard.usezmauth) {
 
             var ck = Math.floor(Math.random() * (50000 - 10000 + 1)) + 10000;
