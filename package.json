@@ -147,7 +147,7 @@
     "cordova-sqlite-storage": "^6.1.0",
     "dotenv": "^16.4.7",
     "electron": "^35.7.5",
-    "electron-builder": "^25.1.8",
+    "electron-builder": "^26.8.1",
     "electron-osx-sign": "^0.6.0",
     "gulp": "^5.0.0",
     "gulp-clean-css": "^4.3.0",
