@@ -3,6 +3,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches: [ master ]
+    tags: [ 'v*' ]
   pull_request:
     branches: [ master ]
 
@@ -43,11 +44,9 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - run: npm install
       - run: npm ci
-      - run: npm install -g cordova@12.0.0
-      - run: cordova platform add android
-      - run: cordova build android --debug
+      - run: npx cordova platform add android
+      - run: npx cordova build android --debug
 
   build-ios:
     runs-on: macos-latest
@@ -57,11 +56,93 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm install
       - run: npm ci
-      - run: npm install -g cordova@12.0.0
-      - run: cordova platform add ios
-      - run: cordova build ios --debug
+      - run: npx cordova platform add ios
+      - run: npx cordova build ios --debug --buildFlag="CODE_SIGNING_ALLOWED=NO"
+
+  release-ios:
+    runs-on: macos-latest
+    needs: [security-audit, test]
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Apple certificate and provisioning profiles
+        env:
+          BUILD_CERTIFICATE_BASE64: ${{ secrets.IOS_DISTRIBUTION_CERTIFICATE_BASE64 }}
+          P12_PASSWORD: ${{ secrets.IOS_DISTRIBUTION_CERTIFICATE_PASSWORD }}
+          APP_PROVISION_PROFILE_BASE64: ${{ secrets.IOS_APP_PROVISION_PROFILE_BASE64 }}
+          EXT_PROVISION_PROFILE_BASE64: ${{ secrets.IOS_NOTIFICATION_EXT_PROVISION_PROFILE_BASE64 }}
+        run: |
+          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+          APP_PP_PATH=$RUNNER_TEMP/app.mobileprovision
+          EXT_PP_PATH=$RUNNER_TEMP/extension.mobileprovision
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+
+          # Decode secrets
+          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
+          echo -n "$APP_PROVISION_PROFILE_BASE64" | base64 --decode -o $APP_PP_PATH
+          echo -n "$EXT_PROVISION_PROFILE_BASE64" | base64 --decode -o $EXT_PP_PATH
+
+          # Create and configure temporary keychain
+          security create-keychain -p "" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "" $KEYCHAIN_PATH
+
+          # Import certificate
+          security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          security set-key-partition-list -S apple-tool:,apple: -k "" $KEYCHAIN_PATH
+          security list-keychain -d user -s $KEYCHAIN_PATH
+
+          # Install provisioning profiles by UUID
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+
+          APP_PP_UUID=$(/usr/libexec/PlistBuddy -c "Print UUID" /dev/stdin <<< "$(security cms -D -i $APP_PP_PATH)")
+          cp $APP_PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/$APP_PP_UUID.mobileprovision
+
+          EXT_PP_UUID=$(/usr/libexec/PlistBuddy -c "Print UUID" /dev/stdin <<< "$(security cms -D -i $EXT_PP_PATH)")
+          cp $EXT_PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/$EXT_PP_UUID.mobileprovision
+
+          # Export UUIDs for build configuration
+          echo "APP_PP_UUID=$APP_PP_UUID" >> $GITHUB_ENV
+          echo "EXT_PP_UUID=$EXT_PP_UUID" >> $GITHUB_ENV
+
+      - run: npm ci
+
+      - name: Generate build configuration
+        run: |
+          cat > build.json << EOF
+          {
+            "ios": {
+              "release": {
+                "codeSignIdentity": "Apple Distribution",
+                "developmentTeam": "P97TSUFFDX",
+                "packageType": "app-store",
+                "provisioningProfile": "$APP_PP_UUID"
+              }
+            }
+          }
+          EOF
+
+      - name: Build iOS release
+        env:
+          EXT_PP_UUID: ${{ env.EXT_PP_UUID }}
+        run: |
+          npx cordova platform add ios
+          npx cordova build ios --release --device --buildConfig=build.json
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: zmNinja-ios-${{ github.ref_name }}
+          path: platforms/ios/build/**/*.ipa
+
+      - name: Clean up keychain
+        if: always()
+        run: security delete-keychain $RUNNER_TEMP/app-signing.keychain-db
 
   dependency-review:
     runs-on: ubuntu-latest
