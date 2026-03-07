@@ -1,0 +1,30 @@
+{
+  "appId": "com.zoneminder.zmninja",
+  "appName": "zmNinja",
+  "webDir": "www",
+  "cordova": {
+    "preferences": {
+      "KeyboardResize": "true",
+      "KeyboardResizeMode": "ionic",
+      "iosPersistentFileLocation": "Library",
+      "AllowInlineMediaPlayback": "true",
+      "DisallowOverscroll": "true",
+      "BackupWebStorage": "none",
+      "AutoHideSplashScreen": "false",
+      "ShowSplashScreenSpinner": "false",
+      "SplashScreen": "screen",
+      "deployment-target": "15.0",
+      "SplashScreenDelay": "300",
+      "SplashMaintainAspectRatio": "true",
+      "FadeSplashScreen": "false",
+      "BackgroundColor": "#444444",
+      "android-targetSdkVersion": "34",
+      "android-compileSdkVersion": "34",
+      "android-minSdkVersion": "22",
+      "SplashScreenBackgroundColor": "#ababab",
+      "StatusBarOverlaysWebView": "false",
+      "StatusBarBackgroundColor": "#2980b9",
+      "SplashShowOnlyFirstTime": "false"
+    }
+  }
+}
