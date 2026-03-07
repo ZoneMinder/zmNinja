@@ -25,3 +25,5 @@ dist/
 
 
 www/templates/zmNinja.code-workspace
+.grepai/
+android/
