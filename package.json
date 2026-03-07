@@ -9,6 +9,13 @@
     "url": "https://github.com/ZoneMinder/zmNinja"
   },
   "license": "SEE LICENSE IN LICENSE.md",
+  "overrides": {
+    "braces": "~3.0.3",
+    "tar": "~7.5.9",
+    "xml2js": "~0.6.2",
+    "micromatch": "~4.0.8",
+    "http-proxy-middleware": "~3.0.5"
+  },
   "cordova": {
     "platforms": [
       "ios",
