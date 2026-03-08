@@ -1,0 +1,13 @@
+diff --git a/node_modules/cordova-plugin-advanced-websocket/src/ios/WebSocketAdvanced.m b/node_modules/cordova-plugin-advanced-websocket/src/ios/WebSocketAdvanced.m
+index b3090ad..35efb11 100644
+--- a/node_modules/cordova-plugin-advanced-websocket/src/ios/WebSocketAdvanced.m
++++ b/node_modules/cordova-plugin-advanced-websocket/src/ios/WebSocketAdvanced.m
+@@ -61,7 +61,7 @@
+ - (void)wsSendMessage:(NSString*)message;
+ {
+     if (_webSocket != nil) {
+-        [_webSocket send:message];
++        [_webSocket sendString:message error:nil];
+     }
+ }
+ 

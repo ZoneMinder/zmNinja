@@ -84,6 +84,7 @@ module.exports = function(context) {
           cfg.buildSettings.LD_RUNPATH_SEARCH_PATHS = `"$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks"`;
           cfg.buildSettings.MARKETING_VERSION = marketing;           // CFBundleShortVersionString
           cfg.buildSettings.CURRENT_PROJECT_VERSION = marketing;     // CFBundleVersion
+          cfg.buildSettings.ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = 'NO';
         }
       });
 
@@ -92,6 +93,21 @@ module.exports = function(context) {
       proj.addBuildPhase([ 'NotificationService.m' ], 'PBXSourcesBuildPhase', 'Sources', target.uuid);
       proj.addBuildPhase([], 'PBXResourcesBuildPhase', 'Resources', target.uuid);
       proj.addBuildPhase([], 'PBXFrameworksBuildPhase', 'Frameworks', target.uuid);
+
+      // Fix "run script output dependency" warnings by marking shell script
+      // build phases with alwaysOutOfDate = 1 so Xcode doesn't warn about
+      // missing output files
+      console.log('Fixing script phase dependency warnings');
+      let shellScriptPhases = proj.hash.project.objects['PBXShellScriptBuildPhase'];
+      if (shellScriptPhases) {
+        Object.keys(shellScriptPhases).forEach(key => {
+          let phase = shellScriptPhases[key];
+          if (phase && typeof phase === 'object' && phase.isa === 'PBXShellScriptBuildPhase') {
+            phase.alwaysOutOfDate = 1;
+          }
+        });
+      }
+
       console.log('Write the changes to the iOS project file');
       fs.writeFileSync(projPath, proj.writeSync());
       console.log(`Added ${extName} notification extension to project`);

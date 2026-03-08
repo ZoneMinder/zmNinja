@@ -1,0 +1,13 @@
+diff --git a/node_modules/cordova-plugin-firebasex/src/ios/FirebasePlugin.m b/node_modules/cordova-plugin-firebasex/src/ios/FirebasePlugin.m
+index 6bb409d..8a63ccd 100644
+--- a/node_modules/cordova-plugin-firebasex/src/ios/FirebasePlugin.m
++++ b/node_modules/cordova-plugin-firebasex/src/ios/FirebasePlugin.m
+@@ -1378,7 +1378,7 @@ static NSMutableArray* pendingGlobalJS = nil;
+         FIRUser* user = [FIRAuth auth].currentUser;
+ 
+         NSString* email = [command.arguments objectAtIndex:0];
+-        [user updateEmail:email completion:^(NSError *_Nullable error) {
++        [user sendEmailVerificationBeforeUpdatingEmail:email completion:^(NSError *_Nullable error) {
+           @try {
+               [self handleEmptyResultWithPotentialError:error command:command];
+           }@catch (NSException *exception) {

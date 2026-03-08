@@ -1,0 +1,175 @@
+diff --git a/node_modules/cordova-plugin-file/src/ios/CDVAssetLibraryFilesystem.m b/node_modules/cordova-plugin-file/src/ios/CDVAssetLibraryFilesystem.m
+index 8486b7b..95dc357 100644
+--- a/node_modules/cordova-plugin-file/src/ios/CDVAssetLibraryFilesystem.m
++++ b/node_modules/cordova-plugin-file/src/ios/CDVAssetLibraryFilesystem.m
+@@ -20,9 +20,7 @@
+ #import "CDVFile.h"
+ #import "CDVAssetLibraryFilesystem.h"
+ #import <Cordova/CDV.h>
+-#import <AssetsLibrary/ALAsset.h>
+-#import <AssetsLibrary/ALAssetRepresentation.h>
+-#import <AssetsLibrary/ALAssetsLibrary.h>
++#import <Photos/Photos.h>
+ #import <MobileCoreServices/MobileCoreServices.h>
+ 
+ NSString* const kCDVAssetsLibraryPrefix = @"assets-library://";
+@@ -188,66 +186,107 @@ NSString* const kCDVAssetsLibraryScheme = @"assets-library";
+     return path;
+ }
+ 
++- (PHAsset *)_assetForURL:(NSURL *)assetURL
++{
++    // Try to extract the local identifier from the assets-library URL
++    // assets-library URLs contain the asset UUID in the query string as id=
++    NSURLComponents *components = [NSURLComponents componentsWithURL:assetURL resolvingAgainstBaseURL:NO];
++    NSString *assetId = nil;
++    for (NSURLQueryItem *item in components.queryItems) {
++        if ([item.name isEqualToString:@"id"]) {
++            assetId = item.value;
++            break;
++        }
++    }
++    if (assetId) {
++        // Try fetching by the UUID portion with common suffix formats
++        NSArray *suffixes = @[@"/L0/001", @"/L0/002", @""];
++        for (NSString *suffix in suffixes) {
++            NSString *localId = [NSString stringWithFormat:@"%@%@", assetId, suffix];
++            PHFetchResult *result = [PHAsset fetchAssetsWithLocalIdentifiers:@[localId] options:nil];
++            if (result.firstObject) {
++                return result.firstObject;
++            }
++        }
++    }
++    // Fallback: cannot resolve legacy assets-library URL
++    return nil;
++}
++
+ - (void)readFileAtURL:(CDVFilesystemURL *)localURL start:(NSInteger)start end:(NSInteger)end callback:(void (^)(NSData*, NSString* mimeType, CDVFileError))callback
+ {
+-    ALAssetsLibraryAssetForURLResultBlock resultBlock = ^(ALAsset* asset) {
+-        if (asset) {
+-            // We have the asset!  Get the data and send it off.
+-            ALAssetRepresentation* assetRepresentation = [asset defaultRepresentation];
+-            NSUInteger size = (end > start) ? (end - start) : [assetRepresentation size];
+-            Byte* buffer = (Byte*)malloc(size);
+-            NSUInteger bufferSize = [assetRepresentation getBytes:buffer fromOffset:start length:size error:nil];
+-            NSData* data = [NSData dataWithBytesNoCopy:buffer length:bufferSize freeWhenDone:YES];
+-            NSString* MIMEType = (__bridge_transfer NSString*)UTTypeCopyPreferredTagWithClass((__bridge CFStringRef)[assetRepresentation UTI], kUTTagClassMIMEType);
+-
+-            callback(data, MIMEType, NO_ERROR);
++    NSURL *assetURL = [self assetLibraryURLForLocalURL:localURL];
++    PHAsset *asset = [self _assetForURL:assetURL];
++
++    if (!asset) {
++        callback(nil, nil, NOT_FOUND_ERR);
++        return;
++    }
++
++    PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
++    options.synchronous = YES;
++    options.version = PHImageRequestOptionsVersionCurrent;
++
++    [[PHImageManager defaultManager] requestImageDataAndOrientationForAsset:asset
++                                                                   options:options
++                                                             resultHandler:^(NSData *imageData, NSString *dataUTI, CGImagePropertyOrientation orientation, NSDictionary *info) {
++        if (imageData) {
++            NSData *data = imageData;
++            if (start > 0 || end > start) {
++                NSUInteger length = (end > start) ? (end - start) : (imageData.length - start);
++                data = [imageData subdataWithRange:NSMakeRange(start, length)];
++            }
++            NSString *mimeType = nil;
++            if (dataUTI) {
++                mimeType = (__bridge_transfer NSString*)UTTypeCopyPreferredTagWithClass((__bridge CFStringRef)dataUTI, kUTTagClassMIMEType);
++            }
++            callback(data, mimeType, NO_ERROR);
+         } else {
+             callback(nil, nil, NOT_FOUND_ERR);
+         }
+-    };
+-
+-    ALAssetsLibraryAccessFailureBlock failureBlock = ^(NSError* error) {
+-        // Retrieving the asset failed for some reason.  Send the appropriate error.
+-        NSLog(@"Error: %@", error);
+-        callback(nil, nil, SECURITY_ERR);
+-    };
+-
+-    ALAssetsLibrary* assetsLibrary = [[ALAssetsLibrary alloc] init];
+-    [assetsLibrary assetForURL:[self assetLibraryURLForLocalURL:localURL] resultBlock:resultBlock failureBlock:failureBlock];
++    }];
+ }
+ 
+ - (void)getFileMetadataForURL:(CDVFilesystemURL *)localURL callback:(void (^)(CDVPluginResult *))callback
+ {
+-    // In this case, we need to use an asynchronous method to retrieve the file.
+-    // Because of this, we can't just assign to `result` and send it at the end of the method.
+-    // Instead, we return after calling the asynchronous method and send `result` in each of the blocks.
+-    ALAssetsLibraryAssetForURLResultBlock resultBlock = ^(ALAsset* asset) {
+-        if (asset) {
+-            // We have the asset!  Populate the dictionary and send it off.
+-            NSMutableDictionary* fileInfo = [NSMutableDictionary dictionaryWithCapacity:5];
+-            ALAssetRepresentation* assetRepresentation = [asset defaultRepresentation];
+-            [fileInfo setObject:[NSNumber numberWithUnsignedLongLong:[assetRepresentation size]] forKey:@"size"];
+-            [fileInfo setObject:localURL.fullPath forKey:@"fullPath"];
+-            NSString* filename = [assetRepresentation filename];
+-            [fileInfo setObject:filename forKey:@"name"];
+-            [fileInfo setObject:[CDVAssetLibraryFilesystem getMimeTypeFromPath:filename] forKey:@"type"];
+-            NSDate* creationDate = [asset valueForProperty:ALAssetPropertyDate];
+-            NSNumber* msDate = [NSNumber numberWithDouble:[creationDate timeIntervalSince1970] * 1000];
+-            [fileInfo setObject:msDate forKey:@"lastModifiedDate"];
+-
+-            callback([CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:fileInfo]);
+-        } else {
+-            // We couldn't find the asset.  Send the appropriate error.
+-            callback([CDVPluginResult resultWithStatus:CDVCommandStatus_IO_EXCEPTION messageAsInt:NOT_FOUND_ERR]);
+-        }
+-    };
+-    ALAssetsLibraryAccessFailureBlock failureBlock = ^(NSError* error) {
+-        // Retrieving the asset failed for some reason.  Send the appropriate error.
+-        callback([CDVPluginResult resultWithStatus:CDVCommandStatus_IO_EXCEPTION messageAsString:[error localizedDescription]]);
+-    };
+-
+-    ALAssetsLibrary* assetsLibrary = [[ALAssetsLibrary alloc] init];
+-    [assetsLibrary assetForURL:[self assetLibraryURLForLocalURL:localURL] resultBlock:resultBlock failureBlock:failureBlock];
+-    return;
++    NSURL *assetURL = [self assetLibraryURLForLocalURL:localURL];
++    PHAsset *asset = [self _assetForURL:assetURL];
++
++    if (!asset) {
++        callback([CDVPluginResult resultWithStatus:CDVCommandStatus_IO_EXCEPTION messageAsInt:NOT_FOUND_ERR]);
++        return;
++    }
++
++    NSMutableDictionary* fileInfo = [NSMutableDictionary dictionaryWithCapacity:5];
++    [fileInfo setObject:localURL.fullPath forKey:@"fullPath"];
++
++    // Get resource data to determine size and filename
++    NSArray<PHAssetResource *> *resources = [PHAssetResource assetResourcesForAsset:asset];
++    PHAssetResource *primaryResource = resources.firstObject;
++
++    if (primaryResource) {
++        NSString *filename = primaryResource.originalFilename;
++        [fileInfo setObject:(filename ?: @"") forKey:@"name"];
++        [fileInfo setObject:[CDVAssetLibraryFilesystem getMimeTypeFromPath:filename] ?: @"" forKey:@"type"];
++
++        // Get file size via requestData
++        __block unsigned long long totalSize = 0;
++        dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
++        [[PHAssetResourceManager defaultManager] requestDataForAssetResource:primaryResource
++                                                                    options:nil
++                                                        dataReceivedHandler:^(NSData *data) {
++            totalSize += data.length;
++        } completionHandler:^(NSError *error) {
++            dispatch_semaphore_signal(semaphore);
++        }];
++        dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, 10 * NSEC_PER_SEC));
++        [fileInfo setObject:[NSNumber numberWithUnsignedLongLong:totalSize] forKey:@"size"];
++    }
++
++    NSDate* creationDate = asset.creationDate;
++    NSNumber* msDate = [NSNumber numberWithDouble:[creationDate timeIntervalSince1970] * 1000];
++    [fileInfo setObject:msDate forKey:@"lastModifiedDate"];
++
++    callback([CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:fileInfo]);
+ }
+ @end
