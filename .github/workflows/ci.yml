@@ -60,6 +60,70 @@ jobs:
       - run: npx cordova platform add ios
       - run: npx cordova build ios --debug --buildFlag="CODE_SIGNING_ALLOWED=NO"
 
+  release-android:
+    runs-on: ubuntu-latest
+    needs: [security-audit, test]
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Decode signing keystore
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: echo -n "$ANDROID_KEYSTORE_BASE64" | base64 --decode > $RUNNER_TEMP/upload-keystore.jks
+
+      - run: npm ci
+
+      - name: Generate build configuration
+        env:
+          KEYSTORE_PATH: ${{ runner.temp }}/upload-keystore.jks
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          node -e "
+            var c = {android:{release:{
+              keystore: process.env.KEYSTORE_PATH,
+              storePassword: process.env.KEYSTORE_PASSWORD,
+              alias: process.env.KEY_ALIAS,
+              password: process.env.KEY_PASSWORD,
+              keystoreType: 'jks'
+            }}};
+            require('fs').writeFileSync('build.json', JSON.stringify(c, null, 2));
+          "
+
+      - name: Build signed AAB
+        run: |
+          npx cordova platform add android
+          npx cordova build android --release --buildConfig=build.json -- --packageType=bundle
+
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: zmNinja-android-${{ github.ref_name }}
+          path: platforms/android/app/build/outputs/bundle/release/*.aab
+
+      - name: Upload to Google Play
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: com.zoneminder.zmNinja
+          releaseFiles: platforms/android/app/build/outputs/bundle/release/*.aab
+          track: internal
+          status: completed
+
+      - name: Clean up keystore
+        if: always()
+        run: rm -f $RUNNER_TEMP/upload-keystore.jks
+
   release-ios:
     runs-on: macos-latest
     needs: [security-audit, test]
@@ -114,35 +178,51 @@ jobs:
 
       - name: Generate build configuration
         run: |
-          cat > build.json << EOF
-          {
-            "ios": {
-              "release": {
-                "codeSignIdentity": "Apple Distribution",
-                "developmentTeam": "P97TSUFFDX",
-                "packageType": "app-store",
-                "provisioningProfile": "$APP_PP_UUID"
-              }
-            }
-          }
-          EOF
+          node -e "
+            var c = {ios:{release:{
+              codeSignIdentity: 'Apple Distribution',
+              developmentTeam: 'P97TSUFFDX',
+              packageType: 'app-store',
+              provisioningProfile: process.env.APP_PP_UUID
+            }}};
+            require('fs').writeFileSync('build.json', JSON.stringify(c, null, 2));
+          "
 
       - name: Build iOS release
-        env:
-          EXT_PP_UUID: ${{ env.EXT_PP_UUID }}
         run: |
           npx cordova platform add ios
           npx cordova build ios --release --device --buildConfig=build.json
 
-      - name: Upload IPA
+      - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
         with:
           name: zmNinja-ios-${{ github.ref_name }}
           path: platforms/ios/build/**/*.ipa
 
-      - name: Clean up keychain
+      - name: Decode App Store Connect API key
+        env:
+          API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
+        run: |
+          mkdir -p $RUNNER_TEMP/private_keys
+          echo -n "$API_KEY_BASE64" | base64 --decode > $RUNNER_TEMP/private_keys/AuthKey_${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}.p8
+
+      - name: Upload to App Store Connect
+        env:
+          API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+        run: |
+          IPA_PATH=$(find platforms/ios/build -name "*.ipa" -print -quit)
+          xcrun altool --upload-app \
+            --type ios \
+            --file "$IPA_PATH" \
+            --apiKey "$API_KEY_ID" \
+            --apiIssuer "$API_ISSUER_ID"
+
+      - name: Clean up keychain and keys
         if: always()
-        run: security delete-keychain $RUNNER_TEMP/app-signing.keychain-db
+        run: |
+          security delete-keychain $RUNNER_TEMP/app-signing.keychain-db
+          rm -rf $RUNNER_TEMP/private_keys
 
   dependency-review:
     runs-on: ubuntu-latest
