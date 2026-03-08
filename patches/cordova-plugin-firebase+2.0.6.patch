@@ -1,0 +1,13 @@
+diff --git a/node_modules/cordova-plugin-firebase/src/ios/AppDelegate+FirebasePlugin.m b/node_modules/cordova-plugin-firebase/src/ios/AppDelegate+FirebasePlugin.m
+index 6992aca..3f16409 100755
+--- a/node_modules/cordova-plugin-firebase/src/ios/AppDelegate+FirebasePlugin.m
++++ b/node_modules/cordova-plugin-firebase/src/ios/AppDelegate+FirebasePlugin.m
+@@ -180,7 +180,7 @@
+     // Print full message.
+     NSLog(@"%@", mutableUserInfo);
+ 
+-    completionHandler(UNNotificationPresentationOptionAlert);
++    completionHandler(UNNotificationPresentationOptionList | UNNotificationPresentationOptionBanner);
+     [FirebasePlugin.firebasePlugin sendNotification:mutableUserInfo];
+ }
+ 

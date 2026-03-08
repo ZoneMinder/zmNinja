@@ -164,6 +164,7 @@
     "gulp-sass": "^6.0.1",
     "jshint": "^2.13.6",
     "json-file": "^0.1.0",
+    "patch-package": "^8.0.1",
     "sass": "^1.91.0",
     "xcode": "^3.0.1",
     "xml-js": "^1.6.11"
@@ -173,7 +174,8 @@
     "dist-win": "./electron_js/sync_versions.sh && ./node_modules/.bin/electron-builder -w",
     "dist-lin": "./electron_js/sync_versions.sh && ./node_modules/.bin/electron-builder -l",
     "dist-mac": "./electron_js/sync_versions.sh && ./node_modules/.bin/electron-builder -m",
-    "dist-all": "./electron_js/sync_versions.sh && ./node_modules/.bin/electron-builder -wlm"
+    "dist-all": "./electron_js/sync_versions.sh && ./node_modules/.bin/electron-builder -wlm",
+    "postinstall": "patch-package"
   },
   "main": "electron_js/main.js",
   "build": {

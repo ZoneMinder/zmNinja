@@ -1,0 +1,382 @@
+diff --git a/node_modules/cordova-library-helper-pp-fork/src/ios/ALAssetsLibrary+CustomPhotoAlbum.h b/node_modules/cordova-library-helper-pp-fork/src/ios/ALAssetsLibrary+CustomPhotoAlbum.h
+index d292520..7fb8542 100644
+--- a/node_modules/cordova-library-helper-pp-fork/src/ios/ALAssetsLibrary+CustomPhotoAlbum.h
++++ b/node_modules/cordova-library-helper-pp-fork/src/ios/ALAssetsLibrary+CustomPhotoAlbum.h
+@@ -1,34 +1,21 @@
+ //
+-//  ALAssetsLibrary category to handle a custom photo album
++//  PHPhotoLibrary category to handle a custom photo album
+ //
+-//  Created by Marin Todorov on 10/26/11.
+-//  Copyright (c) 2011 Marin Todorov. All rights reserved.
++//  Originally created by Marin Todorov on 10/26/11.
++//  Migrated from ALAssetsLibrary to Photos framework.
+ //
+ 
+ #import <Foundation/Foundation.h>
+-#import <AssetsLibrary/AssetsLibrary.h>
++#import <Photos/Photos.h>
+ 
+-@interface ALAssetsLibrary (CustomPhotoAlbum)
++@interface PHPhotoLibrary (CustomPhotoAlbum)
+ 
+-//           |image|: the target image to be saved
+-//       |albumName|: custom album name
+-// |completionBlock|: block to be executed when succeed to write the image data
+-//                    to the assets library (camera roll)
+-//    |failureBlock|: block to be executed when failed to add the asset to the
+-//                    custom photo album
+ -(void)saveImage:(UIImage *)image
+          toAlbum:(NSString *)albumName
+- completionBlock:(ALAssetsLibraryWriteImageCompletionBlock)completionBlock
+-    failureBlock:(ALAssetsLibraryAccessFailureBlock)failureBlock;
++ completionBlock:(void(^)(BOOL success, NSError *error))completionBlock;
+ 
+-//           |videoUrl|: the target video to be saved
+-//       |albumName|: custom album name
+-// |completionBlock|: block to be executed when succeed to write the image data
+-//                    to the assets library (camera roll)
+-//    |failureBlock|: block to be executed when failed to add the asset to the
+-//                    custom photo album
+ -(void)saveVideo:(NSURL *)videoUrl
+          toAlbum:(NSString *)albumName
+- completionBlock:(ALAssetsLibraryWriteImageCompletionBlock)completionBlock
+-    failureBlock:(ALAssetsLibraryAccessFailureBlock)failureBlock;
++ completionBlock:(void(^)(BOOL success, NSError *error))completionBlock;
++
+ @end
+diff --git a/node_modules/cordova-library-helper-pp-fork/src/ios/ALAssetsLibrary+CustomPhotoAlbum.m b/node_modules/cordova-library-helper-pp-fork/src/ios/ALAssetsLibrary+CustomPhotoAlbum.m
+index da55f93..d44d233 100644
+--- a/node_modules/cordova-library-helper-pp-fork/src/ios/ALAssetsLibrary+CustomPhotoAlbum.m
++++ b/node_modules/cordova-library-helper-pp-fork/src/ios/ALAssetsLibrary+CustomPhotoAlbum.m
+@@ -1,135 +1,102 @@
+ //
+-//  ALAssetsLibrary category to handle a custom photo album
++//  PHPhotoLibrary category to handle a custom photo album
+ //
+-//  Created by Marin Todorov on 10/26/11.
+-//  Copyright (c) 2011 Marin Todorov. All rights reserved.
++//  Originally created by Marin Todorov on 10/26/11.
++//  Migrated from ALAssetsLibrary to Photos framework.
+ //
+ 
+ #import "ALAssetsLibrary+CustomPhotoAlbum.h"
+ 
+-@interface ALAssetsLibrary (Private)
++@implementation PHPhotoLibrary (CustomPhotoAlbum)
+ 
+--(void)_addAssetURL:(NSURL *)assetURL
+-            toAlbum:(NSString *)albumName
+-       failureBlock:(ALAssetsLibraryAccessFailureBlock)failureBlock;
+-
+-@end
++#pragma mark - Private Method
+ 
++- (PHAssetCollection *)_findOrCreateAlbum:(NSString *)albumName {
++    // Search for existing album
++    PHFetchOptions *fetchOptions = [[PHFetchOptions alloc] init];
++    fetchOptions.predicate = [NSPredicate predicateWithFormat:@"title = %@", albumName];
++    PHFetchResult *collections = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum
++                                                                         subtype:PHAssetCollectionSubtypeAny
++                                                                         options:fetchOptions];
++    if (collections.firstObject) {
++        return collections.firstObject;
++    }
+ 
+-@implementation ALAssetsLibrary (CustomPhotoAlbum)
++    // Create album synchronously using semaphore
++    __block NSString *albumId = nil;
++    __block NSError *createError = nil;
++    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
++
++    [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
++        PHAssetCollectionChangeRequest *request = [PHAssetCollectionChangeRequest creationRequestForAssetCollectionWithTitle:albumName];
++        albumId = request.placeholderForCreatedAssetCollection.localIdentifier;
++    } completionHandler:^(BOOL success, NSError *error) {
++        createError = error;
++        dispatch_semaphore_signal(semaphore);
++    }];
++    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
++
++    if (albumId) {
++        PHFetchResult *result = [PHAssetCollection fetchAssetCollectionsWithLocalIdentifiers:@[albumId] options:nil];
++        return result.firstObject;
++    }
++    return nil;
++}
+ 
+-#pragma mark - Public Method
++#pragma mark - Public Methods
+ 
+ - (void)saveImage:(UIImage *)image
+           toAlbum:(NSString *)albumName
+-  completionBlock:(ALAssetsLibraryWriteImageCompletionBlock)completionBlock
+-     failureBlock:(ALAssetsLibraryAccessFailureBlock)failureBlock {
+-  // write the image data to the assets library (camera roll)
+-  [self writeImageToSavedPhotosAlbum:image.CGImage
+-                         orientation:(ALAssetOrientation)image.imageOrientation 
+-                     completionBlock:^(NSURL *assetURL, NSError *error) {
+-                       // run the completion block for writing image to saved
+-                       //   photos album
+-                       completionBlock(assetURL, error);
+-                       
+-                       // if an error occured, do not try to add the asset to
+-                       //   the custom photo album
+-                       if (error != nil)
+-                         return;
++  completionBlock:(void(^)(BOOL success, NSError *error))completionBlock {
++
++    PHAssetCollection *album = [self _findOrCreateAlbum:albumName];
++    if (!album) {
++        if (completionBlock) {
++            completionBlock(NO, [NSError errorWithDomain:@"LibraryHelper" code:-1
++                                                userInfo:@{NSLocalizedDescriptionKey: @"Could not find or create album"}]);
++        }
++        return;
++    }
+ 
+-                       // add the asset to the custom photo album
+-                       [self _addAssetURL:assetURL
+-                                  toAlbum:albumName
+-                             failureBlock:failureBlock];
+-                     }];
++    [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
++        PHAssetChangeRequest *assetRequest = [PHAssetChangeRequest creationRequestForAssetFromImage:image];
++        PHAssetCollectionChangeRequest *albumRequest = [PHAssetCollectionChangeRequest changeRequestForAssetCollection:album];
++        PHObjectPlaceholder *placeholder = assetRequest.placeholderForCreatedAsset;
++        if (placeholder) {
++            [albumRequest addAssets:@[placeholder]];
++        }
++    } completionHandler:^(BOOL success, NSError *error) {
++        if (completionBlock) {
++            completionBlock(success, error);
++        }
++    }];
+ }
+ 
+ - (void)saveVideo:(NSURL *)videoUrl
+           toAlbum:(NSString *)albumName
+-  completionBlock:(ALAssetsLibraryWriteImageCompletionBlock)completionBlock
+-     failureBlock:(ALAssetsLibraryAccessFailureBlock)failureBlock {
+-    // write the video to the assets library (camera roll)
+-    [self writeVideoAtPathToSavedPhotosAlbum: videoUrl
+-                             completionBlock:^(NSURL *assetURL, NSError *error) {
+-                           // run the completion block for writing image to saved
+-                           //   photos album
+-                           completionBlock(assetURL, error);
+-                           
+-                           // if an error occured, do not try to add the asset to
+-                           //   the custom photo album
+-                           if (error != nil)
+-                               return;
+-                           
+-                           // add the asset to the custom photo album
+-                           [self _addAssetURL:assetURL
+-                                      toAlbum:albumName
+-                                 failureBlock:failureBlock];
+-                       }];
+-}
+-
+-#pragma mark - Private Method
+-
+--(void)_addAssetURL:(NSURL *)assetURL
+-            toAlbum:(NSString *)albumName
+-       failureBlock:(ALAssetsLibraryAccessFailureBlock)failureBlock {
+-  __block BOOL albumWasFound = NO;
+-  
+-  ALAssetsLibraryGroupsEnumerationResultsBlock enumerationBlock;
+-  enumerationBlock = ^(ALAssetsGroup *group, BOOL *stop) {
+-    // compare the names of the albums
+-    if ([albumName compare:[group valueForProperty:ALAssetsGroupPropertyName]] == NSOrderedSame) {
+-      // target album is found
+-      albumWasFound = YES;
+-      
+-      // get a hold of the photo's asset instance
+-      [self assetForURL:assetURL 
+-            resultBlock:^(ALAsset *asset) {
+-              // add photo to the target album
+-              [group addAsset:asset];
+-            }
+-           failureBlock:failureBlock];
+-      
+-      // album was found, bail out of the method
+-      return;
+-    }
+-    
+-    if (group == nil && albumWasFound == NO) {
+-      // photo albums are over, target album does not exist, thus create it
+-      
+-      // Since you use the assets library inside the block,
+-      //   ARC will complain on compile time that there’s a retain cycle.
+-      //   When you have this – you just make a weak copy of your object.
+-      //
+-      //   __weak ALAssetsLibrary * weakSelf = self;
+-      //
+-      // by @Marin.
+-      //
+-      // I don't use ARC right now, and it leads a warning.
+-      // by @Kjuly
+-      ALAssetsLibrary * weakSelf = self;
+-      
+-      // create new assets album
+-      [self addAssetsGroupAlbumWithName:albumName 
+-                            resultBlock:^(ALAssetsGroup *group) {
+-                              // get the photo's instance
+-                              [weakSelf assetForURL:assetURL 
+-                                        resultBlock:^(ALAsset *asset) {
+-                                          // add photo to the newly created album
+-                                          [group addAsset:asset];
+-                                        }
+-                                       failureBlock:failureBlock];
+-                            }
+-                           failureBlock:failureBlock];
+-      
+-      // should be the last iteration anyway, but just in case
+-      return;
++  completionBlock:(void(^)(BOOL success, NSError *error))completionBlock {
++
++    PHAssetCollection *album = [self _findOrCreateAlbum:albumName];
++    if (!album) {
++        if (completionBlock) {
++            completionBlock(NO, [NSError errorWithDomain:@"LibraryHelper" code:-1
++                                                userInfo:@{NSLocalizedDescriptionKey: @"Could not find or create album"}]);
++        }
++        return;
+     }
+-  };
+ 
+-  // search all photo albums in the library
+-  [self enumerateGroupsWithTypes:ALAssetsGroupAlbum 
+-                      usingBlock:enumerationBlock
+-                    failureBlock:failureBlock];
++    [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
++        PHAssetChangeRequest *assetRequest = [PHAssetChangeRequest creationRequestForAssetFromVideoAtFileURL:videoUrl];
++        PHAssetCollectionChangeRequest *albumRequest = [PHAssetCollectionChangeRequest changeRequestForAssetCollection:album];
++        PHObjectPlaceholder *placeholder = assetRequest.placeholderForCreatedAsset;
++        if (placeholder) {
++            [albumRequest addAssets:@[placeholder]];
++        }
++    } completionHandler:^(BOOL success, NSError *error) {
++        if (completionBlock) {
++            completionBlock(success, error);
++        }
++    }];
+ }
+ 
+ @end
+diff --git a/node_modules/cordova-library-helper-pp-fork/src/ios/LibraryHelper.m b/node_modules/cordova-library-helper-pp-fork/src/ios/LibraryHelper.m
+index 467dc2c..1bb0c1e 100644
+--- a/node_modules/cordova-library-helper-pp-fork/src/ios/LibraryHelper.m
++++ b/node_modules/cordova-library-helper-pp-fork/src/ios/LibraryHelper.m
+@@ -11,7 +11,6 @@
+     ? [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: [error description]]
+     : [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"Successfully Added to Library"];
+ 
+-    // [self writeJavascript: [pluginResult toSuccessCallbackString: self.callbackId]];
+     [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+ }
+ 
+@@ -34,18 +33,14 @@
+         return;
+     }
+ 
+-    //UIImageWriteToSavedPhotosAlbum(image, self, @selector(assetSavedToLibrary:didFinishSavingWithError:contextInfo:), nil);
+-    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+-    [library saveImage:image toAlbum:albumName completionBlock:^(NSURL *assetURL, NSError *error) {
+-        [self assetSavedToLibrary:error callbackId:command.callbackId];
+-    } failureBlock:^(NSError *error){
++    PHPhotoLibrary *library = [PHPhotoLibrary sharedPhotoLibrary];
++    [library saveImage:image toAlbum:albumName completionBlock:^(BOOL success, NSError *error) {
+         [self assetSavedToLibrary:error callbackId:command.callbackId];
+     }];
+ }
+ 
+ - (void)saveVideoToLibrary:(CDVInvokedUrlCommand *)command {
+     NSString* path = [command.arguments objectAtIndex: 0];
+-    //NSString* albumName = [command.arguments objectAtIndex: 1];
+ 
+     CDVPluginResult* pluginResult = nil;
+ 
+@@ -55,29 +50,12 @@
+         return;
+     }
+ 
+-    NSURL *url = [NSURL URLWithString:[path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+-    if (!UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(path)) {
+-        /*
+-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Path is not a valid video file"];
+-        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+-        return;
+-         */
+-    }
+-
+-    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
++    NSURL *url = [NSURL URLWithString:[path stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+ 
+-    //[library saveVideo:<#(NSURL *)#> toAlbum:<#(NSString *)#> completionBlock:<#^(NSURL *assetURL, NSError *error)completionBlock#> failureBlock:<#^(NSError *error)failureBlock#>]
+-
+-    [library writeVideoAtPathToSavedPhotosAlbum:url completionBlock:^(NSURL *assetURL, NSError *error) {
++    PHPhotoLibrary *library = [PHPhotoLibrary sharedPhotoLibrary];
++    [library saveVideo:url toAlbum:@"zmNinja" completionBlock:^(BOOL success, NSError *error) {
+         [self assetSavedToLibrary:error callbackId:command.callbackId];
+     }];
+-    /*
+-    [library saveVideo:url toAlbum:albumName completionBlock:^(NSURL *assetURL, NSError *error) {
+-        [self assetSavedToLibrary:error callbackId:command.callbackId];
+-    } failureBlock:^(NSError *error){
+-        [self assetSavedToLibrary:error callbackId:command.callbackId];
+-    }];
+-     */
+ }
+ 
+ //Many thanks to @jbavari
+@@ -96,11 +74,11 @@
+ 
+     if ([srcVideoPath rangeOfString:@"://"].location == NSNotFound)
+     {
+-        srcVideoUrl = [NSURL URLWithString:[[@"file://localhost" stringByAppendingString:srcVideoPath] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
++        srcVideoUrl = [NSURL URLWithString:[[@"file://localhost" stringByAppendingString:srcVideoPath] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+     }
+     else
+     {
+-        srcVideoUrl = [NSURL URLWithString:[srcVideoPath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
++        srcVideoUrl = [NSURL URLWithString:[srcVideoPath stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+     }
+ 
+     AVURLAsset *srcAsset = [AVURLAsset assetWithURL: srcVideoUrl];
+@@ -108,35 +86,28 @@
+     //Grab the duration
+     Float64 duration = CMTimeGetSeconds(srcAsset.duration);
+ 
+-    //Grab the thumbnail (thanks http://stackoverflow.com/questions/14742262/ios-get-video-duration-and-thumbnails-without-playing-video)
+     AVAssetImageGenerator* generator = [AVAssetImageGenerator assetImageGeneratorWithAsset:srcAsset];
+     generator.appliesPreferredTrackTransform = true;
+ 
+-    
+-    //Get the 1st frame 3 seconds in or half way if the clip is less the 3 seconds
+     int frameTimeStart = (duration < 3)
+         ? (duration/2)
+         : 3;
+ 
+     int frameLocation = 1;
+ 
+-    //Grab the frame
+     CGImageRef frameRef = [generator copyCGImageAtTime:CMTimeMake(frameTimeStart,frameLocation) actualTime:nil error:nil];
+ 
+-    // Get output path
+     NSString *dstFileName = [[NSProcessInfo processInfo] globallyUniqueString];
+     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+     NSString *appDocumentPath = [paths objectAtIndex:0];
+ 
+     NSString *thumbnailPath = [appDocumentPath stringByAppendingPathComponent:dstFileName];
+ 
+-    // Save image
+     NSString *outputFilePath = [thumbnailPath stringByAppendingString:@".jpg"];
+     UIImage *uiImage = [UIImage imageWithCGImage:frameRef];
+     NSData *jpgData = UIImageJPEGRepresentation(uiImage, 0.9f);
+     [jpgData writeToFile:outputFilePath atomically:YES];
+ 
+-    //Get Filesize
+     NSNumber *fileSize = nil;
+     [srcVideoUrl getResourceValue:&fileSize
+                        forKey:NSURLFileSizeKey

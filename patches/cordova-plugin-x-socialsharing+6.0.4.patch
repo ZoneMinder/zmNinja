@@ -1,0 +1,20 @@
+diff --git a/node_modules/cordova-plugin-x-socialsharing/src/ios/SocialSharing.m b/node_modules/cordova-plugin-x-socialsharing/src/ios/SocialSharing.m
+index ecb71b5..fa73269 100644
+--- a/node_modules/cordova-plugin-x-socialsharing/src/ios/SocialSharing.m
++++ b/node_modules/cordova-plugin-x-socialsharing/src/ios/SocialSharing.m
+@@ -757,8 +757,13 @@ static NSString *const kShareOptionIPadCoordinates = @"iPadCoordinates";
+       NSURL *url = [NSURL URLWithString:fileName];
+       NSData *fileData = [NSData dataWithContentsOfURL:url];
+       NSURLRequest *request = [NSURLRequest requestWithURL: url];
+-      NSHTTPURLResponse *response;
+-      [NSURLConnection sendSynchronousRequest: request returningResponse: &response error: nil];
++      __block NSHTTPURLResponse *response = nil;
++      dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
++      [[NSURLSession.sharedSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *resp, NSError *error) {
++        response = (NSHTTPURLResponse *)resp;
++        dispatch_semaphore_signal(semaphore);
++      }] resume];
++      dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, 30 * NSEC_PER_SEC));
+       if ([response respondsToSelector:@selector(allHeaderFields)]) {
+         NSDictionary *dictionary = [response allHeaderFields];
+         NSLog([dictionary description]);
