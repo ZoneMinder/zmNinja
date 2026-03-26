@@ -60,9 +60,10 @@ jobs:
       - run: npx cordova platform add ios
       - name: Build iOS debug
         run: >
-          npx cordova build ios --debug --verbose
+          npx cordova build ios --debug
           --buildFlag="CODE_SIGNING_ALLOWED=NO"
           --buildFlag="IPHONEOS_DEPLOYMENT_TARGET=15.0"
+          --buildFlag="DEBUG_INFORMATION_FORMAT=dwarf"
 
   release-android:
     runs-on: ubuntu-latest
