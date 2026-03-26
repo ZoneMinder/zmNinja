@@ -124,6 +124,32 @@ module.exports = function(context) {
         });
       }
 
+      // Fix build cycle: move script phases (Crashlytics, etc.) to the end
+      // of the main target's build phases so they run after "Embed App
+      // Extensions" (the copy-files phase for the appex). Without this,
+      // Xcode sees: copy appex → Crashlytics → dSYM → copy appex = cycle.
+      console.log('Reordering build phases to break dependency cycle');
+      let nativeTargets = proj.hash.project.objects['PBXNativeTarget'];
+      Object.keys(nativeTargets).forEach(key => {
+        let nt = nativeTargets[key];
+        if (!nt || !nt.buildPhases || nt.name !== `"${appName}"`) return;
+        let phases = nt.buildPhases;
+        let scriptPhaseIndices = [];
+        let scriptPhases = [];
+        phases.forEach((p, idx) => {
+          // Check if this phase ref is a shell script phase
+          if (shellScriptPhases && shellScriptPhases[p.value]) {
+            scriptPhaseIndices.push(idx);
+            scriptPhases.push(p);
+          }
+        });
+        // Remove script phases from their current position and append at end
+        for (let i = scriptPhaseIndices.length - 1; i >= 0; i--) {
+          phases.splice(scriptPhaseIndices[i], 1);
+        }
+        scriptPhases.forEach(p => phases.push(p));
+      });
+
       console.log('Write the changes to the iOS project file');
       fs.writeFileSync(projPath, proj.writeSync());
       console.log(`Added ${extName} notification extension to project`);
