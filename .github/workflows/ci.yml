@@ -58,7 +58,10 @@ jobs:
           node-version: '22'
       - run: npm ci
       - run: npx cordova platform add ios
-      - run: npx cordova build ios --debug --buildFlag="CODE_SIGNING_ALLOWED=NO"
+      - run: >
+          npx cordova build ios --debug
+          --buildFlag="CODE_SIGNING_ALLOWED=NO"
+          --buildFlag="IPHONEOS_DEPLOYMENT_TARGET=15.0"
 
   release-android:
     runs-on: ubuntu-latest

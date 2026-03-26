@@ -88,6 +88,22 @@ module.exports = function(context) {
         }
       });
 
+      // Ensure all targets meet minimum deployment target (Xcode 16+ requires >= 12.0)
+      const minDeployTarget = appConfig.getPreference('deployment-target', 'ios') || '15.0';
+      console.log(`Setting minimum IPHONEOS_DEPLOYMENT_TARGET to ${minDeployTarget} for all configs`);
+      Object.keys(cfgs).forEach(ref => {
+        const cfg = cfgs[ref];
+        if (!cfg || !cfg.buildSettings) return;
+        const cur = cfg.buildSettings.IPHONEOS_DEPLOYMENT_TARGET;
+        if (cur) {
+          const curNum = parseFloat(cur.replace(/"/g, ''));
+          const minNum = parseFloat(minDeployTarget);
+          if (curNum < minNum) {
+            cfg.buildSettings.IPHONEOS_DEPLOYMENT_TARGET = minDeployTarget;
+          }
+        }
+      });
+
       // Add build phases to the new target
       console.log('Adding build phases to the new target');
       proj.addBuildPhase([ 'NotificationService.m' ], 'PBXSourcesBuildPhase', 'Sources', target.uuid);
@@ -111,6 +127,34 @@ module.exports = function(context) {
       console.log('Write the changes to the iOS project file');
       fs.writeFileSync(projPath, proj.writeSync());
       console.log(`Added ${extName} notification extension to project`);
+
+      // Patch CordovaLib deployment target (separate xcodeproj)
+      const cordovaLibProjPath = `${iosPath}CordovaLib/CordovaLib.xcodeproj/project.pbxproj`;
+      if (fs.existsSync(cordovaLibProjPath)) {
+        console.log(`Patching CordovaLib deployment target to ${minDeployTarget}`);
+        let cordovaProj = xcode.project(cordovaLibProjPath);
+        cordovaProj.parse(function (libErr) {
+          if (libErr) {
+            console.log(`Error parsing CordovaLib project: ${libErr}`);
+            return;
+          }
+          const libCfgs = cordovaProj.pbxXCBuildConfigurationSection();
+          Object.keys(libCfgs).forEach(ref => {
+            const cfg = libCfgs[ref];
+            if (!cfg || !cfg.buildSettings) return;
+            const cur = cfg.buildSettings.IPHONEOS_DEPLOYMENT_TARGET;
+            if (cur) {
+              const curNum = parseFloat(cur.replace(/"/g, ''));
+              const minNum = parseFloat(minDeployTarget);
+              if (curNum < minNum) {
+                cfg.buildSettings.IPHONEOS_DEPLOYMENT_TARGET = minDeployTarget;
+              }
+            }
+          });
+          fs.writeFileSync(cordovaLibProjPath, cordovaProj.writeSync());
+          console.log('CordovaLib deployment target patched');
+        });
+      }
     });
   }, 3000);
 };
