@@ -2191,10 +2191,7 @@ $scope.constructStream = function(monitor) {
     stream = monitor.Monitor.streamingURL +
       NVR.getZmsBinary() + "?mode=" + mode +
       "&monitor=" + monitor.Monitor.Id +
-      "&scale=" + $scope.LoginData.montageQuality +
-      "&rand=" + randToAvoidCacheMem + monitor.Monitor.Id;
-    if (mode != 'single')
-      stream += appendConnKey(monitor.Monitor.connKey);
+      "&scale=" + $scope.LoginData.montageQuality;
 
     var fps = NVR.getLogin().montageliveFPS;
     if (fps) {
@@ -2203,6 +2200,13 @@ $scope.constructStream = function(monitor) {
   }
 
   stream += $rootScope.authSession;
+  if (currentStreamState != streamState.SNAPSHOT_LOWQUALITY) {
+    if (!monitor.Monitor.connKey)
+      NVR.regenConnKeys(monitor);
+    stream += appendConnKey(monitor.Monitor.connKey);
+    if (mode != 'jpeg')
+      stream += "&rand=" + randToAvoidCacheMem + monitor.Monitor.Id;
+  }
   stream += NVR.insertSpecialTokens();
   NVR.debug(stream);
   return stream;
