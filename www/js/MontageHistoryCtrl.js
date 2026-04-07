@@ -1,5 +1,4 @@
 // Controller for the montage view
-/* jshint -W041, -W093, -W083 */
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console,ionic,Masonry,moment,Packery, Draggabilly, imagesLoaded, Chart */
 // FIXME: This is a copy of montageCtrl - needs a lot of code cleanup

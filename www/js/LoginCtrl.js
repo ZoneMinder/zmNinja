@@ -1,4 +1,3 @@
-/* jshint -W041 */
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console,alert,URI, localforage */
 

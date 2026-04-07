@@ -1,4 +1,3 @@
-/* jshint -W041 */
 /* jslint browser: true*/
 /* global saveAs, cordova,StatusBar,angular,console,moment */
 

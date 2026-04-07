@@ -1,5 +1,3 @@
-/* jshint -W041 */
-/* jshint -W083 */
 /*This is for the loop closure I am using in line 143 */
 /* jslint browser: true*/
 /* global vis,cordova,StatusBar,angular,console,moment */

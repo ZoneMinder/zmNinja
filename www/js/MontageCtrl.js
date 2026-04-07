@@ -1,6 +1,4 @@
 // Controller for the montage view
-/* jshint -W041 */
-/* jshint esversion: 6 */
 
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console,ionic,Packery, Draggabilly, imagesLoaded, ConnectSDK, moment */

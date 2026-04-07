@@ -18,7 +18,8 @@
     "immutable": "~5.1.5",
     "minimatch": "~3.1.5||~9.0.6||~10.2.4",
     "picomatch": "~2.3.2||~4.0.4",
-    "yaml": "~2.8.3"
+    "yaml": "~2.8.3",
+    "lodash": "~4.18.1"
   },
   "cordova": {
     "platforms": [
@@ -159,12 +160,12 @@
     "electron": "^39.8.4",
     "electron-builder": "^26.8.1",
     "electron-osx-sign": "^0.6.0",
+    "eslint": "^9.39.4",
     "gulp": "^5.0.0",
     "gulp-clean-css": "^4.3.0",
     "gulp-concat": "^2.6.1",
     "gulp-rename": "^2.0.0",
     "gulp-sass": "^6.0.1",
-    "jshint": "^2.13.6",
     "json-file": "^0.1.0",
     "patch-package": "^8.0.1",
     "sass": "^1.91.0",

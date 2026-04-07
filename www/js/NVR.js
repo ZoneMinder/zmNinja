@@ -1,5 +1,3 @@
-/* jshint -W041 */
-/* jshint esversion: 6 */
 
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console, URI, moment, localforage, CryptoJS, Connection, LZString */

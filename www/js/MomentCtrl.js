@@ -1,6 +1,3 @@
-/* jshint -W041 */
-/*jshint -W069 */
-/*jshint sub:true*/
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console, Masonry */
 

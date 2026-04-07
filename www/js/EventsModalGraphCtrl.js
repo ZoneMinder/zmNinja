@@ -1,5 +1,4 @@
 // Common Controller for the montage view
-/* jshint -W041 */
 /* jslint browser: true*/
 /* global saveAs, cordova,StatusBar,angular,console,ionic, moment, vis , Chart, DJS*/
 

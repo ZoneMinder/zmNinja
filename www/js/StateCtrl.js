@@ -1,4 +1,3 @@
-/* jshint -W041 */
 /* jslint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
@@ -148,7 +147,7 @@ $scope.toggleServer = function() {
 
    // console.log("STATE SHORTCUT: " + JSON.stringify($stateParams));
     $stateParams.shortcut && $stateParams.shortcut.fn &&
-      $scope[$stateParams.shortcut.fn]($stateParams.shortcut.fnargs); // jshint ignore:line
+      $scope[$stateParams.shortcut.fn]($stateParams.shortcut.fnargs);
 
   });
 

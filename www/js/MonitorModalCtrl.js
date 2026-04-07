@@ -1,5 +1,4 @@
 // Common Controller for the montage view
-/* jshint -W041 */
 /* jslint browser: true*/
 /* global saveAs, cordova,StatusBar,angular,console,ionic, moment, imagesLoaded, chrome */
 
@@ -690,7 +689,6 @@ angular.module('zmApp.controllers').controller('MonitorModalCtrl', ['$scope', '$
     // now create a points array for circle handles
 
     /* for (i = 0; i < $scope.zoneArray.length; i++) {
-      //jshint loopfunc: true
       $scope.zoneArray[i].coords.split(' ')
         .forEach(function (itm) {
           var o = itm.split(',');

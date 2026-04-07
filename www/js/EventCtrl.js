@@ -1,7 +1,6 @@
-/* jshint -W041 */
-/*jshint bitwise: false*/
 /* jslint browser: true*/
 /* global saveAs, cordova,StatusBar,angular,console,moment, MobileAccessibility, gifshot, ReadableStream , LibraryHelper, GifWriter, NeuQuant, LocalFileSystem, FileError*/
+/* eslint no-bitwise: "off" */
 
 // This is the controller for Event view. StateParams is if I recall the monitor ID.
 // This was before I got access to the new APIs. FIXME: Revisit this code to see what I am doing with it

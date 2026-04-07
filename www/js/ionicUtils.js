@@ -1,5 +1,3 @@
-/* jshint -W041 */
-/* jshint browser: true*/
 /* global cordova,StatusBar,angular,console */
 
 //http://learn.ionicframework.com/formulas/localstorage/
